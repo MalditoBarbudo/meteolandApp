@@ -5,3 +5,4 @@
 data-raw/daily_meteo_data
 data-raw/*.tiff
 data-raw/*.nc
+data-raw/interpolation_objects
