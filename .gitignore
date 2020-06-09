@@ -1,0 +1,7 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+data-raw/daily_meteo_data
+data-raw/*.tiff
+data-raw/*.nc
