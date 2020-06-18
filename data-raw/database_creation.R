@@ -39,3 +39,34 @@ library(RPostgres)
 #
 # # change conn
 # RPostgres::dbDisconnect(conn)
+conn <- RPostgres::dbConnect(
+  RPostgres::Postgres(),
+  'meteoland', 'laboratoriforestal.creaf.uab.cat',
+  5432, rstudioapi::askForPassword(), 'ifn'
+)
+
+sql_guest_activation_1 <- glue::glue_sql(
+  "
+  GRANT USAGE ON SCHEMA public TO guest;
+  "
+)
+sql_guest_activation_2 <- glue::glue_sql(
+  "
+  GRANT SELECT ON ALL TABLES IN SCHEMA public TO guest;
+  "
+)
+sql_guest_activation_3 <- glue::glue_sql(
+  "
+  ALTER DEFAULT PRIVILEGES IN SCHEMA public
+    GRANT SELECT ON TABLES TO guest;
+  "
+)
+
+RPostgres::dbExecute(conn, sql_guest_activation_1)
+RPostgres::dbExecute(conn, sql_guest_activation_2)
+RPostgres::dbExecute(conn, sql_guest_activation_3)
+
+# postgis extension
+rpostgis::pgPostGIS(conn, topology = TRUE, sfcgal = TRUE)
+
+RPostgres::dbDisconnect(conn)

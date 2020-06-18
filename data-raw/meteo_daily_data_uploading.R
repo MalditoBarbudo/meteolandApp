@@ -41,6 +41,79 @@ get_all_stations_daily_data <- function(cat, spa) {
   }
 }
 
+prepare_daily_grid_raster <- function(date_i, topo) {
+
+  topo_meteoland <- meteoland::SpatialPointsTopography(
+    points = sf::as_Spatial(topo),
+    elevation = topo$elevation,
+    slope = topo$slope,
+    aspect = topo$aspect
+  )
+
+  interpolation_cat_day <-
+    lfcdata::meteoland()$.__enclos_env__$private$points_interpolation(
+      user_dates = c(date_i, date_i), .topo = topo_meteoland
+    )
+
+  interpolation_data <-
+    list(data = meteoland::extractdates(interpolation_cat_day)@data)
+  names(interpolation_data) <- interpolation_cat_day@dates
+
+  # taken from the raster tipo in the topology creation script.
+  grid_specs_manual <- sp::GridTopology(
+    cellcentre.offset = c(256500, 4488500),
+    cellsize = c(1000, 1000),
+    cells.dim = c(272, 264)
+  )
+
+  # we build a pixels object because then we can create the rasters easily
+  res_pixels <- meteoland::SpatialPixelsMeteorology(
+    points = interpolation_cat_day,
+    data = interpolation_data,
+    dates = interpolation_cat_day@dates,
+    grid = grid_specs_manual
+  )
+
+  res_stars <- as(res_pixels, 'stars')
+  res_MeanTemperature <- as(res_stars['MeanTemperature'], 'Raster')
+  res_MinTemperature <- as(res_stars['MinTemperature'], 'Raster')
+  res_MaxTemperature <- as(res_stars['MaxTemperature'], 'Raster')
+  res_MeanRelativeHumidity <- as(res_stars['MeanRelativeHumidity'], 'Raster')
+  res_MinRelativeHumidity <- as(res_stars['MinRelativeHumidity'], 'Raster')
+  res_MaxRelativeHumidity <- as(res_stars['MaxRelativeHumidity'], 'Raster')
+  res_Precipitation <- as(res_stars['Precipitation'], 'Raster')
+  res_Radiation <- as(res_stars['Radiation'], 'Raster')
+  res_WindSpeed <- as(res_stars['WindSpeed'], 'Raster')
+  res_WindDirection <- as(res_stars['WindDirection'], 'Raster')
+
+  res_stack <- raster::stack(
+    res_MeanTemperature,
+    res_MinTemperature,
+    res_MaxTemperature,
+    res_MeanRelativeHumidity,
+    res_MinRelativeHumidity,
+    res_MaxRelativeHumidity,
+    res_Precipitation,
+    res_Radiation,
+    res_WindSpeed,
+    res_WindDirection
+  )
+  names(res_stack) <- c(
+    'MeanTemperature',
+    'MinTemperature',
+    'MaxTemperature',
+    'MeanRelativeHumidity',
+    'MinRelativeHumidity',
+    'MaxRelativeHumidity',
+    'Precipitation',
+    'Radiation',
+    'WindSpeed',
+    'WindDirection'
+  )
+
+  return(res_stack)
+}
+
 daily_meto_data_update <- function(db_conn, path_cat, path_spa, overwrite) {
   # dates vector to check, they must be one year long ending in the day before of
   # the present day
@@ -78,6 +151,35 @@ daily_meto_data_update <- function(db_conn, path_cat, path_spa, overwrite) {
         )
       }
     }
+
+    # now the interpolation for grids
+    grid_table_name <- glue::glue(
+      "daily_raster_interpolated_{stringr::str_remove_all(date_i, '-')}"
+    )
+    is_raster_in_db <- dplyr::db_has_table(db_conn, grid_table_name)
+
+    if (any(overwrite, !is_raster_in_db)) {
+      # topology 1km
+      topo_1km <- sf::read_sf(
+        db_conn, 'topo_land_points_km'
+      )
+
+      res_stack <- prepare_daily_grid_raster(date_i, topo_1km)
+
+      # Write Stack
+      db_checkout <- pool::poolCheckout(db_conn)
+      rpostgis::pgWriteRast(
+        db_checkout, grid_table_name, res_stack, blocks = 50, overwrite = TRUE
+      )
+      # Indexes for each layer
+      pool::dbExecute(
+        conn = db_checkout,
+        statement = glue::glue(
+          "CREATE INDEX {grid_table_name}_st_convexhull_idx ON {grid_table_name} USING gist( ST_ConvexHull(rast) );"
+        )
+      )
+      pool::poolReturn(db_checkout)
+    }
   }
 
   # the last part is to remove previous dates from the database. We will make
@@ -91,10 +193,19 @@ daily_meto_data_update <- function(db_conn, path_cat, path_spa, overwrite) {
 
   for (date_r in dates_to_rem) {
     # table name
-    table_name_r <- glue::glue("daily_meteo_{stringr::str_remove_all(date_i, '-')}")
+    table_name_rem <- glue::glue("daily_meteo_{stringr::str_remove_all(date_i, '-')}")
     # check if table exists and remove it
-    if (dplyr::db_has_table(db_conn, table_name_r)) {
-      dplyr::db_drop_table(db_conn, table_name_r, force = TRUE)
+    if (dplyr::db_has_table(db_conn, table_name_rem)) {
+      dplyr::db_drop_table(db_conn, table_name_rem, force = TRUE)
+    }
+
+    # precalculated grids remove
+    grid_table_name_rem <- glue::glue(
+      "daily_raster_interpolated_{stringr::str_remove_all(date_i, '-')}"
+    )
+    # check if table exists and remove it
+    if (dplyr::db_has_table(db_conn, grid_table_name_rem)) {
+      dplyr::db_drop_table(db_conn, grid_table_name_rem, force = TRUE)
     }
   }
 
