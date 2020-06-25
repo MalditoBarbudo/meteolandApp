@@ -80,20 +80,10 @@ catalunya_polys <- sf::read_sf(
   dplyr::select(poly_id = NOM_CA, geometry) %>%
   sf::st_set_crs(value = 3043)
 
-
-all_cells_land_sf <-
+all_cells_catalunya <-
   cbind(all_cells_topo@coords, all_cells_topo@data) %>%
   sf::st_as_sf(coords = c('coords.x1', 'coords.x2'), crs = 3043) %>%
-  # get only the land
-  dplyr::filter(
-    !elevation < 1, !aspect < 1, !slope < 1,
-    !is.na(elevation), !is.na(aspect), !is.na(slope)
-  )
-
-all_cells_catalunya <- all_cells_land_sf %>%
   dplyr::slice(sf::st_intersects(catalunya_polys, .)[[1]])
-
-
 
 # now we need to recreate the topology object, but with the land data
 land_topo_1km <- meteoland::SpatialPointsTopography(

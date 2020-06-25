@@ -51,7 +51,7 @@ prepare_daily_grid_raster <- function(date_i, topo) {
   )
 
   interpolation_cat_day <-
-    lfcdata::meteoland()$.__enclos_env__$private$points_interpolation(
+    lfcdata::meteoland()$points_interpolation(
       user_dates = c(date_i, date_i), .topo = topo_meteoland
     )
 
@@ -118,7 +118,7 @@ daily_meto_data_update <- function(db_conn, path_cat, path_spa, overwrite) {
   # dates vector to check, they must be one year long ending in the day before of
   # the present day
   dates_vec <- as.Date(
-    (Sys.Date() - 366):(Sys.Date() - 1), # one year long
+    (Sys.Date() - 365):Sys.Date(), # one year long
     format = '%j', origin = as.Date('1970-01-01')
   ) %>%
     as.character()
@@ -127,12 +127,13 @@ daily_meto_data_update <- function(db_conn, path_cat, path_spa, overwrite) {
   # Now we are going to check if the table for the corresponding day exists in the
   # database. If not, we create it with the data. If it exists, we check overwrite
   # argument and if is TRUE we overwrite with the new data, if is FALSE we skip it
-  for (date_i in dates_vec) {
+  for (date_i in dates_vec[300:314]) {
     # table name
     table_name <- glue::glue("daily_meteo_{stringr::str_remove_all(date_i, '-')}")
     # check if table exists
     is_table_in_db <- dplyr::db_has_table(db_conn, table_name)
 
+    message(glue::glue("Updating the daily meteo table for {date_i}..."))
     # only go ahead if overwirte is on or table does not exist
     if (any(overwrite, !is_table_in_db)) {
 
@@ -152,6 +153,7 @@ daily_meto_data_update <- function(db_conn, path_cat, path_spa, overwrite) {
       }
     }
 
+    message(glue::glue("daily raster for {date_i}"))
     # now the interpolation for grids
     grid_table_name <- glue::glue(
       "daily_raster_interpolated_{stringr::str_remove_all(date_i, '-')}"
@@ -164,19 +166,14 @@ daily_meto_data_update <- function(db_conn, path_cat, path_spa, overwrite) {
         db_conn, 'topo_land_points_km'
       )
 
+      message("creating raster stack...")
       res_stack <- prepare_daily_grid_raster(date_i, topo_1km)
 
       # Write Stack
+      message("writing raster stack...")
       db_checkout <- pool::poolCheckout(db_conn)
       rpostgis::pgWriteRast(
-        db_checkout, grid_table_name, res_stack, blocks = 50, overwrite = TRUE
-      )
-      # Indexes for each layer
-      pool::dbExecute(
-        conn = db_checkout,
-        statement = glue::glue(
-          "CREATE INDEX {grid_table_name}_st_convexhull_idx ON {grid_table_name} USING gist( ST_ConvexHull(rast) );"
-        )
+        db_checkout, grid_table_name, res_stack, overwrite = TRUE
       )
       pool::poolReturn(db_checkout)
     }
@@ -186,14 +183,14 @@ daily_meto_data_update <- function(db_conn, path_cat, path_spa, overwrite) {
   # a buffer of 30 days, this way we can be sure that previous days are really
   # removed
   dates_to_rem <- as.Date(
-    (Sys.Date() - 397):(Sys.Date() - 367), # one year long
+    (Sys.Date() - 396):(Sys.Date() - 366), # one year long
     format = '%j', origin = as.Date('1970-01-01')
   ) %>%
     as.character()
 
   for (date_r in dates_to_rem) {
     # table name
-    table_name_rem <- glue::glue("daily_meteo_{stringr::str_remove_all(date_i, '-')}")
+    table_name_rem <- glue::glue("daily_meteo_{stringr::str_remove_all(date_r, '-')}")
     # check if table exists and remove it
     if (dplyr::db_has_table(db_conn, table_name_rem)) {
       dplyr::db_drop_table(db_conn, table_name_rem, force = TRUE)
@@ -201,7 +198,7 @@ daily_meto_data_update <- function(db_conn, path_cat, path_spa, overwrite) {
 
     # precalculated grids remove
     grid_table_name_rem <- glue::glue(
-      "daily_raster_interpolated_{stringr::str_remove_all(date_i, '-')}"
+      "daily_raster_interpolated_{stringr::str_remove_all(date_r, '-')}"
     )
     # check if table exists and remove it
     if (dplyr::db_has_table(db_conn, grid_table_name_rem)) {
@@ -214,7 +211,7 @@ daily_meto_data_update <- function(db_conn, path_cat, path_spa, overwrite) {
 
 
 # arguments
-overwrite <- TRUE
+overwrite <- FALSE
 db_conn <- pool::dbPool(
   RPostgres::Postgres(),
   dbname = 'meteoland', host = 'laboratoriforestal.creaf.uab.cat', port = 5432,
@@ -224,6 +221,9 @@ path_cat <- # file.path("/home", "miquel", "Climate", "Sources", "SMC", "Downloa
   "data-raw/daily_meteo_data/DailyCAT"
 path_spa <- # file.path("/home", "miquel", "Climate", "Sources", "AEMET", "Download", "DailySPAIN")
   "data-raw/daily_meteo_data/DailySPAIN"
+
+tictoc::tic()
 daily_meto_data_update(db_conn, path_cat, path_spa, overwrite)
+tictoc::toc()
 
 pool::poolClose(db_conn)
