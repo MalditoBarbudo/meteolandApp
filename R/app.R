@@ -71,19 +71,42 @@ meteoland_app <- function() {
       shiny::tabPanel(
         title = mod_tab_translateOutput('main_tab_translation'),
 
+        ########################################################### debug ####
+        shiny::absolutePanel(
+          id = 'debug', class = 'panel panel-default', fixed = TRUE,
+          draggable = TRUE, width = 640, height = 'auto',
+          # top = 100, left = 100, rigth = 'auto', bottom = 'auto',
+          top = 'auto', left = 10, right = 'auto', bottom = 15,
+          # top = 60, left = 'auto', right = 50, bottom = 'auto',
+
+          shiny::h3("DEBUG"),
+          shiny::textOutput('debug1'),
+          shiny::textOutput('debug2'),
+          shiny::textOutput('debug3')
+        ),
+        ####################################################### end debug ####
+
         # Sidebar layout
         shiny::sidebarLayout(
-          width = 5,
-          # this is gonna be a tabsetPanel, for data selection, save and help.
-          # tabset panel
-          shiny::tabsetPanel(
-            title = mod_tab_translateOutput('data_translation'),
-            # 'data',
-            value = 'data_inputs_panel',
-            mod_dataInput('mod_dataInput')
+          ## options
+          position = 'left', fluid = TRUE,
+          sidebarPanel = shiny::sidebarPanel(
+            width = 5,
+            # this is gonna be a tabsetPanel, for data selection, save and help.
+            # tabset panel
+            shiny::tabsetPanel(
+              id = 'sidebar_tabset', type = 'pills',
+              # data panel
+              shiny::tabPanel(
+                title = mod_tab_translateOutput('data_translation'),
+                value = 'data_inputs_panel',
+                mod_dataInput('mod_dataInput')
+              ) # end of data panel
+            ) # end of tabsetPanel
+          ), # end of sidebarPanel
+          mainPanel = shiny::mainPanel(
+            width = 7
           )
-
-
 
         ) # end of sidebarLayout
 
@@ -108,5 +131,36 @@ meteoland_app <- function() {
       mod_data, 'mod_dataInput', lang
     )
 
+    ## tab translations ####
+    shiny::callModule(
+      mod_tab_translate, 'main_tab_translation',
+      'main_tab_translation', lang
+    )
+    shiny::callModule(
+      mod_tab_translate, 'data_translation',
+      'data_translation', lang
+    )
+
+
+    ## debug #####
+    output$debug1 <- shiny::renderPrint({
+      data_reactives$data_mode
+    })
+    output$debug2 <- shiny::renderPrint({
+      data_reactives$data_type
+    })
+    output$debug3 <- shiny::renderPrint({
+      data_reactives$date_range
+    })
+
   } # end of server
+
+
+  # Run the application
+  meteoland_app_res <- shiny::shinyApp(
+    ui = ui, server = server
+  )
+
+  # shiny::runApp(meteoland_app)
+  return(meteoland_app_res)
 }

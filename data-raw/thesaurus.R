@@ -2,34 +2,24 @@
 
 app_translations <- tibble::tribble(
   ~text_id, ~translation_cat, ~translation_eng, ~translation_spa,
-  # # data version choices
-  # 'h4_data_version', "Fixa l'escala", "Select the scale", "Selecciona la escala",
-  # 'data_version', "Escala temporal", "Temporal scale", "Escala temporal",
-  # 'static', 'Dades estàtics', 'Static data', 'Datos estáticos',
-  # 'dynamic', 'Dades dinamics', 'Dynamic data', 'Datos dinámicos',
-  # 'plot_nfi_2_results', "IFN 2 (~1988-92)", "NFI 2 (~1988-92)", "IFN 2 (~1988-92)",
-  # 'plot_nfi_3_results', "IFN 3 (~2000-01)", "NFI 3 (~2000-01)", "IFN 3 (~2000-01)",
-  # 'plot_nfi_4_results', "IFN 4 (~2014-17)", "NFI 4 (~2014-17)", "IFN 4 (~2014-17)",
-  # 'plot_nfi2_nfi3_results', "Diferències IFN 2 : IFN 3 (1990 ~ 2000)", "Differences NFI 2 : NFI 3 (1990 ~ 2000)", "Diferencias IFN 2 : IFN 3 (1990 ~ 2000)",
-  # 'plot_nfi3_nfi4_results', "Diferències IFN 3 : IFN 4 (2000 ~ 2015)", "Differences NFI 3 : NFI 4 (2000 ~ 2015)", "Diferencias IFN 3 : IFN 4 (2000 ~ 2015)",
-  # 'plot_nfi2_nfi4_results', "Diferències IFN 2 : IFN 4 (1990 ~ 2015)", "Differences NFI 2 : NFI 4 (1990 ~ 2015)", "Diferencias IFN 2 : IFN 4 (1990 ~ 2015)",
-  # # data scale choices
-  # 'data_scale', 'Escala espacial', 'Spatial scale', 'Escala espacial',
-  # 'local', 'Local', 'Local', 'Local',
-  # 'admin_province', 'Provincia', 'Province', 'Provincia',
-  # 'admin_region', 'Comarca', 'County', 'Comarca',
-  # 'admin_municipality', 'Municipi', 'Municipality', 'Municipio',
-  # "admin_natural_interest_area", "Àrees d'interès natural", "Natural interest areas", "Áreas de interés natural",
-  # "admin_special_protection_natural_area", "Àrees naturals de protecció especial", "Special protection natural areas", "Áreas naturales de protección especial",
-  # "admin_natura_network_2000", "Xarxa Natura 2000", "Natura 2000 network", "Red Natura 2000",
-  # 'drawn_polygon', "Polígon dibuxat", "Drawn polygon", "Polígono dibujado",
-  # "file", "Arxiu de polìgons", "Polygon file", "Archivo de polígonos",
-  # "poly_id", "ID polígon", "Polygon ID", "ID polígono",
-  # # use file selection
-  # "user_file_sel_label", "Selecciona l'arxiu a carregar", "Select the file to upload", "Selecciona el archivo a cargar",
-  # "user_file_sel_buttonLabel", "Inspecciona...", "Browse...", "Inspecciona...",
-  # "user_file_sel_placeholder", "Cap fitxer seleccionat", "No file selected", "Ningún archivo seleccionado",
-  # "file_text", 'El fitxer pot ser un shapefile (comprimit en un fitxer zip) o un fitxer GeoPackage (.gpkg). Han de tenir un camp anomenat "poly_id" amb els identificadors dels polígons continguts.', 'File can be a shapefile (compressed in a zip file) or GeoPackage file (.gpkg). They must have a field called "poly_id" with the identifiers of the contained polygons.', 'El archivo puede ser un shapefile (comprimido en un archivo zip) o un archivo GeoPackage (.gpkg). Deben tener un campo llamado "poly_id" con los identificadores de los polígonos contenidos.',
+  # data mode choices
+  'h4_data_selection', "Selecciona les dades", "Select the data", "Selecciona los datos",
+  'data_mode', "Mode", "Modo", "Mode",
+  'current', 'Actual', 'Current', 'Actual',
+  'historic', 'Històric', 'Historic', 'Histórico',
+  # data type choices
+  'data_type', 'Tipus', 'Type', 'Tipo',
+  "raster", "Ràster", "Raster", "Raster",
+  'drawn_polygon', "Polígon dibuxat", "Drawn polygon", "Polígono dibujado",
+  "file", "Arxiu de polìgons", "Polygon file", "Archivo de polígonos",
+  # date range
+  'date_range', 'Rang de dates', 'Dates range', 'Rango de fechas',
+  'date_separator', " a ", " to ", " a ",
+  # use file selection
+  "user_file_sel_label", "Selecciona l'arxiu a carregar", "Select the file to upload", "Selecciona el archivo a cargar",
+  "user_file_sel_buttonLabel", "Inspecciona...", "Browse...", "Inspecciona...",
+  "user_file_sel_placeholder", "Cap fitxer seleccionat", "No file selected", "Ningún archivo seleccionado",
+  "file_text", 'El fitxer pot ser un shapefile (comprimit en un fitxer zip) o un fitxer GeoPackage (.gpkg). Han de tenir un camp anomenat "id" amb els identificadors dels geometries continguts.', 'File can be a shapefile (compressed in a zip file) or GeoPackage file (.gpkg). They must have a field called "id" with the identifiers of the contained geometries.', 'El archivo puede ser un shapefile (comprimido en un archivo zip) o un archivo GeoPackage (.gpkg). Deben tener un campo llamado "id" con los identificadores de las geometrías contenidas.',
   # # map
   # 'Relief', 'Relleu (base)', 'Relief (base)', 'Relieve (base)',
   # 'Imaginery', 'Satèl·lit (base)', 'Imaginery (base)', 'Satélite (base)',
