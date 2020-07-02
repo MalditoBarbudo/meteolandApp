@@ -31,6 +31,8 @@ app_translations <- tibble::tribble(
   "help_translation", "Ajuda", "Help", "Ayuda",
   "map_translation", "Mapa", "Map", "Mapa",
   "table_translation", "Taula", "Table", "Tabla",
+  # apply module
+  "apply", "Aplicar", "Apply", "Aplicar",
   # # metric choices
   # 'mean', 'Mitjana', 'Mean', 'Media',
   # 'min', 'Minim', 'Minimum', 'Mínimo',

@@ -16,7 +16,7 @@ mod_mainDataOutput <- function(id) {
 #' @param output internal
 #' @param session internal
 #'
-#' @param data_reactives,map_reactives reactives from modules
+#' @param data_reactives,map_reactives,apply_reactives reactives from modules
 #' @param meteolanddb object to access the nfi db
 #' @param lang lang selected
 #' @param parent_session parent session to be able to update tabset panel
@@ -28,7 +28,7 @@ mod_mainDataOutput <- function(id) {
 #' @rdname mod_mainDataOuput
 mod_mainData <- function(
   input, output, session,
-  data_reactives, map_reactives,
+  data_reactives, map_reactives, apply_reactives,
   meteolanddb, lang, parent_session
 ) {
 
@@ -58,11 +58,11 @@ mod_mainData <- function(
             list.files(tmp_folder, '.shp', recursive = TRUE, full.names = TRUE),
             as_tibble = TRUE
           ) %>%
-            sf::st_transform(4326)
+            sf::st_transform(3043)
         } else {
           # gpkg
           user_file_polygons <- sf::st_read(path_to_file) %>%
-            sf::st_transform(4326)
+            sf::st_transform(3043)
         }
       }
 
@@ -95,11 +95,14 @@ mod_mainData <- function(
         {list(as.matrix(.))} %>%
         sf::st_polygon() %>%
         sf::st_sfc() %>%
-        sf::st_sf(crs = 4326) %>%
+        sf::st_sf(crs = 3043) %>%
         dplyr::mutate(poly_id = 'drawn_poly')
       return(res)
     }
   })
+
+
+
 
 
 

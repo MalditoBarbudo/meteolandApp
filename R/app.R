@@ -92,6 +92,9 @@ meteoland_app <- function() {
           position = 'left', fluid = TRUE,
           sidebarPanel = shiny::sidebarPanel(
             width = 5,
+            # apply button module
+            mod_applyButtonInput("mod_applyButtonInput"),
+            shiny::br(),
             # this is gonna be a tabsetPanel, for data selection, save and help.
             # tabset panel
             shiny::tabsetPanel(
@@ -129,6 +132,19 @@ meteoland_app <- function() {
     # data inputs
     data_reactives <- shiny::callModule(
       mod_data, 'mod_dataInput', lang
+    )
+    # apply button
+    apply_reactives <- shiny::callModule(
+      mod_applyButton, 'mod_applyButtonInput',
+      lang, data_reactives
+    )
+    # main data
+    main_data_reactives <- shiny::callModule(
+      mod_mainData, 'mod_mainDataOutput',
+      data_reactives,
+      NULL, # map_reactives,
+      apply_reactives,
+      meteolanddb, lang, session
     )
 
     ## tab translations ####
