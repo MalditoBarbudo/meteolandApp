@@ -103,7 +103,8 @@ meteoland_app <- function() {
               shiny::tabPanel(
                 title = mod_tab_translateOutput('data_translation'),
                 value = 'data_inputs_panel',
-                mod_dataInput('mod_dataInput')
+                mod_dataInput('mod_dataInput'),
+                mod_vizInput('mod_vizInput')
               ) # end of data panel
             ) # end of tabsetPanel
           ), # end of sidebarPanel
@@ -145,6 +146,11 @@ meteoland_app <- function() {
       NULL, # map_reactives,
       apply_reactives,
       meteolanddb, lang, session
+    )
+    # viz
+    viz_reactives <- shiny::callModule(
+      mod_viz, 'mod_vizInput',
+      data_reactives, lang
     )
 
     ## tab translations ####

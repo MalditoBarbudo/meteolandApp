@@ -33,6 +33,24 @@ app_translations <- tibble::tribble(
   "table_translation", "Taula", "Table", "Tabla",
   # apply module
   "apply", "Aplicar", "Apply", "Aplicar",
+  # variables
+  'MeanTemperature', "Temperatura mitjana [ºC]", "Mean Temperature [ºC]", "Temperatura media [ºC]",
+  'MinTemperature', "Temperatura mínima [ºC]", "Min Temperature [ºC]", "Temperatura mínima [ºC]",
+  'MaxTemperature', "Temperatura màxima [ºC]", "Max Temperature [ºC]", "Temperatura máxima [ºC]",
+  'MeanRelativeHumidity', "Humitat relativa mitjana [%]", "Mean Relative Humidity [%]", "Humedad relativa media [%]",
+  'MinRelativeHumidity', "Humitat relativa mínima [%]", "Min Relative Humidity [%]", "Humedad relativa mínima [%]",
+  'MaxRelativeHumidity', "Humitat relativa màxima [%]", "Max Relative Humidity [%]", "Humedad relativa máxima [%]",
+  'Precipitation', "Precitpitació [mm]", "Precipitation [mm]", "Precipitación [mm]",
+  'Radiation', "Radiació", "Radiation", "Radiación",
+  'WindSpeed', "Velocitat del vent", "Wind Speed", "Velocidad del viento",
+  'WindDirection', "Direcció del vent", "Wind Direction", "Dirección del viento",
+  # viz
+  "h4_viz", "Visualització", "Visualization", "Visualización",
+  "viz_color_input", "Variable:", "Variable:", "Variable:",
+  "viz_date_input", "Data:", "Date:", "Fecha:",
+  "deselect-all-text", "Ningú", "None selected...", "Ninguno",
+  "select-all-text", "Tots", "All selected...", "Todos",
+  "count-selected-text-value", "{0} valors seleccionats (de {1})", "{0} values selected (of {1})", "{0} valores seleccionados (de {1})",
   # # metric choices
   # 'mean', 'Mitjana', 'Mean', 'Media',
   # 'min', 'Minim', 'Minimum', 'Mínimo',
@@ -49,13 +67,7 @@ app_translations <- tibble::tribble(
   # '_q05', ' quartil 5', ' quantile 5', ' cuartil 5',
   # '_q95', ' quartil 95', ' quantile 95', ' cuartil 95',
   # '_n', ' nombre parcel·las', ' plot number', ' número de parcelas',
-  # # viz
   # "h4_servei", "Fixa el servei", "Select the service", "Selecciona el servicio",
-  # "h4_viz", "Visualització", "Visualization", "Visualización",
-  # "deselect-all-text", "Ningú", "None selected...", "Ninguno",
-  # "select-all-text", "Tots", "All selected...", "Todos",
-  # "count-selected-text-value", "{0} valors seleccionats (de {1})", "{0} values selected (of {1})", "{0} valores seleccionados (de {1})",
-  # "viz_color_input", "Indicador:", "Indicator:", "Indicador:",
   # "viz_statistic_input", "Estadístic:", "Statistic:", "Estadístico:",
   # "pal_high", "Discriminar valors alts", "Discriminate higher values", "Discriminar valores altos",
   # "pal_low", "Discriminar valors baixos", "Discriminate lower values", "Discriminar valores bajos",
