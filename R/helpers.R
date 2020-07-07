@@ -34,3 +34,57 @@ translate_app <- function(id, lang) {
         }
     )
 }
+
+#' current_mode function
+#'
+#' check and retrieve the data for the current mode
+current_mode_data <- function(
+  data_type, date_range = NULL, custom_polygon = NULL, meteolanddb, geometry_id
+) {
+
+  if (data_type == 'raster') {
+    current_data <- date_range[1]:date_range[2] %>%
+      as.Date(format = '%j', origin = as.Date('1970-01-01')) %>%
+      as.character() %>%
+      magrittr::set_names(., .) %>%
+      purrr::map(~ meteolanddb$get_lowres_raster(.x, 'raster'))
+  }
+
+  if (data_type == 'file') {
+    if (all(sf::st_is(custom_polygon, 'POINT'))) {
+      pre_data <- meteolanddb$points_interpolation(
+          custom_polygon, as.character(date_range), geometry_id
+        )
+
+      coords_df <- pre_data@coords %>%
+        as.data.frame %>%
+        dplyr::mutate(geometry_id = names(pre_data@data))
+
+      meteo_df <- pre_data@data %>%
+        purrr::imap_dfr(
+          function(x, y) {
+            x %>%
+              dplyr::mutate(geometry_id = y, date = rownames(x))
+          }
+        )
+
+      current_data <- meteo_df %>%
+        dplyr::left_join(coords_df, by = 'geometry_id') %>%
+        sf::st_as_sf(coords = c('coords.x1', 'coords.x2'), crs = 3043) %>%
+        sf::st_transform(4326)
+
+    }
+
+    if (all(sf::st_is(custom_polygon, c('POLYGON', 'MULTIPOLYGON')))) {
+      current_data <-
+        meteolanddb$raster_interpolation(custom_polygon, as.character(date_range))
+    }
+  }
+
+  if (data_type == 'drawn_polygon') {
+    current_data <-
+      meteolanddb$raster_interpolation(custom_polygon, as.character(date_range))
+  }
+
+  return(current_data)
+}

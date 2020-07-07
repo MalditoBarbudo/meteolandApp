@@ -160,14 +160,14 @@ meteoland_app <- function() {
 
     ## debug #####
     output$debug1 <- shiny::renderPrint({
-      data_reactives$data_mode
+      main_data_reactives$main_data
     })
     output$debug2 <- shiny::renderPrint({
-      data_reactives$data_type
+      main_data_reactives$custom_polygon
     })
-    output$debug3 <- shiny::renderPrint({
-      data_reactives$date_range
-    })
+    # output$debug3 <- shiny::renderPrint({
+    #   data_reactives$date_range
+    # })
 
   } # end of server
 

@@ -71,7 +71,7 @@ mod_mainData <- function(
       )
 
       # rename the poly_id
-      names(user_file_polygons)[1] <- 'poly_id'
+      names(user_file_polygons)[1] <- 'geometry_id'
 
       return(user_file_polygons)
     }
@@ -96,15 +96,47 @@ mod_mainData <- function(
         sf::st_polygon() %>%
         sf::st_sfc() %>%
         sf::st_sf(crs = 3043) %>%
-        dplyr::mutate(poly_id = 'drawn_poly')
+        dplyr::mutate(geometry_id = 'drawn_poly')
       return(res)
     }
   })
 
+  ## main data.
+  # Let's get the data inputs, and depending on mode and type lets use the
+  # metelanddb method (points or raster).
+  main_data <- shiny::eventReactive(
+    eventExpr = apply_reactives$apply_button,
+    valueExpr = {
 
+      browser()
+      # inputs
+      data_mode <- data_reactives$data_mode
+      data_type <- data_reactives$data_type
+      date_range <- data_reactives$date_range
+      # custom polygons
+      user_polygon <- custom_polygon()
 
+      if (data_mode == 'current') {
+        main_data <- current_mode_data(
+          data_type, date_range, user_polygon, meteolanddb, 'geometry_id'
+        )
+      }
 
+      if (data_mode == 'historic') {
+        main_data <- NULL
+        ## TODO Complete when historic method is implemented
+      }
 
+      return(main_data)
+    }
+  )
 
+  ## reactives to return ####
+  main_data_reactives <- shiny::reactiveValues()
+  shiny::observe({
+    main_data_reactives$custom_polygon <- custom_polygon()
+    main_data_reactives$main_data <- main_data()
+  })
+  return(main_data_reactives)
 
 }
