@@ -43,6 +43,8 @@ mod_mainData <- function(
     data_type <- data_reactives$data_type
     path_to_file <- data_reactives$user_file_sel$datapath
 
+    # TODO check extensions and throw an exception if not zip or gpkg
+
     # file
     if (data_type == 'file') {
       # check if there is user file
@@ -119,8 +121,13 @@ mod_mainData <- function(
       user_polygon <- custom_polygon()
 
       if (data_mode == 'current') {
-        main_data <- current_mode_data(
+        main_data <- try(current_mode_data(
           data_type, date_range, user_polygon, meteolanddb, 'geometry_id'
+        ))
+        ## TODO add sweet alert indicating data can not be retrieved
+        # validate that main_data is not try-error
+        shiny::validate(
+          shiny::need(class(main_data) != 'try-error', 'no data')
         )
       }
 

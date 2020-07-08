@@ -43,11 +43,18 @@ current_mode_data <- function(
 ) {
 
   if (data_type == 'raster') {
+
+    get_lowres_raster_safe <- purrr::possibly(
+      .f = meteolanddb$get_lowres_raster,
+      otherwise = NA
+    )
+
     current_data <- date_range[1]:date_range[2] %>%
       as.Date(format = '%j', origin = as.Date('1970-01-01')) %>%
       as.character() %>%
       magrittr::set_names(., .) %>%
-      purrr::map(~ meteolanddb$get_lowres_raster(.x, 'raster'))
+      purrr::map(~ get_lowres_raster_safe(.x, 'raster')) %>%
+      purrr::keep(.p = ~ !rlang::is_na(.x))
   }
 
   if (data_type == 'file') {

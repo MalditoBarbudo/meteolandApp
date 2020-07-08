@@ -19,4 +19,5 @@ Imports:
     glue,
     purrr,
     shiny,
-    shinyjs
+    shinyjs,
+    rlang
