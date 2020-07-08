@@ -78,7 +78,6 @@ mod_mainData <- function(
 
     if (data_type == 'drawn_polygon') {
 
-      browser()
       # validation
       drawn_polygon <- map_reactives$meteoland_map_draw_all_features
       # When removing the features (custom polygon) the

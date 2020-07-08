@@ -11,7 +11,6 @@ mod_vizInput <- function(id) {
 
   # UI ####
   shiny::tagList(
-    shiny::br(),
     shiny::uiOutput(ns('mod_viz_panel'))
   )
 }
@@ -66,7 +65,6 @@ mod_viz <- function(
           8, shiny::h4(translate_app('h4_viz', lang()))
         )
       ),
-      shiny::br(),
       shiny::fluidRow(
         shiny::column(
           6,

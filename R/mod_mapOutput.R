@@ -118,7 +118,7 @@ mod_map <- function(
     # data_type <- data_reactives$data_type
     # date_range <- data_reactives$date_range
     viz_color <- viz_reactives$viz_color
-    # viz_date <- viz_reactives$viz_date
+    viz_date <- viz_reactives$viz_date
 
     # branching to show raster or points, depending on nature of map data
     if (is(pre_map_data, 'sf')) {
@@ -149,7 +149,7 @@ mod_map <- function(
         leaflet::addLegend(
           position = 'bottomright', pal = color_palette_legend,
           values = color_vector,
-          title = translate_app(viz_color, lang()),
+          title = glue::glue("{translate_app(viz_color, lang())} {viz_date}"),
           layerId = 'color_legend', opacity = 1,
           na.label = '', className = 'info legend na_out',
           labFormat = leaflet::labelFormat(
@@ -181,7 +181,7 @@ mod_map <- function(
         leaflet::addLegend(
           position = 'bottomright', pal = color_palette_legend,
           values = raster::values(layer_data),
-          title = translate_app(viz_color, lang()),
+          title = glue::glue("{translate_app(viz_color, lang())} {viz_date}"),
           layerId = 'color_legend', opacity = 1,
           na.label = '', className = 'info legend na_out',
           labFormat = leaflet::labelFormat(
