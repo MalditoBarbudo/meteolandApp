@@ -17,7 +17,7 @@ mod_mainDataOutput <- function(id) {
 #' @param session internal
 #'
 #' @param data_reactives,map_reactives,apply_reactives reactives from modules
-#' @param meteolanddb object to access the nfi db
+#' @param meteolanddb object to access the meteoland db
 #' @param lang lang selected
 #' @param parent_session parent session to be able to update tabset panel
 #'
@@ -76,9 +76,11 @@ mod_mainData <- function(
       return(user_file_polygons)
     }
 
-    if (data_type == 'drawn_poly') {
+    if (data_type == 'drawn_polygon') {
+
+      browser()
       # validation
-      drawn_polygon <- map_reactives$nfi_map_draw_all_features
+      drawn_polygon <- map_reactives$meteoland_map_draw_all_features
       # When removing the features (custom polygon) the
       # input$map_draw_new_feature is not cleared, so is always filtering the
       # sites, even after removing. For that we need to control when the removed
@@ -95,8 +97,9 @@ mod_mainData <- function(
         {list(as.matrix(.))} %>%
         sf::st_polygon() %>%
         sf::st_sfc() %>%
-        sf::st_sf(crs = 3043) %>%
-        dplyr::mutate(geometry_id = 'drawn_poly')
+        sf::st_sf(crs = 4326) %>%
+        sf::st_transform(crs = 3043) %>%
+        dplyr::mutate(geometry_id = 'drawn_polygon')
       return(res)
     }
   })
@@ -108,7 +111,7 @@ mod_mainData <- function(
     eventExpr = apply_reactives$apply_button,
     valueExpr = {
 
-      browser()
+      # browser()
       # inputs
       data_mode <- data_reactives$data_mode
       data_type <- data_reactives$data_type

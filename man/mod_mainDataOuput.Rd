@@ -25,7 +25,7 @@ mod_mainData(
 
 \item{data_reactives, map_reactives, apply_reactives}{reactives from modules}
 
-\item{meteolanddb}{object to access the nfi db}
+\item{meteolanddb}{object to access the meteoland db}
 
 \item{lang}{lang selected}
 
