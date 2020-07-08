@@ -9,7 +9,9 @@ current_mode_data(
   date_range = NULL,
   custom_polygon = NULL,
   meteolanddb,
-  geometry_id
+  geometry_id,
+  progress_obj,
+  lang
 )
 }
 \description{

@@ -51,6 +51,10 @@ app_translations <- tibble::tribble(
   "deselect-all-text", "Ningú", "None selected...", "Ninguno",
   "select-all-text", "Tots", "All selected...", "Todos",
   "count-selected-text-value", "{0} valors seleccionats (de {1})", "{0} values selected (of {1})", "{0} valores seleccionados (de {1})",
+  # progress bar
+  "progress_message", "Obtenció de dades...", "Obtaining data...", "Obteniendo datos...",
+  "progress_detail_initial", "Això pot trigar uns minuts depenent de la franja de dates i el nombre de geometries", "This can take a while depending on the date range and number of geometries", "Esto puede tardar unos minutos dependiendo del rango de fechas y el número de geometrías",
+  "progress_detail_raster", "Interpolant dades per ", "Interpolating data for ", "Interpolando datos para ",
   # # metric choices
   # 'mean', 'Mitjana', 'Mean', 'Media',
   # 'min', 'Minim', 'Minimum', 'Mínimo',
@@ -95,9 +99,6 @@ app_translations <- tibble::tribble(
   # "admin_natura_network_2000_info_plot_title", "Àrea seleccionada comparada amb les altres àreas al mapa", "Clicked natural area compared to other natural areas in map", "Área seleccionada comparada con las otras áreas en el mapa",
   # "admin_special_protection_natural_area_info_plot_title", "Àrea seleccionada comparada amb les altres àreas al mapa", "Clicked natural area compared to other natural areas in map", "Área seleccionada comparada con las otras áreas en el mapa",
   # "admin_natural_interest_area_info_plot_title", "Àrea seleccionada comparada amb les altres àreas al mapa", "Clicked natural area compared to other natural areas in map", "Área seleccionada comparada con las otras áreas en el mapa",
-  # # progress bar
-  # "progress_message", "Obtenció de dades...", "Obtaining data...", "Obteniendo datos...",
-  # "progress_detail_initial", "Escalant les dades", "Data scaling", "Escalando los datos",
   # # map
   # "stats_unavailable_title", "No hi ha dades", "No data available", "No hay datos disponibles",
   # "stats_unavailable", "El polígon actual conté menys de 3 parcel·les, no es calcularan estadístiques", "The current polygon contains less than 3 plots, no statistics will be calculated", "El polígono actual contiene menos de 3 gráficos, no se calcularán estadísticas",

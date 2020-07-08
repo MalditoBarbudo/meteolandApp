@@ -39,21 +39,43 @@ translate_app <- function(id, lang) {
 #'
 #' check and retrieve the data for the current mode
 current_mode_data <- function(
-  data_type, date_range = NULL, custom_polygon = NULL, meteolanddb, geometry_id
+  data_type, date_range = NULL, custom_polygon = NULL,
+  meteolanddb, geometry_id, progress_obj, lang
 ) {
 
   if (data_type == 'raster') {
 
+    datevec <- date_range[1]:date_range[2] %>%
+      as.Date(format = '%j', origin = as.Date('1970-01-01')) %>%
+      as.character()
+
+    progress_values <- ((80/length(datevec))*(1:length(datevec))) + 5
+
+    get_with_progress <- function(
+      date, progress_value, progress_obj, meteolanddb, lang
+    ) {
+      progress_obj$set(
+        detail = glue::glue(
+          "{translate_app('progress_detail_raster', lang())} {date}"
+        ),
+        value = progress_value
+      )
+
+      res <- meteolanddb$get_lowres_raster(date, 'raster')
+      return(res)
+    }
+
     get_lowres_raster_safe <- purrr::possibly(
-      .f = meteolanddb$get_lowres_raster,
+      .f = get_with_progress,
       otherwise = NA
     )
 
-    current_data <- date_range[1]:date_range[2] %>%
-      as.Date(format = '%j', origin = as.Date('1970-01-01')) %>%
-      as.character() %>%
+    current_data <- datevec %>%
       magrittr::set_names(., .) %>%
-      purrr::map(~ get_lowres_raster_safe(.x, 'raster')) %>%
+      purrr::map2(
+        .y = progress_values,
+        .f = ~ get_lowres_raster_safe(.x, .y, progress_obj, meteolanddb, lang())
+      ) %>%
       purrr::keep(.p = ~ !rlang::is_na(.x))
   }
 

@@ -112,6 +112,15 @@ mod_mainData <- function(
     eventExpr = apply_reactives$apply_button,
     valueExpr = {
 
+      # set a progress
+      progress <- shiny::Progress$new(session, min = 5, max = 100)
+      on.exit(progress$close())
+      progress$set(
+        message = translate_app("progress_message", lang()),
+        detail = translate_app("progress_detail_initial", lang()),
+        value = 5
+      )
+
       # browser()
       # inputs
       data_mode <- data_reactives$data_mode
@@ -122,7 +131,8 @@ mod_mainData <- function(
 
       if (data_mode == 'current') {
         main_data <- try(current_mode_data(
-          data_type, date_range, user_polygon, meteolanddb, 'geometry_id'
+          data_type, date_range, user_polygon,
+          meteolanddb, 'geometry_id', progress, lang
         ))
         ## TODO add sweet alert indicating data can not be retrieved
         # validate that main_data is not try-error
