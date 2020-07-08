@@ -11,7 +11,7 @@ app_translations <- tibble::tribble(
   'data_type', 'Tipus', 'Type', 'Tipo',
   "raster", "Ràster", "Raster", "Raster",
   'drawn_polygon', "Polígon dibuxat", "Drawn polygon", "Polígono dibujado",
-  "file", "Arxiu de polìgons", "Polygon file", "Archivo de polígonos",
+  "file", "Arxiu spaial", "Spatial file", "Archivo espacial",
   # date range
   'date_range', 'Rang de dates', 'Dates range', 'Rango de fechas',
   'date_separator', " a ", " to ", " a ",
@@ -52,9 +52,11 @@ app_translations <- tibble::tribble(
   "select-all-text", "Tots", "All selected...", "Todos",
   "count-selected-text-value", "{0} valors seleccionats (de {1})", "{0} values selected (of {1})", "{0} valores seleccionados (de {1})",
   # progress bar
-  "progress_message", "Obtenció de dades...", "Obtaining data...", "Obteniendo datos...",
+  "progress_message", "Interpolant dades...", "Interpolating data...", "Interpolating datos...",
   "progress_detail_initial", "Això pot trigar uns minuts depenent de la franja de dates i el nombre de geometries", "This can take a while depending on the date range and number of geometries", "Esto puede tardar unos minutos dependiendo del rango de fechas y el número de geometrías",
-  "progress_detail_raster", "Interpolant dades per ", "Interpolating data for ", "Interpolando datos para ",
+  "progress_message_raster", "Interpolant dades per ", "Interpolating data for ", "Interpolando datos para ",
+  "progress_message_drawn_polygon", "Interpolant dades per al polígon", "Interpolating data for the polygon", "Interpolando datos para el polígono",
+  "progress_message_file", "Interpolant dades per a l'arxiu", "Interpolating data for the file", "Interpolando datos para el archivo"
   # # metric choices
   # 'mean', 'Mitjana', 'Mean', 'Media',
   # 'min', 'Minim', 'Minimum', 'Mínimo',

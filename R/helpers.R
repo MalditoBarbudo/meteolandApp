@@ -55,8 +55,8 @@ current_mode_data <- function(
       date, progress_value, progress_obj, meteolanddb, lang
     ) {
       progress_obj$set(
-        detail = glue::glue(
-          "{translate_app('progress_detail_raster', lang())} {date}"
+        message = glue::glue(
+          "{translate_app('progress_message_raster', lang())} {date}"
         ),
         value = progress_value
       )
@@ -80,10 +80,23 @@ current_mode_data <- function(
   }
 
   if (data_type == 'file') {
+
+    progress_obj$set(
+      message = glue::glue(
+        "{translate_app('progress_message_file', lang())}"
+      ),
+      value = 45
+    )
+
+
     if (all(sf::st_is(custom_polygon, 'POINT'))) {
       pre_data <- meteolanddb$points_interpolation(
           custom_polygon, as.character(date_range), geometry_id
         )
+
+      progress_obj$set(
+        value = 80
+      )
 
       coords_df <- pre_data@coords %>%
         as.data.frame %>%
@@ -102,17 +115,36 @@ current_mode_data <- function(
         sf::st_as_sf(coords = c('coords.x1', 'coords.x2'), crs = 3043) %>%
         sf::st_transform(4326)
 
+      progress_obj$set(
+        value = 90
+      )
+
     }
 
     if (all(sf::st_is(custom_polygon, c('POLYGON', 'MULTIPOLYGON')))) {
       current_data <-
         meteolanddb$raster_interpolation(custom_polygon, as.character(date_range))
+
+      progress_obj$set(
+        value = 85
+      )
     }
   }
 
   if (data_type == 'drawn_polygon') {
+    progress_obj$set(
+      message = glue::glue(
+        "{translate_app('progress_message_drawn_polygon', lang())}"
+      ),
+      value = 45
+    )
+
     current_data <-
       meteolanddb$raster_interpolation(custom_polygon, as.character(date_range))
+
+    progress_obj$set(
+      value = 85
+    )
   }
 
   return(current_data)
