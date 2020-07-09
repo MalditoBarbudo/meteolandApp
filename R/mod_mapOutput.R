@@ -98,7 +98,7 @@ mod_map <- function(
         dplyr::filter(date == viz_date)
       # validation of the filtering
       shiny::validate(
-        shiny::need(nrow(data_res > 0), 'no data for this date')
+        shiny::need(nrow(data_res) > 0, 'no data for this date')
       )
     } else {
       data_res <- main_data %>%
@@ -165,6 +165,7 @@ mod_map <- function(
             transform = function(x) {sort(x, decreasing = TRUE)}
           )
         )
+
     } else {
 
       layer_data <- pre_map_data[[viz_color]]

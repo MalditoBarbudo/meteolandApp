@@ -42,8 +42,14 @@ mod_mainData <- function(
 
     data_type <- data_reactives$data_type
     path_to_file <- data_reactives$user_file_sel$datapath
+    file_name <- data_reactives$user_file_sel$name
 
-    # TODO check extensions and throw an exception if not zip or gpkg
+    # TODO sweet alert of bad file format
+    shiny::validate(
+      shiny::need(
+        stringr::str_detect(file_name, '.gpkg$|.zip$'), 'bad file format'
+      )
+    )
 
     # file
     if (data_type == 'file') {
