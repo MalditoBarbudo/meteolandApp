@@ -56,7 +56,14 @@ app_translations <- tibble::tribble(
   "progress_detail_initial", "Això pot trigar uns minuts depenent de la franja de dates i el nombre de geometries", "This can take a while depending on the date range and number of geometries", "Esto puede tardar unos minutos dependiendo del rango de fechas y el número de geometrías",
   "progress_message_raster", "Interpolant dades per ", "Interpolating data for ", "Interpolando datos para ",
   "progress_message_drawn_polygon", "Interpolant dades per al polígon", "Interpolating data for the polygon", "Interpolando datos para el polígono",
-  "progress_message_file", "Interpolant dades per a l'arxiu", "Interpolating data for the file", "Interpolando datos para el archivo"
+  "progress_message_file", "Interpolant dades per a l'arxiu", "Interpolating data for the file", "Interpolando datos para el archivo",
+  # sweet alerts
+  'sweet_alert_date_missing_title', "No hi ha dades per a aquesta data", "No data for this date.", "No hay datos para esta fecha",
+  'sweet_alert_date_missing_text', "Si us plau seleccioneu una altra data en el control de visualització", "Please select another one in the visualization control", "Por favor, seleccione otra fecha en el control de visualización",
+  'sweet_alert_fileext_title', "Format de fitxer no acceptat", "File format not accepted", "Formato de archivo no aceptado",
+  'sweet_alert_fileext_text', "L'arxiu carregat ha de ser un zip o gpkg", "Uploaded file must be a zip or a gpkg file", "El archivo cargado debe ser un zip o un gpkg",
+  'sweet_alert_nodata_title', "No s'ha pogut accedir a les dades.", "No data can be retrieved.", "No se ha podido acceder a los datos.",
+  'sweet_alert_nodata_text', "Això pot ser un problema de connexió amb la base de dades o que no es troben dades per a les dates proporcionades. Si us plau-ho a provar amb un altre rang de dates", "It can be a problem of the database connection or that no data can be retrieved for the dates provided. Please try with another set of dates.", "Esto puede ser un problema de conexión con la base de datos o que no se encuentran datos para las fechas proporcionadas. Por favor, inténtelo de nuevo con otro rango de fechas",
   # # metric choices
   # 'mean', 'Mitjana', 'Mean', 'Media',
   # 'min', 'Minim', 'Minimum', 'Mínimo',

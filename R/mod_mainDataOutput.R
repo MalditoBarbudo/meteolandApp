@@ -41,24 +41,32 @@ mod_mainData <- function(
     )
 
     data_type <- data_reactives$data_type
-    path_to_file <- data_reactives$user_file_sel$datapath
-    file_name <- data_reactives$user_file_sel$name
-
-    # TODO sweet alert of bad file format
-    shiny::validate(
-      shiny::need(
-        stringr::str_detect(file_name, '.gpkg$|.zip$'), 'bad file format'
-      )
-    )
 
     # file
     if (data_type == 'file') {
+      path_to_file <- data_reactives$user_file_sel$datapath
+      file_name <- data_reactives$user_file_sel$name
+
       # check if there is user file
       if (is.null(path_to_file)) {
         user_file_polygons <- NULL
       } else {
+        # alert and validation for the file extension
+        if (!stringr::str_detect(file_name, '.gpkg$|.zip$')) {
+          shinyWidgets::sendSweetAlert(
+            session = session,
+            title = translate_app('sweet_alert_fileext_title', lang()),
+            text = translate_app('sweet_alert_fileext_text', lang())
+          )
+          shiny::validate(
+            shiny::need(
+              stringr::str_detect(file_name, '.gpkg$|.zip$'), 'bad file format'
+            )
+          )
+        }
+
         # check if zip (shapefile) or gpkg to load the data
-        if (stringr::str_detect(path_to_file, 'zip')) {
+        if (stringr::str_detect(file_name, '.zip$')) {
           tmp_folder <- tempdir()
           utils::unzip(path_to_file, exdir = tmp_folder)
 
@@ -140,11 +148,21 @@ mod_mainData <- function(
           data_type, date_range, user_polygon,
           meteolanddb, 'geometry_id', progress, lang
         ))
-        ## TODO add sweet alert indicating data can not be retrieved
-        # validate that main_data is not try-error
-        shiny::validate(
-          shiny::need(class(main_data) != 'try-error', 'no data')
-        )
+
+        # browser()
+        # validate that main_data is not try-error or of length 0
+        if (class(main_data) == 'try-error' || length(main_data) < 1) {
+          shinyWidgets::sendSweetAlert(
+            session = session,
+            title = translate_app('sweet_alert_nodata_title', lang()),
+            text = translate_app('sweet_alert_nodata_text', lang())
+          )
+          shiny::validate(
+            shiny::need(class(main_data) != 'try-error', 'no data'),
+            shiny::need(length(main_data) > 0, 'no data')
+          )
+        }
+
       }
 
       if (data_mode == 'historic') {

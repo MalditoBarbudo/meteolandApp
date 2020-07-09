@@ -92,21 +92,37 @@ mod_map <- function(
     # viz_color <- viz_reactives$viz_color
     viz_date <- viz_reactives$viz_date
 
-    ## TODO Add sweet alert indicating the missing data
     if (is(main_data, 'sf')) {
       data_res <- main_data %>%
         dplyr::filter(date == viz_date)
+
       # validation of the filtering
-      shiny::validate(
-        shiny::need(nrow(data_res) > 0, 'no data for this date')
-      )
+      if (nrow(data_res) < 1) {
+        shinyWidgets::sendSweetAlert(
+          session = session,
+          title = translate_app('sweet_alert_date_missing_title', lang()),
+          text = translate_app('sweet_alert_date_missing_text', lang())
+        )
+
+        shiny::validate(
+          shiny::need(nrow(data_res) > 0, 'no data for this date')
+        )
+      }
+
     } else {
       data_res <- main_data %>%
         magrittr::extract2(viz_date)
       # validation of the filtering
-      shiny::validate(
-        shiny::need(data_res, 'no data for this date')
-      )
+      if (is.null(data_res)) {
+        shinyWidgets::sendSweetAlert(
+          session = session,
+          title = translate_app('sweet_alert_date_missing_title', lang()),
+          text = translate_app('sweet_alert_date_missing_text', lang())
+        )
+        shiny::validate(
+          shiny::need(data_res, 'no data for this date')
+        )
+      }
     }
     # return the map data
     return(data_res)
