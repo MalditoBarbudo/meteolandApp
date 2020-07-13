@@ -52,7 +52,7 @@ prepare_daily_grid_raster <- function(date_i, topo) {
 
   interpolation_cat_day <-
     lfcdata::meteoland()$points_interpolation(
-      user_dates = c(date_i, date_i), .topo = topo_meteoland
+      topo, user_dates = c(date_i, date_i), 'point_id', .topo = topo_meteoland
     )
 
   interpolation_data <-
@@ -127,7 +127,7 @@ daily_meto_data_update <- function(db_conn, path_cat, path_spa, overwrite) {
   # Now we are going to check if the table for the corresponding day exists in the
   # database. If not, we create it with the data. If it exists, we check overwrite
   # argument and if is TRUE we overwrite with the new data, if is FALSE we skip it
-  for (date_i in dates_vec[300:314]) {
+  for (date_i in dates_vec) {
     # table name
     table_name <- glue::glue("daily_meteo_{stringr::str_remove_all(date_i, '-')}")
     # check if table exists
@@ -211,7 +211,7 @@ daily_meto_data_update <- function(db_conn, path_cat, path_spa, overwrite) {
 
 
 # arguments
-overwrite <- FALSE
+overwrite <- TRUE
 db_conn <- pool::dbPool(
   RPostgres::Postgres(),
   dbname = 'meteoland', host = 'laboratoriforestal.creaf.uab.cat', port = 5432,
