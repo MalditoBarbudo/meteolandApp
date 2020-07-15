@@ -43,6 +43,8 @@ get_all_stations_daily_data <- function(cat, spa) {
 
 prepare_daily_grid_raster <- function(date_i, topo) {
 
+  message("spatialpointstopography creation ", Sys.time())
+
   topo_meteoland <- meteoland::SpatialPointsTopography(
     points = sf::as_Spatial(topo),
     elevation = topo$elevation,
@@ -50,11 +52,13 @@ prepare_daily_grid_raster <- function(date_i, topo) {
     aspect = topo$aspect
   )
 
+  message("Points interpolation ", Sys.time())
   interpolation_cat_day <-
     lfcdata::meteoland()$points_interpolation(
       topo, user_dates = c(date_i, date_i), 'point_id', .topo = topo_meteoland
     )
 
+  message("Interpolation data, grid specs ", Sys.time())
   interpolation_data <-
     list(data = meteoland::extractdates(interpolation_cat_day)@data)
   names(interpolation_data) <- interpolation_cat_day@dates
@@ -66,6 +70,7 @@ prepare_daily_grid_raster <- function(date_i, topo) {
     cells.dim = c(272, 264)
   )
 
+  message("SpatialPixelsMeteorology creation ", Sys.time())
   # we build a pixels object because then we can create the rasters easily
   res_pixels <- meteoland::SpatialPixelsMeteorology(
     points = interpolation_cat_day,
@@ -74,6 +79,7 @@ prepare_daily_grid_raster <- function(date_i, topo) {
     grid = grid_specs_manual
   )
 
+  message("raster creation ", Sys.time())
   res_stars <- as(res_pixels, 'stars')
   res_MeanTemperature <- as(res_stars['MeanTemperature'], 'Raster')
   res_MinTemperature <- as(res_stars['MinTemperature'], 'Raster')
@@ -118,7 +124,7 @@ daily_meto_data_update <- function(db_conn, path_cat, path_spa, overwrite) {
   # dates vector to check, they must be one year long ending in the day before of
   # the present day
   dates_vec <- as.Date(
-    (Sys.Date() - 365):Sys.Date(), # one year long
+    (Sys.Date() - 305):Sys.Date(), # one year long + 30 days buffer
     format = '%j', origin = as.Date('1970-01-01')
   ) %>%
     as.character()
@@ -181,9 +187,10 @@ daily_meto_data_update <- function(db_conn, path_cat, path_spa, overwrite) {
 
   # the last part is to remove previous dates from the database. We will make
   # a buffer of 30 days, this way we can be sure that previous days are really
-  # removed
+  # removed, but we left 30 days lag to be able to interpolate the first dates
+  # in points mode (because the 15 days buffer in point interpolation)
   dates_to_rem <- as.Date(
-    (Sys.Date() - 396):(Sys.Date() - 366), # one year long
+    (Sys.Date() - 426):(Sys.Date() - 396),
     format = '%j', origin = as.Date('1970-01-01')
   ) %>%
     as.character()
