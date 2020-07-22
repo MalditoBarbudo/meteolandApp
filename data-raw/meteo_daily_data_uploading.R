@@ -60,8 +60,12 @@ prepare_daily_grid_raster <- function(date_i, topo) {
 
   message("Interpolation data, grid specs ", Sys.time())
   interpolation_data <-
-    list(data = meteoland::extractdates(interpolation_cat_day)@data)
-  names(interpolation_data) <- interpolation_cat_day@dates
+    list(
+      data = meteoland::extractdates(
+        interpolation_cat_day, dates = as.Date(date_i)
+      )@data
+    )
+  names(interpolation_data) <- date_i
 
   # taken from the raster tipo in the topology creation script.
   grid_specs_manual <- sp::GridTopology(
@@ -75,7 +79,7 @@ prepare_daily_grid_raster <- function(date_i, topo) {
   res_pixels <- meteoland::SpatialPixelsMeteorology(
     points = interpolation_cat_day,
     data = interpolation_data,
-    dates = interpolation_cat_day@dates,
+    dates = as.Date(date_i),
     grid = grid_specs_manual
   )
 
@@ -173,7 +177,12 @@ daily_meto_data_update <- function(db_conn, path_cat, path_spa, overwrite) {
       )
 
       message("creating raster stack...")
-      res_stack <- prepare_daily_grid_raster(date_i, topo_1km)
+      res_stack <- try(prepare_daily_grid_raster(date_i, topo_1km))
+
+      if (is(res_stack, 'try-error')) {
+        warning("Not possible to create the raster for ", date_i, ". Skipping it...")
+        next()
+      }
 
       # Write Stack
       message("writing raster stack...")
