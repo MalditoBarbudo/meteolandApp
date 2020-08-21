@@ -10,6 +10,10 @@ library(lfcdata)
 topology_data <- stars::read_ncdf('data-raw/Topology_grid.nc')
 st_crs(topology_data) <-
   "+proj=utm +zone=31 +ellps=WGS84 +datum=WGS84 +units=m +towgs84=0,0,0"
+
+# st_crs(topology_data) <- st_crs(25831)
+
+
 topology_data <- st_warp(topology_data, crs = 3043)
 
 topology_elevation <- as(topology_data[1,,], "Raster")

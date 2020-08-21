@@ -137,6 +137,8 @@ mod_map <- function(
       shiny::need(viz_reactives$viz_color, 'no viz inputs yet')
     )
 
+    browser()
+
     # needed reactives
     pre_map_data <- map_data()
     # data_mode <- data_reactives$data_mode
