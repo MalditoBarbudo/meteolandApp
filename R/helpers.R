@@ -74,7 +74,9 @@ get_data <- function(
     )
 
     query_data <-
-      meteolanddb$raster_interpolation(custom_polygon, as.character(date_range))
+      meteolanddb$raster_interpolation(
+        custom_polygon, as.character(date_range), .progress_shiny = progress_obj
+      )
 
     progress_obj$set(
       value = 85
@@ -82,7 +84,8 @@ get_data <- function(
   }
 
   # file, here we have two options:
-  #   - POINTS, in this case the function to call is different for historical and current
+  #   - POINTS, in this case the function to call is different for historical
+  #     and current
   #   - POLYGONS, in this case is the same for current and historical
   if (data_type == 'file') {
     progress_obj$set(
@@ -94,7 +97,10 @@ get_data <- function(
 
     if (all(sf::st_is(custom_polygon, c('POLYGON', 'MULTIPOLYGON')))) {
       query_data <-
-        meteolanddb$raster_interpolation(custom_polygon, as.character(date_range))
+        meteolanddb$raster_interpolation(
+          custom_polygon, as.character(date_range),
+          .progress_shiny = progress_obj
+        )
     }
 
     if (all(sf::st_is(custom_polygon, 'POINT'))) {
