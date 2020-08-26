@@ -143,28 +143,8 @@ mod_mainData <- function(
       # custom polygons
       user_polygon <- custom_polygon()
 
-      data_function <- switch(
-        data_mode,
-        'current' = current_mode_data,
-        'historic' = historical_mode_data
-      )
-
-      # if (data_mode == 'current') {
-      #   main_data <- try(current_mode_data(
-      #     data_type, date_range, user_polygon,
-      #     meteolanddb, 'geometry_id', progress, lang
-      #   ))
-      # }
-      #
-      # if (data_mode == 'historic') {
-      #   main_data <- try(historical_mode_data(
-      #     data_type, date_range, user_polygon,
-      #     meteolanddb, 'geometry_id', progress, lang
-      #   ))
-      # }
-
-      main_data <- try(data_function(
-        data_type, date_range, user_polygon,
+      main_data <- try(get_data(
+        data_type, data_mode, date_range, user_polygon,
         meteolanddb, 'geometry_id', progress, lang
       ))
 

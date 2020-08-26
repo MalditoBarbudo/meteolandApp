@@ -35,62 +35,36 @@ translate_app <- function(id, lang) {
     )
 }
 
-#' current_mode function
+# get data function. As it results that the only difference between current and historic is
+# in the special case of file with points, lets do all in one function:
+#' get data function
 #'
-#' check and retrieve the data for the current mode
-current_mode_data <- function(
-  data_type, date_range = NULL, custom_polygon = NULL,
+#' check and retrieve the data for the selected mode and type
+get_data <- function(
+  data_type, data_mode, date_range = NULL, custom_polygon = NULL,
   meteolanddb, geometry_id, progress_obj, lang
 ) {
 
-  if (data_type == 'raster') {
+  # browser()
 
+  # raster type, works for both current and historic
+  if (data_type == 'raster') {
     datevec <- date_range[1]:date_range[2] %>%
       as.Date(format = '%j', origin = as.Date('1970-01-01')) %>%
       as.character()
 
     progress_values <- ((80/length(datevec))*(1:length(datevec))) + 5
 
-    current_data <- datevec %>%
+    query_data <- datevec %>%
       magrittr::set_names(., .) %>%
       purrr::map2(
         .y = progress_values,
-        .f = ~ get_lowres_raster_safe(.x, .y, progress_obj, meteolanddb, lang())
+        .f = ~ get_lowres_raster_safe(.x, .y, progress_obj, meteolanddb, lang)
       ) %>%
       purrr::keep(.p = ~ !rlang::is_na(.x))
   }
 
-  if (data_type == 'file') {
-
-    progress_obj$set(
-      message = glue::glue(
-        "{translate_app('progress_message_file', lang())}"
-      ),
-      value = 45
-    )
-
-    if (all(sf::st_is(custom_polygon, 'POINT'))) {
-      current_data <- meteolanddb$points_interpolation(
-          custom_polygon, as.character(date_range), geometry_id, .as_sf = TRUE
-        ) %>%
-        sf::st_transform(4326)
-
-      progress_obj$set(
-        value = 85
-      )
-
-    }
-
-    if (all(sf::st_is(custom_polygon, c('POLYGON', 'MULTIPOLYGON')))) {
-      current_data <-
-        meteolanddb$raster_interpolation(custom_polygon, as.character(date_range))
-
-      progress_obj$set(
-        value = 85
-      )
-    }
-  }
-
+  # drawn_polygon, works for both current and historic
   if (data_type == 'drawn_polygon') {
     progress_obj$set(
       message = glue::glue(
@@ -99,7 +73,7 @@ current_mode_data <- function(
       value = 45
     )
 
-    current_data <-
+    query_data <-
       meteolanddb$raster_interpolation(custom_polygon, as.character(date_range))
 
     progress_obj$set(
@@ -107,33 +81,9 @@ current_mode_data <- function(
     )
   }
 
-  return(current_data)
-}
-
-
-historical_mode_data <- function(
-  data_type, date_range = NULL, custom_polygon = NULL,
-  meteolanddb, geometry_id, progress_obj, lang
-) {
-
-  if (data_type == 'raster') {
-
-    datevec <- date_range[1]:date_range[2] %>%
-      as.Date(format = '%j', origin = as.Date('1970-01-01')) %>%
-      as.character()
-
-    progress_values <- ((80/length(datevec))*(1:length(datevec))) + 5
-
-    historical_data <- datevec %>%
-      magrittr::set_names(., .) %>%
-      purrr::map2(
-        .y = progress_values,
-        .f = ~ get_lowres_raster_safe(.x, .y, progress_obj, meteolanddb, lang())
-      ) %>%
-      purrr::keep(.p = ~ !rlang::is_na(.x))
-
-  }
-
+  # file, here we have two options:
+  #   - POINTS, in this case the function to call is different for historical and current
+  #   - POLYGONS, in this case is the same for current and historical
   if (data_type == 'file') {
     progress_obj$set(
       message = glue::glue(
@@ -142,52 +92,41 @@ historical_mode_data <- function(
       value = 45
     )
 
-    if (all(sf::st_is(custom_polygon, 'POINT'))) {
-      historical_data <- meteolanddb$historical_points_interpolation(
-        custom_polygon, as.character(date_range), geometry_id, .as_sf = TRUE
-      ) %>%
-        sf::st_transform(4326)
-
-      progress_obj$set(
-        value = 85
-      )
-
-    }
-
     if (all(sf::st_is(custom_polygon, c('POLYGON', 'MULTIPOLYGON')))) {
-      historical_data <-
+      query_data <-
         meteolanddb$raster_interpolation(custom_polygon, as.character(date_range))
-
-      progress_obj$set(
-        value = 85
-      )
     }
-  }
 
-  if (data_type == 'drawn_poly') {
-    progress_obj$set(
-      message = glue::glue(
-        "{translate_app('progress_message_drawn_polygon', lang())}"
-      ),
-      value = 45
-    )
+    if (all(sf::st_is(custom_polygon, 'POINT'))) {
+      if (data_mode == 'current') {
+        query_data <- meteolanddb$points_interpolation(
+          custom_polygon, as.character(date_range), geometry_id, .as_sf = TRUE
+        ) %>%
+          sf::st_transform(4326)
+      }
 
-    historical_data <-
-      meteolanddb$raster_interpolation(custom_polygon, as.character(date_range))
+      if (data_mode == 'historic') {
+        query_data <- meteolanddb$historical_points_interpolation(
+          custom_polygon, as.character(date_range), geometry_id
+        ) %>%
+          sf::st_transform(4326)
+      }
+    }
 
     progress_obj$set(
       value = 85
     )
+
   }
 
-  return(historical_data)
-
+  return(query_data)
 }
 
 # helpers for current and historical modes raster retrieving
 get_with_progress <- function(
   date, progress_value, progress_obj, meteolanddb, lang
 ) {
+
   progress_obj$set(
     message = glue::glue(
       "{translate_app('progress_message_raster', lang())} {date}"
