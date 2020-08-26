@@ -51,25 +51,6 @@ current_mode_data <- function(
 
     progress_values <- ((80/length(datevec))*(1:length(datevec))) + 5
 
-    get_with_progress <- function(
-      date, progress_value, progress_obj, meteolanddb, lang
-    ) {
-      progress_obj$set(
-        message = glue::glue(
-          "{translate_app('progress_message_raster', lang())} {date}"
-        ),
-        value = progress_value
-      )
-
-      res <- meteolanddb$get_lowres_raster(date, 'raster')
-      return(res)
-    }
-
-    get_lowres_raster_safe <- purrr::possibly(
-      .f = get_with_progress,
-      otherwise = NA
-    )
-
     current_data <- datevec %>%
       magrittr::set_names(., .) %>%
       purrr::map2(
@@ -97,27 +78,6 @@ current_mode_data <- function(
       progress_obj$set(
         value = 85
       )
-
-      # coords_df <- pre_data@coords %>%
-      #   as.data.frame %>%
-      #   dplyr::mutate(geometry_id = names(pre_data@data))
-      #
-      # meteo_df <- pre_data@data %>%
-      #   purrr::imap_dfr(
-      #     function(x, y) {
-      #       x %>%
-      #         dplyr::mutate(geometry_id = y, date = rownames(x))
-      #     }
-      #   )
-      #
-      # current_data <- meteo_df %>%
-      #   dplyr::left_join(coords_df, by = 'geometry_id') %>%
-      #   sf::st_as_sf(coords = c('coords.x1', 'coords.x2'), crs = 3043) %>%
-      #   sf::st_transform(4326)
-      #
-      # progress_obj$set(
-      #   value = 90
-      # )
 
     }
 
@@ -149,3 +109,97 @@ current_mode_data <- function(
 
   return(current_data)
 }
+
+
+historical_mode_data <- function(
+  data_type, date_range = NULL, custom_polygon = NULL,
+  meteolanddb, geometry_id, progress_obj, lang
+) {
+
+  if (data_type == 'raster') {
+
+    datevec <- date_range[1]:date_range[2] %>%
+      as.Date(format = '%j', origin = as.Date('1970-01-01')) %>%
+      as.character()
+
+    progress_values <- ((80/length(datevec))*(1:length(datevec))) + 5
+
+    historical_data <- datevec %>%
+      magrittr::set_names(., .) %>%
+      purrr::map2(
+        .y = progress_values,
+        .f = ~ get_lowres_raster_safe(.x, .y, progress_obj, meteolanddb, lang())
+      ) %>%
+      purrr::keep(.p = ~ !rlang::is_na(.x))
+
+  }
+
+  if (data_type == 'file') {
+    progress_obj$set(
+      message = glue::glue(
+        "{translate_app('progress_message_file', lang())}"
+      ),
+      value = 45
+    )
+
+    if (all(sf::st_is(custom_polygon, 'POINT'))) {
+      historical_data <- meteolanddb$historical_points_interpolation(
+        custom_polygon, as.character(date_range), geometry_id, .as_sf = TRUE
+      ) %>%
+        sf::st_transform(4326)
+
+      progress_obj$set(
+        value = 85
+      )
+
+    }
+
+    if (all(sf::st_is(custom_polygon, c('POLYGON', 'MULTIPOLYGON')))) {
+      historical_data <-
+        meteolanddb$raster_interpolation(custom_polygon, as.character(date_range))
+
+      progress_obj$set(
+        value = 85
+      )
+    }
+  }
+
+  if (data_type == 'drawn_poly') {
+    progress_obj$set(
+      message = glue::glue(
+        "{translate_app('progress_message_drawn_polygon', lang())}"
+      ),
+      value = 45
+    )
+
+    historical_data <-
+      meteolanddb$raster_interpolation(custom_polygon, as.character(date_range))
+
+    progress_obj$set(
+      value = 85
+    )
+  }
+
+  return(historical_data)
+
+}
+
+# helpers for current and historical modes raster retrieving
+get_with_progress <- function(
+  date, progress_value, progress_obj, meteolanddb, lang
+) {
+  progress_obj$set(
+    message = glue::glue(
+      "{translate_app('progress_message_raster', lang())} {date}"
+    ),
+    value = progress_value
+  )
+
+  res <- meteolanddb$get_lowres_raster(date, 'raster')
+  return(res)
+}
+
+get_lowres_raster_safe <- purrr::possibly(
+  .f = get_with_progress,
+  otherwise = NA
+)
