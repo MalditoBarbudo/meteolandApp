@@ -34,3 +34,6 @@ mod_mainData(
 \description{
 mod_mainData server function
 }
+\details{
+mod_mainData always return the data in the 3043 projection
+}

@@ -101,15 +101,13 @@ get_data <- function(
       if (data_mode == 'current') {
         query_data <- meteolanddb$points_interpolation(
           custom_polygon, as.character(date_range), geometry_id, .as_sf = TRUE
-        ) %>%
-          sf::st_transform(4326)
+        )
       }
 
       if (data_mode == 'historic') {
         query_data <- meteolanddb$historical_points_interpolation(
           custom_polygon, as.character(date_range), geometry_id
-        ) %>%
-          sf::st_transform(4326)
+        )
       }
     }
 

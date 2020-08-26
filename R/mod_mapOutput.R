@@ -15,6 +15,9 @@ mod_mapOutput <- function(id) {
 }
 
 #' mod_map server function
+#'
+#' @details mod_map is in charge of setting the points/polygons (sf) and rasters
+#'   in the leaflet projection.
 #' @param input internal
 #' @param output internal
 #' @param session internal
@@ -79,6 +82,8 @@ mod_map <- function(
   ## reactives ####
   map_data <- shiny::reactive({
 
+    # map_data reactive is in cahrge to transform to the leaflet projection
+
     shiny::validate(
       shiny::need(main_data_reactives$main_data, 'no data yet'),
       shiny::need(viz_reactives$viz_date, 'no viz inputs yet')
@@ -94,6 +99,7 @@ mod_map <- function(
 
     if (is(main_data, 'sf')) {
       data_res <- main_data %>%
+        sf::st_transform(crs = 4326) %>%
         dplyr::filter(date == viz_date)
 
       # validation of the filtering
@@ -123,6 +129,9 @@ mod_map <- function(
           shiny::need(data_res, 'no data for this date')
         )
       }
+
+      data_res <- data_res %>%
+        leaflet::projectRasterForLeaflet('bilinear')
     }
     # return the map data
     return(data_res)
@@ -201,7 +210,7 @@ mod_map <- function(
         leaflet::clearGroup('plots') %>%
         leaflet::clearGroup('raster') %>%
         leaflet::addRasterImage(
-          layer_data, project = TRUE, colors = color_palette, opacity = 0.8,
+          layer_data, project = FALSE, colors = color_palette, opacity = 0.8,
           group = 'raster', layerId = 'raster'
         ) %>%
         leaflet::addLegend(

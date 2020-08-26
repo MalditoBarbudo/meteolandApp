@@ -12,6 +12,8 @@ mod_mainDataOutput <- function(id) {
 
 #' @title mod_mainData server function
 #'
+#' @details mod_mainData always return the data in the 3043 projection
+#'
 #' @param input internal
 #' @param output internal
 #' @param session internal

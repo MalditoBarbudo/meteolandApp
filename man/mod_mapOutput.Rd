@@ -33,3 +33,7 @@ mod_map(
 \description{
 Shiny module to generate the map
 }
+\details{
+mod_map is in charge of setting the points/polygons (sf) and rasters
+  in the leaflet projection.
+}
