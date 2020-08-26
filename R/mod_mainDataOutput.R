@@ -143,31 +143,42 @@ mod_mainData <- function(
       # custom polygons
       user_polygon <- custom_polygon()
 
-      if (data_mode == 'current') {
-        main_data <- try(current_mode_data(
-          data_type, date_range, user_polygon,
-          meteolanddb, 'geometry_id', progress, lang
-        ))
+      data_function <- switch(
+        data_mode,
+        'current' = current_mode_data,
+        'historic' = historical_mode_data
+      )
 
-        # browser()
-        # validate that main_data is not try-error or of length 0
-        if (class(main_data) == 'try-error' || length(main_data) < 1) {
-          shinyWidgets::sendSweetAlert(
-            session = session,
-            title = translate_app('sweet_alert_nodata_title', lang()),
-            text = translate_app('sweet_alert_nodata_text', lang())
-          )
-          shiny::validate(
-            shiny::need(class(main_data) != 'try-error', 'no data'),
-            shiny::need(length(main_data) > 0, 'no data')
-          )
-        }
+      # if (data_mode == 'current') {
+      #   main_data <- try(current_mode_data(
+      #     data_type, date_range, user_polygon,
+      #     meteolanddb, 'geometry_id', progress, lang
+      #   ))
+      # }
+      #
+      # if (data_mode == 'historic') {
+      #   main_data <- try(historical_mode_data(
+      #     data_type, date_range, user_polygon,
+      #     meteolanddb, 'geometry_id', progress, lang
+      #   ))
+      # }
 
-      }
+      main_data <- try(data_function(
+        data_type, date_range, user_polygon,
+        meteolanddb, 'geometry_id', progress, lang
+      ))
 
-      if (data_mode == 'historic') {
-        main_data <- NULL
-        ## TODO Complete when historic method is implemented
+      # validate that main_data is not try-error or of length 0
+      if (class(main_data) == 'try-error' || length(main_data) < 1) {
+        shinyWidgets::sendSweetAlert(
+          session = session,
+          title = translate_app('sweet_alert_nodata_title', lang()),
+          text = translate_app('sweet_alert_nodata_text', lang())
+        )
+        shiny::validate(
+          shiny::need(class(main_data) != 'try-error', 'no data'),
+          shiny::need(length(main_data) > 0, 'no data')
+        )
       }
 
       return(main_data)
