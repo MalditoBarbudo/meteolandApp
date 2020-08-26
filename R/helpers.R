@@ -88,36 +88,36 @@ current_mode_data <- function(
       value = 45
     )
 
-
     if (all(sf::st_is(custom_polygon, 'POINT'))) {
-      pre_data <- meteolanddb$points_interpolation(
-          custom_polygon, as.character(date_range), geometry_id
-        )
-
-      progress_obj$set(
-        value = 80
-      )
-
-      coords_df <- pre_data@coords %>%
-        as.data.frame %>%
-        dplyr::mutate(geometry_id = names(pre_data@data))
-
-      meteo_df <- pre_data@data %>%
-        purrr::imap_dfr(
-          function(x, y) {
-            x %>%
-              dplyr::mutate(geometry_id = y, date = rownames(x))
-          }
-        )
-
-      current_data <- meteo_df %>%
-        dplyr::left_join(coords_df, by = 'geometry_id') %>%
-        sf::st_as_sf(coords = c('coords.x1', 'coords.x2'), crs = 3043) %>%
+      current_data <- meteolanddb$points_interpolation(
+          custom_polygon, as.character(date_range), geometry_id, .as_sf = TRUE
+        ) %>%
         sf::st_transform(4326)
 
       progress_obj$set(
-        value = 90
+        value = 85
       )
+
+      # coords_df <- pre_data@coords %>%
+      #   as.data.frame %>%
+      #   dplyr::mutate(geometry_id = names(pre_data@data))
+      #
+      # meteo_df <- pre_data@data %>%
+      #   purrr::imap_dfr(
+      #     function(x, y) {
+      #       x %>%
+      #         dplyr::mutate(geometry_id = y, date = rownames(x))
+      #     }
+      #   )
+      #
+      # current_data <- meteo_df %>%
+      #   dplyr::left_join(coords_df, by = 'geometry_id') %>%
+      #   sf::st_as_sf(coords = c('coords.x1', 'coords.x2'), crs = 3043) %>%
+      #   sf::st_transform(4326)
+      #
+      # progress_obj$set(
+      #   value = 90
+      # )
 
     }
 

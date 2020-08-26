@@ -55,7 +55,7 @@ prepare_daily_grid_raster <- function(date_i, topo) {
   message("Points interpolation ", Sys.time())
   interpolation_cat_day <-
     lfcdata::meteoland()$points_interpolation(
-      topo, user_dates = c(date_i, date_i), 'point_id', .topo = topo_meteoland
+      topo, user_dates = c(date_i, date_i), 'point_id', .topo = topo_meteoland, .as_sf = FALSE
     )
 
   message("Interpolation data, grid specs ", Sys.time())
