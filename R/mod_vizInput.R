@@ -37,7 +37,8 @@ mod_viz <- function(
 
     # validation
     shiny::validate(
-      shiny::need(data_reactives$data_mode, 'no inputs yet')
+      shiny::need(data_reactives$data_mode, 'no inputs yet'),
+      shiny::need(data_reactives$date_range, 'no dates yet')
     )
 
     # ns

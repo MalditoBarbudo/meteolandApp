@@ -51,7 +51,7 @@ mod_data <- function(
     dates_lang <- switch(
       lang(),
       'spa' = 'es',
-      'cat' = 'ca',
+      'cat' = 'es',
       'eng' = 'en'
     )
 
@@ -119,13 +119,23 @@ mod_data <- function(
       shiny::fluidRow(
         shiny::column(
           width = 6,
-          shiny::dateRangeInput(
+          # shiny::dateRangeInput(
+          #   ns('date_range'),
+          #   label = translate_app('date_range', lang()),
+          #   start = Sys.Date()-1, end = Sys.Date()-1,
+          #   min = Sys.Date()-365, max = Sys.Date()-1,
+          #   weekstart = 1, language = dates_lang,
+          #   separator = translate_app('date_separator', lang())
+          # )
+          shinyWidgets::airDatepickerInput(
             ns('date_range'),
-            label = translate_app('date_range', lang()),
-            start = Sys.Date()-1, end = Sys.Date()-1,
-            min = Sys.Date()-366, max = Sys.Date()-1,
-            weekstart = 1, language = dates_lang,
-            separator = translate_app('date_separator', lang())
+            label = translate_app('date_range', lang()), range = TRUE,
+            firstDay = 1,
+            minDate = Sys.Date()-365, maxDate = Sys.Date()-1,
+            value = c(Sys.Date()-2, Sys.Date()-1),
+            startView = Sys.Date()-1, position = 'top right', update_on = 'close',
+            addon = 'none', separator = translate_app('date_separator', lang()),
+            language = dates_lang
           )
         )
       ) # end of dates row
@@ -158,6 +168,48 @@ mod_data <- function(
       shinyjs::show('file_upload_panel')
     } else {
       shinyjs::hide('file_upload_panel')
+    }
+  })
+
+  # observer to update the date range input when in historic
+  shiny::observe({
+    shiny::validate(
+      shiny::need(input$data_mode, 'no mode')
+    )
+
+    data_mode <- input$data_mode
+
+    if (data_mode == 'current') {
+      shinyWidgets::updateAirDateInput(
+        session, 'date_range',
+        label = translate_app('date_range', lang()),
+        value = c(Sys.Date()-2, Sys.Date()-1),
+        options = list(
+          minDate = Sys.Date()-365, maxDate = Sys.Date()-1
+        )
+      )
+      # shinyjs::reset('date_range')
+      # shiny::updateDateRangeInput(
+      #   session, 'date_range',
+      #   label = translate_app('date_range', lang()),
+      #   start = Sys.Date()-1, end = Sys.Date()-1,
+      #   min = Sys.Date()-365, max = Sys.Date()-1
+      # )
+    } else {
+      shinyWidgets::updateAirDateInput(
+        session, 'date_range',
+        label = translate_app('date_range', lang()),
+        value = c('1976-01-01', '1976-01-02'),
+        options = list(
+          minDate = '1976-01-01', maxDate = Sys.Date()-366
+        )
+      )
+      # shiny::updateDateRangeInput(
+      #   session, 'date_range',
+      #   label = translate_app('date_range', lang()),
+      #   start = '1976-01-01', end = '1976-01-01',
+      #   min = '1976-01-01', max = Sys.Date()-366
+      # )
     }
   })
 
