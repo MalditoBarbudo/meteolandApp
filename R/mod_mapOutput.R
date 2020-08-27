@@ -93,9 +93,14 @@ mod_map <- function(
     main_data <- main_data_reactives$main_data
     # data_mode <- data_reactives$data_mode
     # data_type <- data_reactives$data_type
-    # date_range <- data_reactives$date_range
+    date_range <- data_reactives$date_range
     # viz_color <- viz_reactives$viz_color
     viz_date <- viz_reactives$viz_date
+
+    # here we validate that viz_date is in the correct mode
+    shiny::validate(
+      shiny::need(viz_date_mode_check(date_range, main_data), 'incorrect data mode')
+    )
 
     if (is(main_data, 'sf')) {
       data_res <- main_data %>%

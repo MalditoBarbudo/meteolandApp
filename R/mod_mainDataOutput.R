@@ -137,7 +137,6 @@ mod_mainData <- function(
         value = 5
       )
 
-      # browser()
       # inputs
       data_mode <- data_reactives$data_mode
       data_type <- data_reactives$data_type
