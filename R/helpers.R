@@ -42,13 +42,20 @@ translate_app <- function(id, lang) {
 #' check and retrieve the data for the selected mode and type
 get_data <- function(
   data_type, data_mode, date_range = NULL, custom_polygon = NULL,
-  meteolanddb, geometry_id, progress_obj, lang
+  meteolanddb, geometry_id, progress_obj, lang, session
 ) {
 
   # browser()
 
   # raster type, works for both current and historic
   if (data_type == 'raster') {
+
+    shinyWidgets::sendSweetAlert(
+      session = session,
+      title = translate_app('sweet_alert_res1km_title', lang()),
+      text = translate_app('sweet_alert_res1km_text', lang())
+    )
+
     datevec <- date_range[1]:date_range[2] %>%
       as.Date(format = '%j', origin = as.Date('1970-01-01')) %>%
       as.character()
@@ -66,6 +73,12 @@ get_data <- function(
 
   # drawn_polygon, works for both current and historic
   if (data_type == 'drawn_polygon') {
+    shinyWidgets::sendSweetAlert(
+      session = session,
+      title = translate_app('sweet_alert_res1km_title', lang()),
+      text = translate_app('sweet_alert_res1km_text', lang())
+    )
+
     progress_obj$set(
       message = glue::glue(
         "{translate_app('progress_message_drawn_polygon', lang())}"
@@ -96,6 +109,12 @@ get_data <- function(
     )
 
     if (all(sf::st_is(custom_polygon, c('POLYGON', 'MULTIPOLYGON')))) {
+      shinyWidgets::sendSweetAlert(
+        session = session,
+        title = translate_app('sweet_alert_res1km_title', lang()),
+        text = translate_app('sweet_alert_res1km_text', lang())
+      )
+
       query_data <-
         meteolanddb$raster_interpolation(
           custom_polygon, as.character(date_range),
@@ -105,12 +124,23 @@ get_data <- function(
 
     if (all(sf::st_is(custom_polygon, 'POINT'))) {
       if (data_mode == 'current') {
+        shinyWidgets::sendSweetAlert(
+          session = session,
+          title = translate_app('sweet_alert_res30m_title', lang()),
+          text = translate_app('sweet_alert_res30m_text', lang())
+        )
         query_data <- meteolanddb$points_interpolation(
           custom_polygon, as.character(date_range), geometry_id, .as_sf = TRUE
         )
       }
 
       if (data_mode == 'historic') {
+        shinyWidgets::sendSweetAlert(
+          session = session,
+          title = translate_app('sweet_alert_res1km_title', lang()),
+          text = translate_app('sweet_alert_res1km_text', lang())
+        )
+
         query_data <- meteolanddb$historical_points_interpolation(
           custom_polygon, as.character(date_range), geometry_id
         )

@@ -12,7 +12,8 @@ get_data(
   meteolanddb,
   geometry_id,
   progress_obj,
-  lang
+  lang,
+  session
 )
 }
 \description{

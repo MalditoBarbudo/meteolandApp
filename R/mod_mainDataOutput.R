@@ -121,7 +121,7 @@ mod_mainData <- function(
     }
   })
 
-  ## main data.
+  ## main data ####
   # Let's get the data inputs, and depending on mode and type lets use the
   # metelanddb method (points or raster).
   main_data <- shiny::eventReactive(
@@ -146,7 +146,7 @@ mod_mainData <- function(
 
       main_data <- try(get_data(
         data_type, data_mode, date_range, user_polygon,
-        meteolanddb, 'geometry_id', progress, lang
+        meteolanddb, 'geometry_id', progress, lang, session
       ))
 
       # validate that main_data is not try-error or of length 0
