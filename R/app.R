@@ -105,7 +105,13 @@ meteoland_app <- function() {
                 value = 'data_inputs_panel',
                 mod_dataInput('mod_dataInput'),
                 mod_vizInput('mod_vizInput')
-              ) # end of data panel
+              ), # end of data panel
+              # save panel
+              shiny::tabPanel(
+                title = mod_tab_translateOutput('save_translation'),
+                value = 'save_panel',
+                mod_saveOutput('mod_saveOutput')
+              )
             ) # end of tabsetPanel
           ), # end of sidebarPanel
           mainPanel = shiny::mainPanel(
@@ -165,6 +171,13 @@ meteoland_app <- function() {
       data_reactives, viz_reactives, main_data_reactives,
       lang
     )
+    # save
+    # save
+    shiny::callModule(
+      mod_save, 'mod_saveOutput',
+      main_data_reactives, data_reactives,
+      lang
+    )
 
     ## tab translations ####
     shiny::callModule(
@@ -178,6 +191,10 @@ meteoland_app <- function() {
     shiny::callModule(
       mod_tab_translate, 'map_translation',
       'map_translation', lang
+    )
+    shiny::callModule(
+      mod_tab_translate, 'save_translation',
+      'save_translation', lang
     )
 
 

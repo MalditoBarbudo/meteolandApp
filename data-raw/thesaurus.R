@@ -68,6 +68,10 @@ app_translations <- tibble::tribble(
   'sweet_alert_res1km_text', '1 km', '1 km', '1 km',
   'sweet_alert_res30m_title', 'Resolució de la interpolació', 'Interpolation resolution', 'Resolución de la interpolación',
   'sweet_alert_res30m_text', '30 m', '30 m', '30 m',
+  # save
+  'save_map_btn', "Guarda el map", "Save the map", "Guarda el mapa",
+  'save_remarks', 'Tots els arxius espacials generats es troben en el sistema de referència de coordenades EPGS:3043:', 'All generated spatial files are in the EPGS: 3043 coordinate reference system.', 'Todos los archivos espaciales generados se encuentran en el sistema de referencia de coordenadas EPGS:3043:',
+  'save_remarks_2', 'Els rásteres es guardaran en format GeoTiff (extensió .tif). Si la consulta es realitza per punts, es guardaran en format GeoPackage (extensió .gpkg).', 'The rasters will be saved in GeoTiff format (.tif extension). If the query is made for points, they will be saved in GeoPackage format (extension .gpkg).', 'Los rásteres se guardarán en formato GeoTiff (extensión .tif). Si la consulta se realiza para puntos, se guardarán en formato GeoPackage (extensión .gpkg).',
   # # metric choices
   # 'mean', 'Mitjana', 'Mean', 'Media',
   # 'min', 'Minim', 'Minimum', 'Mínimo',
@@ -91,12 +95,6 @@ app_translations <- tibble::tribble(
   # "pal_normal", "Normal", "Normal", "Normal",
   # "viz_pal_config_input", "Configurar paleta", "Config palette", "Configurar paleta",
   # "viz_pal_reverse_input", "Invertir la paleta?", "Reverse the palette?", "¿Invertir la paleta?",
-  # # save
-  # 'save_map_btn', "Guarda el map", "Save the map", "Guarda el mapa",
-  # 'save_table_btn', "Guarda la taula", "Save the table", "Guarda la tabla",
-  # "csv", "Text (csv)", "Text (csv)", "Texto (csv)",
-  # "xlsx", "MS Excel (xlsx)", "MS Excel (xlsx)", "MS Excel (xlsx)",
-  # "table_output_options_input", "Selecciona el format", "Choose the output format", "Selecciona el formato",
   # # help module
   # "glossary_var_input", "Selecciona el indicador a descriure", "Choose the indicator to describe", "Selecciona el indicador a describir",
   # "link_to_tutorials_text", "Per obtenir més informació, aneu al tutorial de l'aplicació aquí", "For more info, please go to the application tutorial here", "Para obtener más información, vaya al tutorial de la aplicación aquí.",
