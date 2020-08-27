@@ -72,18 +72,18 @@ meteoland_app <- function() {
         title = mod_tab_translateOutput('main_tab_translation'),
 
         ########################################################### debug ####
-        shiny::absolutePanel(
-          id = 'debug', class = 'panel panel-default', fixed = TRUE,
-          draggable = TRUE, width = 640, height = 'auto',
-          # top = 100, left = 100, rigth = 'auto', bottom = 'auto',
-          top = 'auto', left = 10, right = 'auto', bottom = 15,
-          # top = 60, left = 'auto', right = 50, bottom = 'auto',
-
-          shiny::h3("DEBUG"),
-          shiny::textOutput('debug1'),
-          shiny::textOutput('debug2'),
-          shiny::textOutput('debug3')
-        ),
+        # shiny::absolutePanel(
+        #   id = 'debug', class = 'panel panel-default', fixed = TRUE,
+        #   draggable = TRUE, width = 640, height = 'auto',
+        #   # top = 100, left = 100, rigth = 'auto', bottom = 'auto',
+        #   top = 'auto', left = 10, right = 'auto', bottom = 15,
+        #   # top = 60, left = 'auto', right = 50, bottom = 'auto',
+        #
+        #   shiny::h3("DEBUG"),
+        #   shiny::textOutput('debug1'),
+        #   shiny::textOutput('debug2'),
+        #   shiny::textOutput('debug3')
+        # ),
         ####################################################### end debug ####
 
         # Sidebar layout
@@ -182,12 +182,12 @@ meteoland_app <- function() {
 
 
     ## debug #####
-    output$debug1 <- shiny::renderPrint({
-      main_data_reactives$main_data
-    })
-    output$debug2 <- shiny::renderPrint({
-      main_data_reactives$custom_polygon
-    })
+    # output$debug1 <- shiny::renderPrint({
+    #   main_data_reactives$main_data
+    # })
+    # output$debug2 <- shiny::renderPrint({
+    #   main_data_reactives$custom_polygon
+    # })
     # output$debug3 <- shiny::renderPrint({
     #   data_reactives$date_range
     # })
