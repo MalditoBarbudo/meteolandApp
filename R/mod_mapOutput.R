@@ -49,7 +49,7 @@ mod_map <- function(
 
     # we need data, and we need color var at least
     leaflet::leaflet() %>%
-      leaflet::setView(1.1, 41.70, zoom = 8) %>%
+      leaflet::setView(2.36, 41.70, zoom = 8) %>%
       leaflet::addProviderTiles(
         leaflet::providers$Esri.WorldShadedRelief, group = 'Relief'
       ) %>%
@@ -238,6 +238,7 @@ mod_map <- function(
     map_reactives$meteoland_map_shape_click <- input$meteoland_map_shape_click
     map_reactives$meteoland_map_draw_all_features <-
       input$meteoland_map_draw_all_features
+    # map_reactives$meteoland_map_center <- input$meteoland_map_center
   })
   return(map_reactives)
 }

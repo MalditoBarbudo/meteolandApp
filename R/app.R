@@ -200,7 +200,7 @@ meteoland_app <- function() {
 
     ## debug #####
     # output$debug1 <- shiny::renderPrint({
-    #   main_data_reactives$main_data
+    #   map_reactives$meteoland_map_center
     # })
     # output$debug2 <- shiny::renderPrint({
     #   main_data_reactives$custom_polygon
