@@ -3,6 +3,8 @@
 export(meteoland_app)
 export(mod_applyButton)
 export(mod_applyButtonInput)
+export(mod_cv)
+export(mod_cvOutput)
 export(mod_data)
 export(mod_dataInput)
 export(mod_mainData)

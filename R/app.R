@@ -129,7 +129,12 @@ meteoland_app <- function() {
 
         ) # end of sidebarLayout
 
-      ) # end of tabPanel
+      ), # end of main tabPanel
+      shiny::tabPanel(
+        title = mod_tab_translateOutput('cv_translation'),
+        value = 'cv_panel',
+        mod_cvOutput('mod_cvOutput')
+      ) # end of cv tabPanel
 
     ) # end of navbarPage
 
@@ -172,11 +177,15 @@ meteoland_app <- function() {
       lang
     )
     # save
-    # save
     shiny::callModule(
       mod_save, 'mod_saveOutput',
       main_data_reactives, data_reactives,
       lang
+    )
+    # cv module
+    shiny::callModule(
+      mod_cv, 'mod_cvOutput',
+      meteolanddb, lang
     )
 
     ## tab translations ####
@@ -195,6 +204,10 @@ meteoland_app <- function() {
     shiny::callModule(
       mod_tab_translate, 'save_translation',
       'save_translation', lang
+    )
+    shiny::callModule(
+      mod_tab_translate, 'cv_translation',
+      'cv_translation', lang
     )
 
 

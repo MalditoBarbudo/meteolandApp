@@ -31,6 +31,7 @@ app_translations <- tibble::tribble(
   "help_translation", "Ajuda", "Help", "Ayuda",
   "map_translation", "Mapa", "Map", "Mapa",
   "table_translation", "Taula", "Table", "Tabla",
+  "cv_translation", "Validacions creuades", "Cross-validations", "Validaciones cruzadas",
   # apply module
   "apply", "Aplicar", "Apply", "Aplicar",
   # variables
@@ -72,6 +73,30 @@ app_translations <- tibble::tribble(
   'save_map_btn', "Guarda el map", "Save the map", "Guarda el mapa",
   'save_remarks', 'Tots els arxius espacials generats es troben en el sistema de referència de coordenades EPGS:3043:', 'All generated spatial files are in the EPGS: 3043 coordinate reference system.', 'Todos los archivos espaciales generados se encuentran en el sistema de referencia de coordenadas EPGS:3043:',
   'save_remarks_2', 'Els rásteres es guardaran en format GeoTiff (extensió .tif). Si la consulta es realitza per punts, es guardaran en format GeoPackage (extensió .gpkg).', 'The rasters will be saved in GeoTiff format (.tif extension). If the query is made for points, they will be saved in GeoPackage format (extension .gpkg).', 'Los rásteres se guardarán en formato GeoTiff (extensión .tif). Si la consulta se realiza para puntos, se guardarán en formato GeoPackage (extensión .gpkg).',
+  # cv module
+  'cv_intro', "Aquests són els resultats de la validació creuada per al procés d’interpolació de dades meteorològiques diàries. La validació es va fer fent prediccions sobre la ubicació de cada estació metereològica després d’excloure les dades del model. La validació creuada es va dur a terme per a cada any durant el període 1976-2017 per separat.", "These are the cross-validation results for the process of interpolating daily meteorological data. Validation was done by making predictions for the location of each metereological station after excluding its data from the model. Cross-validation was conducted for each year in the 1976-2017 period separately.", "Estos son los resultados de la validación cruzada para el proceso de interpolación de datos meteorológicos diarios. La validación se realizó haciendo predicciones para la ubicación de cada estación meteorológica después de excluir sus datos del modelo. La validación cruzada se realizó para cada año en el período 1976-2017 por separado.",
+  'TemperatureRange', "Rang de temperatura [ºC]", "Temperature range [ºC]", "Rango de temperatura [ºC]",
+  "RelativeHumidity", "Humitat relativa [%]", "Relative Humidity [%]", "Humedad relativa [%]",
+  "Station.rainfall", "Precipitaciò per estaciò", "Rainfall by station", "Precipitación por estación",
+  "Station.rainfall.relative", "Precipitaciò per estaciò relativa", "Rainfall by station (relative)", "Precipitación por estación relativa",
+  "Station.precdays", "Dies amb precipitació per estació", "Days with rainfall by station", "Dias con precipitación por estación",
+  "Station.precdays.relative", "Dies amb precipitació per estació relativo", "Days with rainfall by station (relative)", "Dias con precipitación por estación relativo",
+  "Date.rainfall", "Precipitaciò per data", "Rainfall by date", "Precipitación por fecha",
+  "Date.rainfall.relative", "Precipitaciò per data relativa", "Rainfall by date (relative)", "Precipitación por fecha relativa",
+  "Date.precstations", "Dies amb precipitació per data", "Days with rainfall by date", "Dias con precipitación por fecha",
+  "Date.precstations.relative", "Dies amb precipitació per data relativo", "Days with rainfall by date (relative)", "Dias con precipitación por fecha relativo",
+  "variable", "Variable", "Variable", "Variable",
+  "year", "Any", "Year", "Año",
+  "n", "n", "n", "n",
+  "r", "r", "r", "r",
+  "MAE", "MAE", "MAE", "MAE",
+  "sd.station.MAE", "MAE sd per estaciò", "MAE sd by station", "MAE sd por estación",
+  "sd.dates.MAE", "MAE sd per data", "MAE sd by date", "MAE sd por fecha",
+  "Bias", "Bias", "Bias", "Bias",
+  "sd.station.Bias", "Bias sd per estaciò", "Bias sd by station", "Bias sd por estación",
+  "sd.dates.Bias", "Bias sd per data", "Bias sd by date", "Bias sd por fecha",
+
+
   # # metric choices
   # 'mean', 'Mitjana', 'Mean', 'Media',
   # 'min', 'Minim', 'Minimum', 'Mínimo',

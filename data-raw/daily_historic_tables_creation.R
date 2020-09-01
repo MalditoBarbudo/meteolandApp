@@ -10,9 +10,10 @@ db_conn <- pool::dbPool(
   password = rstudioapi::askForPassword(), user = 'ifn'
 )
 
-# year_1976 <- stars::read_ncdf('data-raw/1976_historical_netCDF.nc')
-
+# stars::read_stars(file_year, proxy = TRUE, sub = 3:13)
+pryr::mem_used()
 year_1976 <- stars::read_stars('data-raw/1976_historical_netCDF.nc', proxy = TRUE)
+pryr::mem_used()
 
 for (day in 1:stars::st_dimensions(year_1976)$time$to %>% as.numeric()) {
 
@@ -23,6 +24,26 @@ for (day in 1:stars::st_dimensions(year_1976)$time$to %>% as.numeric()) {
     stringr::str_remove_all('-')
   table_name <- glue::glue("daily_historic_raster_interpolated_{date_name}")
   message(glue::glue("Creating raster table: {table_name}"))
+
+  pryr::mem_used()
+  res_stack <- year_1976[,,,day, drop = TRUE] %>%
+    st_as_stars() %>%
+    merge() %>%
+    as('Raster') %>%
+    magrittr::set_names(names(year_1976))
+  pryr::mem_used()
+  pryr::object_size(res_stack)
+
+
+
+
+
+  # stars_object %>%
+  #   # merge attributes (variables) as a dimension. This allows the
+  #   # direct conversion from stars to rasterBrick
+  #   merge() %>%
+  #   as('Raster') %>%
+  #   magrittr::set_names(names(stars_object))
 
   res_MeanTemperature <- as(year_1976['MeanTemperature',,,day, drop = TRUE], 'Raster')
   raster::projection(res_MeanTemperature) <- crs('+proj=utm +zone=31 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs')
