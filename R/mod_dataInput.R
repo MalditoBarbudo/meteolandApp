@@ -67,6 +67,12 @@ mod_data <- function(
             label = translate_app('data_mode', lang()),
             choices = data_mode_choices,
             selected = 'current'
+          ),
+          shinyWidgets::pickerInput(
+            ns('data_type'),
+            label = translate_app('data_type', lang()),
+            choices = data_type_choices,
+            selected = 'raster'
           )
         ),
         # explanation of the mode
@@ -78,24 +84,24 @@ mod_data <- function(
           )
         )
       ), # end of data mode row
-      # data type row
-      shiny::fluidRow(
-        shiny::column(
-          width = 6,
-          shinyWidgets::pickerInput(
-            ns('data_type'),
-            label = translate_app('data_type', lang()),
-            choices = data_type_choices,
-            selected = 'raster'
-          )
-        )
-      ), # end of data type row
+      # # data type row
+      # shiny::fluidRow(
+      #   shiny::column(
+      #     width = 6,
+      #     shinyWidgets::pickerInput(
+      #       ns('data_type'),
+      #       label = translate_app('data_type', lang()),
+      #       choices = data_type_choices,
+      #       selected = 'raster'
+      #     )
+      #   )
+      # ), # end of data type row
       shinyjs::hidden(
         shiny::div(
           id = ns('file_upload_panel'),
           shiny::fluidRow(
             shiny::column(
-              7, align = 'center',
+              6,
               shiny::fileInput(
                 ns('user_file_sel'),
                 translate_app('user_file_sel_label', lang()),
@@ -109,7 +115,7 @@ mod_data <- function(
               )
             ),
             shiny::column(
-              5, align = 'center',
+              6,
               shiny::p(translate_app('file_text', lang()))
             )
           )
