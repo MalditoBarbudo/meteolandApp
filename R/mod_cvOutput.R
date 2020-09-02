@@ -10,7 +10,7 @@ mod_cvOutput <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(
     shiny::p(shiny::textOutput(ns('cv_intro'))),
-    shiny::br(), shiny::br(),
+    shiny::br(),
     DT::DTOutput(ns('cv_table'))
   )
 }
