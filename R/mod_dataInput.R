@@ -219,6 +219,33 @@ mod_data <- function(
     }
   })
 
+  # observer to limit the dates selected to 30 days.
+  shiny::observe({
+    shiny::validate(
+      shiny::need(input$date_range, 'no dates')
+    )
+
+    date_range <- input$date_range
+    date_seq <- as.Date(date_range[1]):as.Date(date_range[2])
+
+    # if we have more than 30 days, issue an alert and update
+    # the airDatepicker to the 30 days.
+    if (length(date_seq) > 31) {
+      shinyWidgets::sendSweetAlert(
+        session = session,
+        title = translate_app('sweet_alert_30days_title', lang()),
+        text = translate_app('sweet_alert_30days_text', lang())
+      )
+
+      shinyWidgets::updateAirDateInput(
+        session, 'date_range',
+        label = translate_app('date_range', lang()),
+        value = c(as.Date(date_range[1]), as.Date(date_range[1])+30)
+      )
+    }
+
+  })
+
   ## returning inputs ####
   # reactive values to return and use in other modules
   data_reactives <- shiny::reactiveValues()

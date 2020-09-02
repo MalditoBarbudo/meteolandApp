@@ -115,6 +115,17 @@ mod_viz <- function(
             )
           )
         )
+      ),
+      shiny::fluidRow(
+        shiny::column(
+          6,
+          # reverse palette
+          shinyWidgets::awesomeCheckbox(
+            ns('viz_pal_reverse'),
+            label = translate_app('viz_pal_reverse_input', lang()),
+            status = 'info'
+          )
+        )
       )
     )
   })
@@ -125,6 +136,7 @@ mod_viz <- function(
   shiny::observe({
     viz_reactives$viz_color <- input$viz_color
     viz_reactives$viz_date <- input$viz_date
+    viz_reactives$viz_pal_reverse <- input$viz_pal_reverse
   })
   return(viz_reactives)
 

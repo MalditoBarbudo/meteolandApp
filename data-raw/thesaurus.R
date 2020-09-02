@@ -49,6 +49,7 @@ app_translations <- tibble::tribble(
   "h4_viz", "Visualització", "Visualization", "Visualización",
   "viz_color_input", "Variable:", "Variable:", "Variable:",
   "viz_date_input", "Data:", "Date:", "Fecha:",
+  "viz_pal_reverse_input", "Invertir la paleta?", "Inverse pallete", "¿Invertir la paleta?",
   "deselect-all-text", "Ningú", "None selected...", "Ninguno",
   "select-all-text", "Tots", "All selected...", "Todos",
   "count-selected-text-value", "{0} valors seleccionats (de {1})", "{0} values selected (of {1})", "{0} valores seleccionados (de {1})",
@@ -69,6 +70,8 @@ app_translations <- tibble::tribble(
   'sweet_alert_res1km_text', '1 km', '1 km', '1 km',
   'sweet_alert_res30m_title', 'Resolució de la interpolació', 'Interpolation resolution', 'Resolución de la interpolación',
   'sweet_alert_res30m_text', '30 m', '30 m', '30 m',
+  'sweet_alert_30days_title', "El rang de dates està limitat a 31 dies", "Date range is limited to 31 days", "El rango de fechas está limitado a 31 días",
+  'sweet_alert_30days_text', "La data final s'ha canviat a 31 dies des de la data inicial.", "Ending date has been changed to 31 days from start date.", "La fecha final se ha cambiado a 31 días desde la fecha inicial.",
   # save
   'save_map_btn', "Guarda el map", "Save the map", "Guarda el mapa",
   'save_remarks', 'Tots els arxius espacials generats es troben en el sistema de referència de coordenades EPGS:3043:', 'All generated spatial files are in the EPGS: 3043 coordinate reference system.', 'Todos los archivos espaciales generados se encuentran en el sistema de referencia de coordenadas EPGS:3043:',

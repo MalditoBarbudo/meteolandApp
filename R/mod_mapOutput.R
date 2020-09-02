@@ -158,6 +158,7 @@ mod_map <- function(
     # date_range <- data_reactives$date_range
     viz_color <- viz_reactives$viz_color
     viz_date <- viz_reactives$viz_date
+    viz_pal_reverse <- viz_reactives$viz_pal_reverse
 
     # branching to show raster or points, depending on nature of map data
     if (is(pre_map_data, 'sf')) {
@@ -165,11 +166,11 @@ mod_map <- function(
       color_vector <- pre_map_data %>%
         dplyr::pull(!! rlang::sym(viz_color))
       color_palette <- leaflet::colorNumeric(
-        'plasma', color_vector, reverse = FALSE,
+        'plasma', color_vector, reverse = viz_pal_reverse,
         na.color = 'black'
       )
       color_palette_legend <- leaflet::colorNumeric(
-        'plasma', color_vector, reverse = TRUE,
+        'plasma', color_vector, reverse = !viz_pal_reverse,
         na.color = 'black'
       )
 
@@ -202,11 +203,11 @@ mod_map <- function(
 
       # palette configuration
       color_palette <- leaflet::colorNumeric(
-        'plasma', raster::values(layer_data), reverse = FALSE,
+        'plasma', raster::values(layer_data), reverse = viz_pal_reverse,
         na.color = 'transparent'
       )
       color_palette_legend <- leaflet::colorNumeric(
-        'plasma', raster::values(layer_data), reverse = TRUE,
+        'plasma', raster::values(layer_data), reverse = !viz_pal_reverse,
         na.color = 'transparent'
       )
 
