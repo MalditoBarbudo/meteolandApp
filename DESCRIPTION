@@ -21,4 +21,12 @@ Imports:
     shiny,
     shinyjs,
     rlang,
-    spacetime
+    DT,
+    htmltools,
+    leaflet,
+    leaflet.extras,
+    raster,
+    sf,
+    shinyWidgets,
+    sp,
+    stringr
