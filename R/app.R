@@ -27,6 +27,13 @@ meteoland_app <- function() {
     )
   )
 
+  ## JS code needed ############################################################
+  js_script <- shiny::HTML(
+    '$(document).on("shiny:idle", function(event) {
+  Shiny.setInputValue("first_time", "true", {priority: "event"});
+});'
+  )
+
   ## UI ####
   ui <- shiny::tagList(
 
@@ -35,6 +42,8 @@ meteoland_app <- function() {
 
     # css
     shiny::tags$head(
+      # js script,
+      shiny::tags$script(js_script),
       # corporative image css
       shiny::includeCSS(
         system.file('resources', 'corp_image.css', package = 'meteolandApp')
@@ -208,6 +217,19 @@ meteoland_app <- function() {
     shiny::callModule(
       mod_tab_translate, 'cv_translation',
       'cv_translation', lang
+    )
+
+    ## observers ####
+    # first time observer
+    shiny::observeEvent(
+      once = TRUE, priority = 1,
+      eventExpr = {
+        input$first_time
+        shiny::isolate(data_reactives$data_mode)
+      },
+      handlerExpr = {
+        shinyjs::click("mod_applyButtonInput-apply", asis = TRUE)
+      }
     )
 
 
