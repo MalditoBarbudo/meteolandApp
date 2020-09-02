@@ -95,51 +95,9 @@ app_translations <- tibble::tribble(
   "Bias", "Bias", "Bias", "Bias",
   "sd.station.Bias", "Bias sd per estaciò", "Bias sd by station", "Bias sd por estación",
   "sd.dates.Bias", "Bias sd per data", "Bias sd by date", "Bias sd por fecha",
-
-
-  # # metric choices
-  # 'mean', 'Mitjana', 'Mean', 'Media',
-  # 'min', 'Minim', 'Minimum', 'Mínimo',
-  # 'max', 'Maxim', 'Maximum', 'Máximo',
-  # 'se', 'ES', 'SE', 'ES',
-  # 'q05', 'Quartil 5', 'Quantile 5', 'Cuartil 5',
-  # 'q95', 'Quartil 95', 'Quantile 95', 'Cuartil 95',
-  # 'n', 'Nombre parcel·las', 'Plot number', 'Número de parcelas',
-  # # _metric
-  # '_mean', ' mitjana', ' mean', ' media',
-  # '_min', ' minim ', ' minimum', ' mínimo',
-  # '_max', ' maxim', ' maximum', ' máximo de ',
-  # '_se', ' ES', ' SE', ' ES',
-  # '_q05', ' quartil 5', ' quantile 5', ' cuartil 5',
-  # '_q95', ' quartil 95', ' quantile 95', ' cuartil 95',
-  # '_n', ' nombre parcel·las', ' plot number', ' número de parcelas',
-  # "h4_servei", "Fixa el servei", "Select the service", "Selecciona el servicio",
-  # "viz_statistic_input", "Estadístic:", "Statistic:", "Estadístico:",
-  # "pal_high", "Discriminar valors alts", "Discriminate higher values", "Discriminar valores altos",
-  # "pal_low", "Discriminar valors baixos", "Discriminate lower values", "Discriminar valores bajos",
-  # "pal_normal", "Normal", "Normal", "Normal",
-  # "viz_pal_config_input", "Configurar paleta", "Config palette", "Configurar paleta",
-  # "viz_pal_reverse_input", "Invertir la paleta?", "Reverse the palette?", "¿Invertir la paleta?",
-  # # help module
-  # "glossary_var_input", "Selecciona el indicador a descriure", "Choose the indicator to describe", "Selecciona el indicador a describir",
-  # "link_to_tutorials_text", "Per obtenir més informació, aneu al tutorial de l'aplicació aquí", "For more info, please go to the application tutorial here", "Para obtener más información, vaya al tutorial de la aplicación aquí.",
-  # "var_description_title", "Descripció:", "Description:", "Descripción:",
-  # "var_units_title", "Unitats:", "Units:", "Unidades:",
-  # "var_servei_title", "Servei:", "Service:", "Servicio:",
-  # "dismiss", "Tancar", "Dismiss", "Cerrar",
-  # # info module
-  # "plot_id_info_plot_title", "Parcel·la seleccionada comparada amb les altres parcel·les al mapa", "Clicked plot compared to other plots in map", "Parcela seleccionada comparada con las otras parcelas en el mapa",
-  # "admin_region_info_plot_title", "Comarca seleccionada comparada amb les altres comarques al mapa", "Clicked region compared to other regions in map", "Comarca seleccionada comparada con las otras comarcas en el mapa",
-  # "admin_municipality_info_plot_title", "Municipi seleccionado comparad amb els altres municipis al mapa", "Clicked municipality compared to other municipalities in map", "Municipio seleccionada comparada con los otros municipios en el mapa",
-  # "poly_id_info_plot_title", "Polìgon seleccionado comparado amb les altres polìgons al mapa", "Clicked polygon compared to other polygons in map", "Polígono seleccionada comparada con los otros polígonos en el mapa",
-  # "admin_natura_network_2000_info_plot_title", "Àrea seleccionada comparada amb les altres àreas al mapa", "Clicked natural area compared to other natural areas in map", "Área seleccionada comparada con las otras áreas en el mapa",
-  # "admin_special_protection_natural_area_info_plot_title", "Àrea seleccionada comparada amb les altres àreas al mapa", "Clicked natural area compared to other natural areas in map", "Área seleccionada comparada con las otras áreas en el mapa",
-  # "admin_natural_interest_area_info_plot_title", "Àrea seleccionada comparada amb les altres àreas al mapa", "Clicked natural area compared to other natural areas in map", "Área seleccionada comparada con las otras áreas en el mapa",
-  # # map
-  # "stats_unavailable_title", "No hi ha dades", "No data available", "No hay datos disponibles",
-  # "stats_unavailable", "El polígon actual conté menys de 3 parcel·les, no es calcularan estadístiques", "The current polygon contains less than 3 plots, no statistics will be calculated", "El polígono actual contiene menos de 3 gráficos, no se calcularán estadísticas",
-  # # visual_aids
-  # "diff_of_diffs", "Aquest indicador és una diferència de diferències, atès que el valor per a l'IFN3 és la diferència entre el període IFN2 - IFN3, i el valor per al IFN4 és la diferència per al període IFN3 - IFN4. D'aquesta manera, el valor presentat aquí és l'increment en la taxa, no una taxa per se", "This indicator is a difference of differences, as the value for the NFI3 is the difference for the period NFI2 - NFI3, and the value for NFI4 is the difference for the period NFI3 - NFI4. This way the value presented here is the increment on the rate, not a rate per se.", "Este indicador es una diferencia de diferencias, dado que el valor para el IFN3 es la diferencia entre el período IFN2 - IFN3, y el valor para el IFN4 es la diferencia para el período IFN3 - IFN4. De esta manera, el valor presentado aquí es el incremento en la tasa, no una tasa per se"
+  # modes explanation
+  "current_mode_explanation", "Dades d’interpolació dels darrers 365 dies (any natural). Totes les interpolacions es fan amb una resolució d’1 km, excepte els fitxers que contenen punts individuals, en què la interpolació es realitza a 30 m de resolució.", "Interpolation data for the last 365 days (natural year). All interpolations are done in a 1km resolution, except for files containing individual points, in which the interpolation is made at 30m resolution.", "Datos de interpolación de los últimos 365 días (año natural). Todas las interpolaciones se realizan con una resolución de 1 km, excepto los archivos que contienen puntos individuales, en los que la interpolación se realiza con una resolución de 30 m.",
+  "historic_mode_explanation", "Dades d’interpolació de dates històriques (des del 1976). Totes les interpolacions, inclosos fitxers que contenen punts individuals, es fan a una resolució d'1 km.", "Interpolation data for historic dates (since 1976). All interpolations, included file containing individual points, are made at 1km resolution.", "Datos de interpolación para fechas históricas (desde 1976). Todas las interpolaciones, incluidos los archivos que contienen puntos individuales, se realizan a una resolución de 1 km.",
 )
 
 # internal data for package
