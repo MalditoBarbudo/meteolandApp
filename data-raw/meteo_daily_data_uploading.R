@@ -43,7 +43,7 @@ get_all_stations_daily_data <- function(cat, spa) {
 
 prepare_daily_grid_raster <- function(date_i, topo) {
 
-  message("spatialpointstopography creation ", Sys.time())
+  message("spatialpointstopography creation ")
 
   topo_meteoland <- meteoland::SpatialPointsTopography(
     points = sf::as_Spatial(topo),
@@ -52,13 +52,13 @@ prepare_daily_grid_raster <- function(date_i, topo) {
     aspect = topo$aspect
   )
 
-  message("Points interpolation ", Sys.time())
+  message("Points interpolation ")
   interpolation_cat_day <-
     lfcdata::meteoland()$points_interpolation(
       topo, user_dates = c(date_i, date_i), 'point_id', .topo = topo_meteoland, .as_sf = FALSE
     )
 
-  message("Interpolation data, grid specs ", Sys.time())
+  message("Interpolation data, grid specs ")
   interpolation_data <-
     list(
       data = meteoland::extractdates(
@@ -74,7 +74,7 @@ prepare_daily_grid_raster <- function(date_i, topo) {
     cells.dim = c(272, 264)
   )
 
-  message("SpatialPixelsMeteorology creation ", Sys.time())
+  message("SpatialPixelsMeteorology creation ")
   # we build a pixels object because then we can create the rasters easily
   res_pixels <- meteoland::SpatialPixelsMeteorology(
     points = interpolation_cat_day,
@@ -83,7 +83,7 @@ prepare_daily_grid_raster <- function(date_i, topo) {
     grid = grid_specs_manual
   )
 
-  message("raster creation ", Sys.time())
+  message("raster creation ")
   res_stars <- as(res_pixels, 'stars')
   res_MeanTemperature <- as(res_stars['MeanTemperature'], 'Raster')
   res_MinTemperature <- as(res_stars['MinTemperature'], 'Raster')
@@ -95,6 +95,7 @@ prepare_daily_grid_raster <- function(date_i, topo) {
   res_Radiation <- as(res_stars['Radiation'], 'Raster')
   res_WindSpeed <- as(res_stars['WindSpeed'], 'Raster')
   res_WindDirection <- as(res_stars['WindDirection'], 'Raster')
+  res_PET <- as(res_stars['PET'], 'Raster')
 
   res_stack <- raster::stack(
     res_MeanTemperature,
@@ -106,7 +107,8 @@ prepare_daily_grid_raster <- function(date_i, topo) {
     res_Precipitation,
     res_Radiation,
     res_WindSpeed,
-    res_WindDirection
+    res_WindDirection,
+    res_PET
   )
   names(res_stack) <- c(
     'MeanTemperature',
@@ -118,7 +120,8 @@ prepare_daily_grid_raster <- function(date_i, topo) {
     'Precipitation',
     'Radiation',
     'WindSpeed',
-    'WindDirection'
+    'WindDirection',
+    'PET'
   )
 
   return(res_stack)
@@ -128,7 +131,7 @@ daily_meto_data_update <- function(db_conn, path_cat, path_spa, overwrite) {
   # dates vector to check, they must be one year long ending in the day before of
   # the present day
   dates_vec <- as.Date(
-    (Sys.Date() - 305):Sys.Date(), # one year long + 30 days buffer
+    (Sys.Date() - 365):Sys.Date(), # one year long + 30 days buffer
     format = '%j', origin = as.Date('1970-01-01')
   ) %>%
     as.character()
