@@ -21,7 +21,7 @@ app_translations <- tibble::tribble(
   "user_file_sel_placeholder", "Cap fitxer seleccionat", "No file selected", "Ningún archivo seleccionado",
   "file_text", 'El fitxer pot ser un shapefile (comprimit en un fitxer zip) o un fitxer GeoPackage (.gpkg). Han de tenir un camp anomenat "id" amb els identificadors dels geometries continguts.', 'File can be a shapefile (compressed in a zip file) or GeoPackage file (.gpkg). They must have a field called "id" with the identifiers of the contained geometries.', 'El archivo puede ser un shapefile (comprimido en un archivo zip) o un archivo GeoPackage (.gpkg). Deben tener un campo llamado "id" con los identificadores de las geometrías contenidas.',
   # map
-  "cite_div", "Dades elaborades pel CTFC i el CREAF.", "Data prepared by the CTFC and CREAF.", "Datos elaborados por el CTFC y el CREAF.",
+  "cite_div", "Dades elaborades pel CTFC i el CREAF a partir de les xarxes d'estacions meteorològiques automàtiques del SMC i AEMET.", "Data prepared by the CTFC and CREAF from the networks of automatic weather stations of the SMC and AEMET.", "Datos elaborados por el CTFC y el CREAF a partir de las redes de estaciones meteorológicas automáticas del SMC y AEMET.",
   # 'Relief', 'Relleu (base)', 'Relief (base)', 'Relieve (base)',
   # 'Imaginery', 'Satèl·lit (base)', 'Imaginery (base)', 'Satélite (base)',
   # tabs translations
