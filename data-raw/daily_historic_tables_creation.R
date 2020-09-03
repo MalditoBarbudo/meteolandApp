@@ -65,16 +65,19 @@ for (day in 1:stars::st_dimensions(year_1976)$time$to %>% as.numeric()) {
   raster::projection(res_WindSpeed) <- crs('+proj=utm +zone=31 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs')
   res_WindDirection <- as(year_1976['WindDirection',,,day, drop = TRUE], 'Raster')
   raster::projection(res_WindDirection) <- crs('+proj=utm +zone=31 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs')
+  res_PET <- as(year_1976['PET',,,day, drop = TRUE], 'Raster')
+  raster::projection(res_PET) <- crs('+proj=utm +zone=31 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs')
 
   res_stack <- raster::stack(
     res_MeanTemperature, res_MinTemperature, res_MaxTemperature,
     res_MeanRelativeHumidity, res_MinRelativeHumidity, res_MaxRelativeHumidity,
-    res_Precipitation, res_Radiation, res_WindSpeed, res_WindDirection
+    res_Precipitation, res_Radiation, res_WindSpeed, res_WindDirection,
+    res_PET
   )
   names(res_stack) <- c(
     'MeanTemperature', 'MinTemperature', 'MaxTemperature',
     'MeanRelativeHumidity', 'MinRelativeHumidity', 'MaxRelativeHumidity',
-    'Precipitation', 'Radiation', 'WindSpeed', 'WindDirection'
+    'Precipitation', 'Radiation', 'WindSpeed', 'WindDirection', 'PET'
   )
 
   db_checkout <- pool::poolCheckout(db_conn)

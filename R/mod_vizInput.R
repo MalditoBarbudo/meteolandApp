@@ -51,7 +51,7 @@ mod_viz <- function(
     color_choices <- c(
       'MeanTemperature', 'MinTemperature', 'MaxTemperature',
       'MeanRelativeHumidity', 'MinRelativeHumidity', 'MaxRelativeHumidity',
-      'Precipitation', 'Radiation', 'WindSpeed', 'WindDirection'
+      'Precipitation', 'Radiation', 'WindSpeed', 'WindDirection', 'PET'
     ) %>%
       magrittr::set_names(translate_app(., lang()))
 
