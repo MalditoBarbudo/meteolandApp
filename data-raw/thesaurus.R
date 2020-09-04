@@ -45,6 +45,7 @@ app_translations <- tibble::tribble(
   'Radiation', "Radiació", "Radiation", "Radiación",
   'WindSpeed', "Velocitat del vent", "Wind Speed", "Velocidad del viento",
   'WindDirection', "Direcció del vent", "Wind Direction", "Dirección del viento",
+  'PET', "PET", "PET", "PET",
   # viz
   "h4_viz", "Visualització", "Visualization", "Visualización",
   "viz_color_input", "Variable:", "Variable:", "Variable:",

@@ -50,11 +50,11 @@ get_data <- function(
   # raster type, works for both current and historic
   if (data_type == 'raster') {
 
-    shinyWidgets::sendSweetAlert(
-      session = session,
-      title = translate_app('sweet_alert_res1km_title', lang()),
-      text = translate_app('sweet_alert_res1km_text', lang())
-    )
+    # shinyWidgets::sendSweetAlert(
+    #   session = session,
+    #   title = translate_app('sweet_alert_res1km_title', lang()),
+    #   text = translate_app('sweet_alert_res1km_text', lang())
+    # )
 
     datevec <- date_range[1]:date_range[2] %>%
       as.Date(format = '%j', origin = as.Date('1970-01-01')) %>%
@@ -73,11 +73,11 @@ get_data <- function(
 
   # drawn_polygon, works for both current and historic
   if (data_type == 'drawn_polygon') {
-    shinyWidgets::sendSweetAlert(
-      session = session,
-      title = translate_app('sweet_alert_res1km_title', lang()),
-      text = translate_app('sweet_alert_res1km_text', lang())
-    )
+    # shinyWidgets::sendSweetAlert(
+    #   session = session,
+    #   title = translate_app('sweet_alert_res1km_title', lang()),
+    #   text = translate_app('sweet_alert_res1km_text', lang())
+    # )
 
     progress_obj$set(
       message = glue::glue(
@@ -109,11 +109,11 @@ get_data <- function(
     )
 
     if (all(sf::st_is(custom_polygon, c('POLYGON', 'MULTIPOLYGON')))) {
-      shinyWidgets::sendSweetAlert(
-        session = session,
-        title = translate_app('sweet_alert_res1km_title', lang()),
-        text = translate_app('sweet_alert_res1km_text', lang())
-      )
+      # shinyWidgets::sendSweetAlert(
+      #   session = session,
+      #   title = translate_app('sweet_alert_res1km_title', lang()),
+      #   text = translate_app('sweet_alert_res1km_text', lang())
+      # )
 
       query_data <-
         meteolanddb$raster_interpolation(
@@ -124,22 +124,22 @@ get_data <- function(
 
     if (all(sf::st_is(custom_polygon, 'POINT'))) {
       if (data_mode == 'current') {
-        shinyWidgets::sendSweetAlert(
-          session = session,
-          title = translate_app('sweet_alert_res30m_title', lang()),
-          text = translate_app('sweet_alert_res30m_text', lang())
-        )
+        # shinyWidgets::sendSweetAlert(
+        #   session = session,
+        #   title = translate_app('sweet_alert_res30m_title', lang()),
+        #   text = translate_app('sweet_alert_res30m_text', lang())
+        # )
         query_data <- meteolanddb$points_interpolation(
           custom_polygon, as.character(date_range), geometry_id, .as_sf = TRUE
         )
       }
 
       if (data_mode == 'historic') {
-        shinyWidgets::sendSweetAlert(
-          session = session,
-          title = translate_app('sweet_alert_res1km_title', lang()),
-          text = translate_app('sweet_alert_res1km_text', lang())
-        )
+        # shinyWidgets::sendSweetAlert(
+        #   session = session,
+        #   title = translate_app('sweet_alert_res1km_title', lang()),
+        #   text = translate_app('sweet_alert_res1km_text', lang())
+        # )
 
         query_data <- meteolanddb$historical_points_interpolation(
           custom_polygon, as.character(date_range), geometry_id
