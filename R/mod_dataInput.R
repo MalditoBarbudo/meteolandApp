@@ -143,6 +143,13 @@ mod_data <- function(
           #   addon = 'none', separator = translate_app('date_separator', lang()),
           #   language = dates_lang
           # )
+        ),
+        shiny::column(
+          width = 6,
+          shiny::br(),
+          shiny::textOutput(
+            ns('date_range_explanation')
+          )
         )
       ) # end of dates row
     ) # end of tagList
@@ -159,6 +166,15 @@ mod_data <- function(
 
     translate_app(text_identifier, lang())
 
+  })
+
+  # date range explanation
+  output$date_range_explanation <- shiny::renderText({
+    shiny::validate(
+      shiny::need(input$data_mode, 'no mode')
+    )
+
+    translate_app('date_range_explanation', lang())
   })
 
   ## observers ####

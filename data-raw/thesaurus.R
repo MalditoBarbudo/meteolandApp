@@ -15,6 +15,7 @@ app_translations <- tibble::tribble(
   # date range
   'date_range', 'Rang de dates', 'Dates range', 'Rango de fechas',
   'date_separator', " a ", " to ", " a ",
+  'date_range_explanation', "L'interval de dates es limita a un màxim de 31 dies des de la data d'inici. Seleccioneu la data de finalització en conseqüència.", "Date range is limited to a max of 31 days from start date. Please select the end date accordingly.", "El rango de fechas está limitado a un máximo de 31 días desde la fecha de inicio. Seleccione la fecha final en consecuencia.",
   # use file selection
   "user_file_sel_label", "Selecciona l'arxiu a carregar", "Select the file to upload", "Selecciona el archivo a cargar",
   "user_file_sel_buttonLabel", "Inspecciona...", "Browse...", "Inspecciona...",
@@ -31,7 +32,8 @@ app_translations <- tibble::tribble(
   "help_translation", "Ajuda", "Help", "Ayuda",
   "map_translation", "Mapa", "Map", "Mapa",
   "table_translation", "Taula", "Table", "Tabla",
-  "cv_translation", "Validacions creuades", "Cross-validations", "Validaciones cruzadas",
+  "cv_translation", "Validació de les interpolació", "Interpolation validation", "Validación de la interpolación",
+  "tech_specs_translation", "Especificacions tècniques", "Technical specifications", "Especificaciones técnicas",
   # apply module
   "apply", "Aplicar", "Apply", "Aplicar",
   # variables
