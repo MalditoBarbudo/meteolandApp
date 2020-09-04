@@ -43,6 +43,17 @@ mod_cv <- function(
       meteolanddb$.__enclos_env__$private$pool_conn, 'crossvalidation_summary'
     ) %>%
       dplyr::collect() %>%
+      dplyr::select(
+        variable,
+        year,
+        n,
+        MAE,
+        Bias,
+        sd.station.MAE,
+        sd.dates.MAE,
+        sd.station.Bias,
+        sd.dates.Bias
+      ) %>%
       dplyr::mutate(
         variable = translate_app(variable, lang())
       ) %>%

@@ -91,7 +91,6 @@ app_translations <- tibble::tribble(
   "variable", "Variable", "Variable", "Variable",
   "year", "Any", "Year", "Año",
   "n", "n", "n", "n",
-  "r", "r", "r", "r",
   "MAE", "MAE", "MAE", "MAE",
   "sd.station.MAE", "MAE sd per estaciò", "MAE sd by station", "MAE sd por estación",
   "sd.dates.MAE", "MAE sd per data", "MAE sd by date", "MAE sd por fecha",
