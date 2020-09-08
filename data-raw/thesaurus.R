@@ -105,6 +105,7 @@ app_translations <- tibble::tribble(
   "Bias", "Bias", "Bias", "Bias",
   "sd.station.Bias", "Bias sd per estaciò", "Bias sd by station", "Bias sd por estación",
   "sd.dates.Bias", "Bias sd per data", "Bias sd by date", "Bias sd por fecha",
+  'cv_download', 'Descarrega', 'Download', 'Descarga',
   # modes explanation
   "current_mode_explanation", "Dades d’interpolació dels darrers 365 dies (any natural). Totes les interpolacions es fan amb una resolució d’1 km, excepte els fitxers que contenen punts individuals, en què la interpolació es realitza a 30 m de resolució.", "Interpolation data for the last 365 days (natural year). All interpolations are done in a 1km resolution, except for files containing individual points, in which the interpolation is made at 30m resolution.", "Datos de interpolación de los últimos 365 días (año natural). Todas las interpolaciones se realizan con una resolución de 1 km, excepto los archivos que contienen puntos individuales, en los que la interpolación se realiza con una resolución de 30 m.",
   "historic_mode_explanation", "Dades d’interpolació de dates històriques (des del 1976). Totes les interpolacions, inclosos fitxers que contenen punts individuals, es fan a una resolució d'1 km.", "Interpolation data for historic dates (since 1976). All interpolations, included file containing individual points, are made at 1km resolution.", "Datos de interpolación para fechas históricas (desde 1976). Todas las interpolaciones, incluidos los archivos que contienen puntos individuales, se realizan a una resolución de 1 km.",

@@ -9,7 +9,20 @@ mod_cvOutput <- function(id) {
   # ns
   ns <- shiny::NS(id)
   shiny::tagList(
-    shiny::p(shiny::textOutput(ns('cv_intro'))),
+    shiny::fluidRow(
+      shiny::column(
+        10,
+        shiny::p(shiny::textOutput(ns('cv_intro')))
+      ),
+      shiny::column(
+        2, align = 'right',
+        shiny::br(),
+        shiny::downloadButton(
+          ns('cv_table_download_button'),
+          label = ''
+        )
+      )
+    ),
     shiny::br(),
     DT::DTOutput(ns('cv_table'))
   )
@@ -33,13 +46,8 @@ mod_cv <- function(
   meteolanddb, lang
 ) {
 
-  output$cv_intro <- shiny::renderText({
-    translate_app('cv_intro', lang())
-  })
-
-  output$cv_table <- DT::renderDT({
-
-    cv_df <- dplyr::tbl(
+  cv_df <- shiny::reactive({
+    dplyr::tbl(
       meteolanddb$.__enclos_env__$private$pool_conn, 'crossvalidation_summary'
     ) %>%
       dplyr::collect() %>%
@@ -64,9 +72,42 @@ mod_cv <- function(
       magrittr::set_names(
         translate_app(names(.), lang())
       )
+  })
+
+  output$cv_intro <- shiny::renderText({
+    translate_app('cv_intro', lang())
+  })
+
+  output$cv_table <- DT::renderDT({
+
+    # cv_df <- dplyr::tbl(
+    #   meteolanddb$.__enclos_env__$private$pool_conn, 'crossvalidation_summary'
+    # ) %>%
+    #   dplyr::collect() %>%
+    #   dplyr::select(
+    #     variable,
+    #     year,
+    #     n,
+    #     MAE,
+    #     Bias,
+    #     sd.station.MAE,
+    #     sd.dates.MAE,
+    #     sd.station.Bias,
+    #     sd.dates.Bias
+    #   ) %>%
+    #   dplyr::mutate(
+    #     variable = translate_app(variable, lang())
+    #   ) %>%
+    #   dplyr::mutate_if(
+    #     is.numeric,
+    #     round, digits = 1
+    #   ) %>%
+    #   magrittr::set_names(
+    #     translate_app(names(.), lang())
+    #   )
 
     DT::datatable(
-      cv_df,
+      cv_df(),
       rownames = FALSE,
       class = 'hover order-column stripe nowrap',
       filter = list(position = 'top', clear = FALSE, plain = FALSE),
@@ -85,5 +126,12 @@ mod_cv <- function(
       )
     )
   })
+
+  output$cv_table_download_button <- shiny::downloadHandler(
+    filename = 'cv_table.txt',
+    content = function(file) {
+      readr::write_delim(cv_df(), file)
+    }
+  )
 
 }

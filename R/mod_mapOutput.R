@@ -102,6 +102,8 @@ mod_map <- function(
       shiny::need(viz_date_mode_check(date_range, main_data), 'incorrect data mode')
     )
 
+    browser()
+
     if (is(main_data, 'sf')) {
       data_res <- main_data %>%
         sf::st_transform(crs = 4326) %>%

@@ -79,8 +79,29 @@ span>a.paginate_button.current {
   font-family: Montserrat;
 }
 
+dygraph-axis-label.dygraph-axis-label-x {
+  color: var(--main-dark-color) !important;
+  font-family: Montserrat;
+}
+
+dygraph-axis-label.dygraph-axis-label-y {
+  color: var(--main-dark-color) !important;
+  font-family: Montserrat;
+}
+
 .dygraph-legend {
   background-color: var(--main-selected-color) !important;
   border-radius: 5px;
   padding: 5px;
+}
+
+div#shiny-notification-panel {
+  bottom: 48%;
+  right: 20%;
+  background-color: var(--main-dark-color);
+}
+
+.shiny-notification {
+  background-color: var(--main-dark-color);
+  color: var(--main-bg-color);
 }

@@ -44,7 +44,7 @@ mod_ts <- function(
 
     date_index <- main_data_reactives$main_data$date %>%
       unique() %>%
-      as.POSIXct()
+      as.Date()
 
     # filter the sf object with the points selected
     main_data_reactives$main_data %>%
