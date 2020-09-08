@@ -99,10 +99,10 @@ mod_map <- function(
 
     # here we validate that viz_date is in the correct mode
     shiny::validate(
-      shiny::need(viz_date_mode_check(date_range, main_data), 'incorrect data mode')
+      shiny::need(viz_date_mode_check(date_range, viz_date), 'incorrect data mode')
     )
 
-    browser()
+    # browser()
 
     if (is(main_data, 'sf')) {
       data_res <- main_data %>%

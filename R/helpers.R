@@ -178,31 +178,42 @@ get_lowres_raster_safe <- purrr::possibly(
 )
 
 
-viz_date_mode_check <- function(date_range, main_data) {
+viz_date_mode_check <- function(date_range, viz_date) {
+  dates_vec <- as.Date(
+    (as.Date(date_range[1])):(as.Date(date_range[2])),
+    format = '%j', origin = as.Date('1970-01-01')
+  ) %>% as.character()
 
-  # dates_vec <- as.Date(
-  #   (as.Date(date_range[1])):(as.Date(date_range[2])),
-  #   format = '%j', origin = as.Date('1970-01-01')
-  # )
-
-  if (is(main_data, 'sf')) {
-    dates_in_data <- main_data %>%
-      dplyr::arrange(date) %>%
-      dplyr::slice(1, nrow(main_data)) %>%
-      dplyr::pull(date) %>%
-      as.Date()
-    # as.Date(viz_date) >= as.Date(dates_in_data[1]) &
-    #   as.Date(viz_date) <= as.Date(dates_in_data[2])
-
-  } else {
-    dates_in_data <- names(main_data)[c(1, length(names(main_data)))] %>%
-      as.Date()
-    # as.Date(viz_date) >= as.Date(dates_in_data[1]) &
-    #   as.Date(viz_date) <= as.Date(dates_in_data[2])
-  }
-
-  all(
-    dates_in_data >= as.Date(date_range[1]) & dates_in_data <= as.Date(date_range[2])
-  )
+  viz_date %in% dates_vec
 
 }
+
+
+# viz_date_mode_check <- function(date_range, main_data) {
+#
+#   # dates_vec <- as.Date(
+#   #   (as.Date(date_range[1])):(as.Date(date_range[2])),
+#   #   format = '%j', origin = as.Date('1970-01-01')
+#   # )
+#
+#   if (is(main_data, 'sf')) {
+#     dates_in_data <- main_data %>%
+#       dplyr::arrange(date) %>%
+#       dplyr::slice(1, nrow(main_data)) %>%
+#       dplyr::pull(date) %>%
+#       as.Date()
+#     # as.Date(viz_date) >= as.Date(dates_in_data[1]) &
+#     #   as.Date(viz_date) <= as.Date(dates_in_data[2])
+#
+#   } else {
+#     dates_in_data <- names(main_data)[c(1, length(names(main_data)))] %>%
+#       as.Date()
+#     # as.Date(viz_date) >= as.Date(dates_in_data[1]) &
+#     #   as.Date(viz_date) <= as.Date(dates_in_data[2])
+#   }
+#
+#   all(
+#     dates_in_data >= as.Date(date_range[1]) & dates_in_data <= as.Date(date_range[2])
+#   )
+#
+# }
