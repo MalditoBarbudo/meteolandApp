@@ -32,7 +32,7 @@ app_translations <- tibble::tribble(
   "help_translation", "Ajuda", "Help", "Ayuda",
   "map_translation", "Mapa", "Map", "Mapa",
   "table_translation", "Taula", "Table", "Tabla",
-  "cv_translation", "Validació de les interpolació", "Interpolation validation", "Validación de la interpolación",
+  "cv_translation", "Validació de la interpolació", "Interpolation validation", "Validación de la interpolación",
   "tech_specs_translation", "Especificacions tècniques", "Technical specifications", "Especificaciones técnicas",
   # apply module
   "apply", "Aplicar", "Apply", "Aplicar",
@@ -76,7 +76,7 @@ app_translations <- tibble::tribble(
   'sweet_alert_30days_title', "El rang de dates està limitat a 31 dies", "Date range is limited to 31 days", "El rango de fechas está limitado a 31 días",
   'sweet_alert_30days_text', "La data final s'ha canviat a 31 dies des de la data inicial.", "Ending date has been changed to 31 days from start date.", "La fecha final se ha cambiado a 31 días desde la fecha inicial.",
   # save
-  'save_map_btn', "Guarda el map", "Save the map", "Guarda el mapa",
+  'save_map_btn', "Descarrega", "Download", "Descarga",
   'save_remarks', 'Tots els arxius espacials generats es troben en el sistema de referència de coordenades EPGS:3043:', 'All generated spatial files are in the EPGS: 3043 coordinate reference system.', 'Todos los archivos espaciales generados se encuentran en el sistema de referencia de coordenadas EPGS:3043:',
   'save_remarks_2', 'Els rásteres es guardaran en format GeoTiff (extensió .tif). Si la consulta es realitza per punts, es guardaran en format GeoPackage (extensió .gpkg).', 'The rasters will be saved in GeoTiff format (.tif extension). If the query is made for points, they will be saved in GeoPackage format (extension .gpkg).', 'Los rásteres se guardarán en formato GeoTiff (extensión .tif). Si la consulta se realiza para puntos, se guardarán en formato GeoPackage (extensión .gpkg).',
   # cv module
