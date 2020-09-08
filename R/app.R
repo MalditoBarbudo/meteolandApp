@@ -112,9 +112,15 @@ meteoland_app <- function() {
               shiny::tabPanel(
                 title = mod_tab_translateOutput('data_translation'),
                 value = 'data_inputs_panel',
-                mod_dataInput('mod_dataInput'),
-                mod_vizInput('mod_vizInput')
+                mod_dataInput('mod_dataInput')#,
+                # mod_vizInput('mod_vizInput')
               ), # end of data panel
+              # viz panel
+              shiny::tabPanel(
+                title = mod_tab_translateOutput('viz_translation'),
+                value = 'viz_inputs_panel',
+                mod_vizInput('mod_vizInput')
+              ),
               # save panel
               shiny::tabPanel(
                 title = mod_tab_translateOutput('save_translation'),
@@ -182,7 +188,7 @@ meteoland_app <- function() {
     # viz
     viz_reactives <- shiny::callModule(
       mod_viz, 'mod_vizInput',
-      data_reactives, lang
+      data_reactives, main_data_reactives, lang
     )
     # map
     map_reactives <- shiny::callModule(
@@ -206,6 +212,12 @@ meteoland_app <- function() {
       mod_techSpecs, 'mod_techSpecsOutput',
       lang
     )
+    # ts module
+    shiny::callModule(
+      mod_ts, 'mod_tsOutput',
+      viz_reactives, main_data_reactives,
+      lang
+    )
 
     ## tab translations ####
     shiny::callModule(
@@ -215,6 +227,10 @@ meteoland_app <- function() {
     shiny::callModule(
       mod_tab_translate, 'data_translation',
       'data_translation', lang
+    )
+    shiny::callModule(
+      mod_tab_translate, 'viz_translation',
+      'viz_translation', lang
     )
     shiny::callModule(
       mod_tab_translate, 'map_translation',
@@ -243,6 +259,22 @@ meteoland_app <- function() {
       },
       handlerExpr = {
         shinyjs::click("mod_applyButtonInput-apply", asis = TRUE)
+      }
+    )
+
+    # time series modal observer
+    shiny::observeEvent(
+      eventExpr = viz_reactives$ts_button,
+      handlerExpr = {
+        shiny::showModal(
+          shiny::modalDialog(
+            mod_tsOutput('mod_tsOutput'),
+            footer = shiny::modalButton(
+              translate_app('dismiss', lang())
+            ),
+            size = 'l', easyClose = FALSE
+          )
+        )
       }
     )
 

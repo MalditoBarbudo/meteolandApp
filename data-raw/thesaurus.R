@@ -28,6 +28,7 @@ app_translations <- tibble::tribble(
   # tabs translations
   "main_tab_translation", "Explora", "Explore", "Explora",
   "data_translation", "Dades", "Data", "Datos",
+  "viz_translation", "Visualització", "Visualization", "Visualización",
   "save_translation", "Guardar", "Save", "Guardar",
   "help_translation", "Ajuda", "Help", "Ayuda",
   "map_translation", "Mapa", "Map", "Mapa",
@@ -56,6 +57,10 @@ app_translations <- tibble::tribble(
   "deselect-all-text", "Ningú", "None selected...", "Ninguno",
   "select-all-text", "Tots", "All selected...", "Todos",
   "count-selected-text-value", "{0} valors seleccionats (de {1})", "{0} values selected (of {1})", "{0} valores seleccionados (de {1})",
+  # ts module
+  'ts_button', "Sèries temporals", "Time series", "Series temporales",
+  "dismiss", "Tancar", "Dismiss", "Cerrar",
+  "ts_points", "Seleccioneu els punts per la sèrie temporal", "Select the points for the time series", "Selecciona los puntos para la serie temporal",
   # progress bar
   "progress_message", "Interpolant dades...", "Interpolating data...", "Interpolating datos...",
   "progress_detail_initial", "Això pot trigar uns minuts depenent de la franja de dates i el nombre de geometries", "This can take a while depending on the date range and number of geometries", "Esto puede tardar unos minutos dependiendo del rango de fechas y el número de geometrías",

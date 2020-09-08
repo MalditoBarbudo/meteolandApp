@@ -166,6 +166,17 @@ mod_mainData <- function(
     }
   )
 
+  # observers to update tab and update viz_fg
+  shiny::observeEvent(
+    eventExpr = main_data(),
+    handlerExpr = {
+      # update tab
+      shiny::updateTabsetPanel(
+        parent_session, 'sidebar_tabset', selected = 'viz_inputs_panel'
+      )
+    }
+  )
+
   ## reactives to return ####
   main_data_reactives <- shiny::reactiveValues()
   shiny::observe({

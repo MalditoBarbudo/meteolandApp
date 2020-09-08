@@ -50,7 +50,7 @@ div.table_container {
 /* position of the modal */
 div.modal-dialog {
   position: relative;
-  top: 10px;
+  top: 40px;
 }
 
 /* table body */
@@ -67,4 +67,20 @@ span>a.paginate_button {
 span>a.paginate_button.current {
   background-color: #448714;
   color: var(--main-bg-color) !important;
+}
+
+/* dygraphs */
+.dygraphs {
+  background-color: var(--main-bg-color) !important;
+}
+
+.dygraph-label {
+  color: var(--main-dark-color) !important;
+  font-family: Montserrat;
+}
+
+.dygraph-legend {
+  background-color: var(--main-selected-color) !important;
+  border-radius: 5px;
+  padding: 5px;
 }

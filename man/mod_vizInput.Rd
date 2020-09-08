@@ -7,7 +7,7 @@
 \usage{
 mod_vizInput(id)
 
-mod_viz(input, output, session, data_reactives, lang)
+mod_viz(input, output, session, data_reactives, main_data_reactives, lang)
 }
 \arguments{
 \item{id}{shiny id}
@@ -18,7 +18,7 @@ mod_viz(input, output, session, data_reactives, lang)
 
 \item{session}{internal}
 
-\item{data_reactives}{reactives needed}
+\item{data_reactives, main_data_reactives}{reactives needed}
 
 \item{lang}{lang value}
 }

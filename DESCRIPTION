@@ -29,4 +29,5 @@ Imports:
     sf,
     shinyWidgets,
     sp,
-    stringr
+    stringr,
+    dygraphs

@@ -11,7 +11,8 @@ mod_vizInput <- function(id) {
 
   # UI ####
   shiny::tagList(
-    shiny::uiOutput(ns('mod_viz_panel'))
+    shiny::uiOutput(ns('mod_viz_panel')),
+    shiny::uiOutput(ns('ts_inputs_panel'))
   )
 }
 
@@ -20,7 +21,7 @@ mod_vizInput <- function(id) {
 #' @param output internal
 #' @param session internal
 #'
-#' @param data_reactives reactives needed
+#' @param data_reactives,main_data_reactives reactives needed
 #' @param lang lang value
 #'
 #' @export
@@ -28,7 +29,7 @@ mod_vizInput <- function(id) {
 #' @rdname mod_vizInput
 mod_viz <- function(
   input, output, session,
-  data_reactives,
+  data_reactives, main_data_reactives,
   lang
 ) {
 
@@ -115,7 +116,7 @@ mod_viz <- function(
             )
           )
         )
-      ),
+      ), # end of fluidRow (var and date)
       shiny::fluidRow(
         shiny::column(
           6,
@@ -126,8 +127,76 @@ mod_viz <- function(
             status = 'info'
           )
         )
-      )
+      ) # end of fluidRow (palette)
     )
+  })
+
+  output$ts_inputs_panel <- shiny::renderUI({
+
+    shiny::validate(
+      shiny::need(main_data_reactives$main_data, 'no main data yet')
+    )
+
+    # ns
+    ns <- session$ns
+
+    # needed reactives
+    main_data <- main_data_reactives$main_data
+
+    if (is(main_data, 'sf')) {
+
+      data_choices <- main_data %>%
+        dplyr::pull('geometry_id') %>%
+        unique()
+
+      shiny::tagList(
+        shiny::fluidRow(
+          shiny::column(
+            6,
+            shiny::br(), shiny::br(),
+            shiny::actionButton(
+              ns('ts_button'),
+              label = translate_app('ts_button', lang()),
+              # icon = shiny::icon('creative-commons-sampling')
+              icon = shiny::icon('chart-area')
+            )
+          ),
+          shiny::column(
+            6, #align = 'center',
+            shinyWidgets::pickerInput(
+              ns('ts_points'),
+              label = translate_app('ts_points', lang()),
+              choices = data_choices,
+              selected = data_choices,
+              multiple = TRUE,
+              options = shinyWidgets::pickerOptions(
+                actionsBox = TRUE,
+                noneSelectedText = translate_app(
+                  'deselect-all-text', lang()
+                ),
+                selectAllText = translate_app(
+                  'select-all-text', lang()
+                ),
+                deselectAllText = translate_app(
+                  'deselect-all-text', lang()
+                ),
+                selectedTextFormat =  'count',
+                countSelectedText = translate_app(
+                  'count-selected-text-value', lang()
+                ),
+                size = 10,
+                liveSearch = TRUE,
+                tickIcon = 'glyphicon-tree-deciduous'
+              )
+            )
+          )
+        )
+      )
+
+
+    }
+
+
   })
 
 
@@ -137,6 +206,8 @@ mod_viz <- function(
     viz_reactives$viz_color <- input$viz_color
     viz_reactives$viz_date <- input$viz_date
     viz_reactives$viz_pal_reverse <- input$viz_pal_reverse
+    viz_reactives$ts_points <- input$ts_points
+    viz_reactives$ts_button <- input$ts_button
   })
   return(viz_reactives)
 
