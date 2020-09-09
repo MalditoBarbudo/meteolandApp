@@ -38,8 +38,10 @@ mod_techSpecs <- function(
 
     shiny::tagList(
       shiny::fluidPage(
-        shiny::includeMarkdown(
-          system.file('resources', markdown_translated, package = 'meteolandApp')
+        shiny::withMathJax(
+          shiny::includeMarkdown(
+            system.file('resources', markdown_translated, package = 'meteolandApp')
+          )
         )
       )
     )
