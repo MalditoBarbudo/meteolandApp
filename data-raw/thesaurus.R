@@ -83,6 +83,7 @@ app_translations <- tibble::tribble(
   'sweet_alert_res30m_text', '30 m', '30 m', '30 m',
   'sweet_alert_30days_title', "El rang de dates està limitat a 31 dies", "Date range is limited to 31 days", "El rango de fechas está limitado a 31 días",
   'sweet_alert_30days_text', "La data final s'ha canviat a 31 dies des de la data inicial.", "Ending date has been changed to 31 days from start date.", "La fecha final se ha cambiado a 31 días desde la fecha inicial.",
+  "ts_one_date", "No s'ha pogut crear una sèrie temporal amb una sola data", "Could not create a time series with a single date", "No se pudo crear una serie temporal con una sola fecha",
   # save
   'save_map_btn', "Descarrega", "Download", "Descarga",
   'save_remarks', 'Tots els arxius espacials generats es troben en el sistema de referència de coordenades EPGS:3043:', 'All generated spatial files are in the EPGS: 3043 coordinate reference system.', 'Todos los archivos espaciales generados se encuentran en el sistema de referencia de coordenadas EPGS:3043:',

@@ -58,7 +58,7 @@ mod_ts <- function(
         as.Date()
 
       # filter the sf object with the points selected
-      main_data %>%
+      res <- main_data %>%
         dplyr::as_tibble() %>%
         dplyr::select(
           dplyr::all_of(c('date', 'geometry_id', viz_reactives$viz_color))
@@ -94,7 +94,7 @@ mod_ts <- function(
           coords = c('lng', 'lat'), crs = sf::st_crs(4326)
         )
 
-      main_data %>%
+      res <- main_data %>%
         purrr::map(
           ~ raster::extract(.x, coordinates_sf, sp = TRUE)
         ) %>%
@@ -115,7 +115,14 @@ mod_ts <- function(
         dplyr::select(-date) %>%
         xts::as.xts(order.by = date_index)
 
+      attr(res, 'coords') <- glue::glue(
+        "(long: {round(map_reactives$meteoland_map_click$lng, 2)}; ",
+        "lat: {round(map_reactives$meteoland_map_click$lat, 2)})"
+      )
+
     }
+
+    return(res)
 
 
 
@@ -138,11 +145,30 @@ mod_ts <- function(
   # dygraph
   output$ts_plot <- dygraphs::renderDygraph({
 
-    # browser()
+    # check if only one date and rise a warning in that case
+    if (nrow(ts_data()) < 2) {
+      shinyWidgets::sendSweetAlert(
+        session = session,
+        title = translate_app('ts_one_date', lang()),
+        text = ''
+      )
+    }
+
+    shiny::validate(
+      shiny::need(
+        nrow(ts_data()) > 1,
+        translate_app('ts_one_date', lang())
+      )
+    )
+
+    dygraph_main <- glue::glue(
+      "{translate_app(viz_reactives$viz_color, lang())} ",
+      "{if (is.null(attr(ts_data(), 'coords'))) {''} else {attr(ts_data(), 'coords')}}"
+    )
 
     ts_data() %>%
       dygraphs::dygraph(
-        main = translate_app(viz_reactives$viz_color, lang())
+        main = dygraph_main
       ) %>%
       dygraphs::dyAxis("x", drawGrid = FALSE) %>%
       dygraphs::dyHighlight(
