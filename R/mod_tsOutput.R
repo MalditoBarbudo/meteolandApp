@@ -138,18 +138,26 @@ mod_ts <- function(
   # dygraph
   output$ts_plot <- dygraphs::renderDygraph({
 
+    # browser()
+
     ts_data() %>%
       dygraphs::dygraph(
         main = translate_app(viz_reactives$viz_color, lang())
       ) %>%
+      dygraphs::dyAxis("x", drawGrid = FALSE) %>%
       dygraphs::dyHighlight(
         highlightCircleSize = 5,
         highlightSeriesBackgroundAlpha = 1,
         hideOnMouseOut = TRUE
       ) %>%
-      dygraphs::dyLegend(show = "follow") %>%
+      dygraphs::dyLegend(
+        show = "follow", labelsSeparateLines = TRUE
+      ) %>%
       dygraphs::dyOptions(
-        axisLineWidth = 1.5, drawGrid = FALSE
+        axisLineWidth = 1.5,
+        # drawGrid = FALSE,
+        axisLineColor = '#647a8d', axisLabelColor = '#647a8d',
+        includeZero = TRUE, gridLineColor = '#647a8d'
       )
 
   })

@@ -71,26 +71,27 @@ span>a.paginate_button.current {
 
 /* dygraphs */
 .dygraphs {
-  background-color: var(--main-bg-color) !important;
+  background-color: #c8cac8 !important;
 }
 
 .dygraph-label {
-  color: var(--main-dark-color) !important;
+  color: #647a8d !important;
   font-family: Montserrat;
 }
 
 dygraph-axis-label.dygraph-axis-label-x {
-  color: var(--main-dark-color) !important;
+  color: #647a8d !important;
   font-family: Montserrat;
 }
 
 dygraph-axis-label.dygraph-axis-label-y {
-  color: var(--main-dark-color) !important;
+  color: #647a8d !important;
   font-family: Montserrat;
 }
 
 .dygraph-legend {
-  background-color: var(--main-selected-color) !important;
+  color: #c8cac8;
+  background-color: #647a8d !important;
   border-radius: 5px;
   padding: 5px;
 }
