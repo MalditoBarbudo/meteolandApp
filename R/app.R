@@ -212,10 +212,15 @@ meteoland_app <- function() {
       mod_techSpecs, 'mod_techSpecsOutput',
       lang
     )
-    # ts module
+    # ts modules
     shiny::callModule(
       mod_ts, 'mod_tsOutput',
-      viz_reactives, main_data_reactives,
+      viz_reactives, main_data_reactives, map_reactives,
+      lang
+    )
+    shiny::callModule(
+      mod_ts, 'mod_tsOutput_raster',
+      viz_reactives, main_data_reactives, map_reactives,
       lang
     )
 
@@ -262,13 +267,35 @@ meteoland_app <- function() {
       }
     )
 
-    # time series modal observer
+    # time series modal observers
+    # 1. points
     shiny::observeEvent(
       eventExpr = viz_reactives$ts_button,
       handlerExpr = {
         shiny::showModal(
           shiny::modalDialog(
             mod_tsOutput('mod_tsOutput'),
+            footer = shiny::modalButton(
+              translate_app('dismiss', lang())
+            ),
+            size = 'l', easyClose = FALSE
+          )
+        )
+      }
+    )
+    # 2. raster
+    shiny::observeEvent(
+      eventExpr = map_reactives$meteoland_map_click,
+      handlerExpr = {
+
+        # check first that the activator is on
+        shiny::validate(
+          shiny::need(viz_reactives$activate_tsraster, 'no activator')
+        )
+
+        shiny::showModal(
+          shiny::modalDialog(
+            mod_tsOutput('mod_tsOutput_raster'),
             footer = shiny::modalButton(
               translate_app('dismiss', lang())
             ),

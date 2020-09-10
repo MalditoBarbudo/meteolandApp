@@ -11,7 +11,9 @@ mod_vizInput <- function(id) {
 
   # UI ####
   shiny::tagList(
+    shiny::br(),
     shiny::uiOutput(ns('mod_viz_panel')),
+    shiny::hr(),
     shiny::uiOutput(ns('ts_inputs_panel'))
   )
 }
@@ -150,17 +152,8 @@ mod_viz <- function(
         unique()
 
       shiny::tagList(
+        shiny::h4(translate_app('ts_title', lang())),
         shiny::fluidRow(
-          shiny::column(
-            6,
-            shiny::br(), shiny::br(),
-            shiny::actionButton(
-              ns('ts_button'),
-              label = translate_app('ts_button', lang()),
-              # icon = shiny::icon('creative-commons-sampling')
-              icon = shiny::icon('chart-area')
-            )
-          ),
           shiny::column(
             6, #align = 'center',
             shinyWidgets::pickerInput(
@@ -189,10 +182,39 @@ mod_viz <- function(
                 tickIcon = 'glyphicon-tree-deciduous'
               )
             )
+          ),
+          shiny::column(
+            6, align = 'center',
+            shiny::br(),
+            shiny::actionButton(
+              ns('ts_button'),
+              label = translate_app('ts_button', lang()),
+              # icon = shiny::icon('creative-commons-sampling')
+              icon = shiny::icon('chart-area')
+            )
           )
         )
       )
+    } else {
 
+      shiny::tagList(
+        shiny::h4(translate_app('ts_title', lang())),
+        shiny::fluidRow(
+          shiny::column(
+            5,
+            shiny::br(),
+            shinyWidgets::awesomeCheckbox(
+              ns('activate_tsraster'),
+              label = translate_app('activate_tsraster', lang()),
+              status = 'info'
+            )
+          ),
+          shiny::column(
+            7,
+            shiny::p(translate_app('tsraster_info', lang()))
+          )
+        )
+      )
 
     }
 
@@ -208,6 +230,7 @@ mod_viz <- function(
     viz_reactives$viz_pal_reverse <- input$viz_pal_reverse
     viz_reactives$ts_points <- input$ts_points
     viz_reactives$ts_button <- input$ts_button
+    viz_reactives$activate_tsraster <- input$activate_tsraster
   })
   return(viz_reactives)
 

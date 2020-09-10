@@ -61,6 +61,9 @@ app_translations <- tibble::tribble(
   'ts_button', "Sèries temporals", "Time series", "Series temporales",
   "dismiss", "Tancar", "Dismiss", "Cerrar",
   "ts_points", "Seleccioneu els punts per la sèrie temporal", "Select the points for the time series", "Selecciona los puntos para la serie temporal",
+  "ts_title", "Sèries temporals", "Time series", "Series temporales",
+  "activate_tsraster", "Activeu sèries temporals", "Activate time series", "Activar series temporales",
+  "tsraster_info", "Quan aquesta està activa, permet fer clic al mapa per visualitzar una sèrie temporal de les coordenades en què es va fer clic.", "When this is active, it allows to click on the map to visualize a time series for the coordinates clicked.", "Cuando está activo, permite hacer click en el mapa para visualizar una serie temporal para las coordenadas seleccionadas.",
   # progress bar
   "progress_message", "Interpolant dades...", "Interpolating data...", "Interpolating datos...",
   "progress_detail_initial", "Això pot trigar uns minuts depenent de la franja de dates i el nombre de geometries", "This can take a while depending on the date range and number of geometries", "Esto puede tardar unos minutos dependiendo del rango de fechas y el número de geometrías",

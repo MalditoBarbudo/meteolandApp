@@ -9,7 +9,10 @@ mod_saveOutput <- function(id) {
   # ns
   ns <- shiny::NS(id)
   # ui
-  shiny::uiOutput(ns("save_container"))
+  shiny::tagList(
+    shiny::br(),
+    shiny::uiOutput(ns("save_container"))
+  )
 }
 
 #' mod_save

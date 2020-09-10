@@ -237,11 +237,10 @@ mod_map <- function(
   ## reactives to return ####
   map_reactives <- shiny::reactiveValues()
   shiny::observe({
-    # map_reactives$map_data <- map_data()
     map_reactives$meteoland_map_shape_click <- input$meteoland_map_shape_click
     map_reactives$meteoland_map_draw_all_features <-
       input$meteoland_map_draw_all_features
-    # map_reactives$meteoland_map_center <- input$meteoland_map_center
+    map_reactives$meteoland_map_click <- input$meteoland_map_click
   })
   return(map_reactives)
 }
