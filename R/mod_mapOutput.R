@@ -36,8 +36,6 @@ mod_map <- function(
 
   ## renderUI ####
   output$map_container <- shiny::renderUI({
-    # ns
-    ns <- session$ns
     shiny::tags$div(
       id = 'cite',
       translate_app('cite_div', lang())
@@ -140,6 +138,7 @@ mod_map <- function(
       data_res <- data_res %>%
         leaflet::projectRasterForLeaflet('bilinear')
     }
+
     # return the map data
     return(data_res)
   })

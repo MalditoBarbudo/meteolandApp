@@ -30,4 +30,5 @@ Imports:
     shinyWidgets,
     sp,
     stringr,
-    dygraphs
+    dygraphs,
+    waiter

@@ -34,6 +34,15 @@ mod_mainData <- function(
   meteolanddb, lang, parent_session
 ) {
 
+  ## waiter/hostess progress ####
+  # set a progress with waiter. We will use infinite TRUE, that way we dont
+  # need to calculate any steps durations
+  waitress_progress <- waiter::Waitress$new(
+    selector = '#mod_mapOutput-meteoland_map',
+    theme = "overlay-opacity",
+    infinite = TRUE
+  )
+
   # custom polygon ####
   # we need to check if custom polygon, to retrieve it and build the data later
   custom_polygon <- shiny::reactive({
@@ -128,14 +137,19 @@ mod_mainData <- function(
     eventExpr = apply_reactives$apply_button,
     valueExpr = {
 
+
+      waitress_progress$start()
+      on.exit(waitress_progress$close())
+
       # set a progress
       progress <- shiny::Progress$new(session, min = 5, max = 100)
-      on.exit(progress$close())
+      on.exit(progress$close(), add = TRUE)
       progress$set(
         message = translate_app("progress_message", lang()),
         detail = translate_app("progress_detail_initial", lang()),
         value = 5
       )
+
 
       # inputs
       data_mode <- data_reactives$data_mode
@@ -163,6 +177,7 @@ mod_mainData <- function(
       }
 
       return(main_data)
+
     }
   )
 

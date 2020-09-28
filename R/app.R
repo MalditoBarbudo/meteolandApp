@@ -39,6 +39,8 @@ meteoland_app <- function() {
 
     # shinyjs
     shinyjs::useShinyjs(),
+    # waiter
+    waiter::use_waitress(),
 
     # css
     shiny::tags$head(
