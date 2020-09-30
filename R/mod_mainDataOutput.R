@@ -39,7 +39,7 @@ mod_mainData <- function(
   # need to calculate any steps durations
   waitress_progress <- waiter::Waitress$new(
     selector = '#mod_mapOutput-meteoland_map',
-    theme = "overlay-opacity",
+    theme = "overlay-percent",
     infinite = TRUE
   )
 
@@ -138,17 +138,23 @@ mod_mainData <- function(
     valueExpr = {
 
 
-      waitress_progress$start()
+      waitress_progress$start(
+        html = shiny::tagList(
+          shiny::h3(translate_app("progress_message", lang())),
+          shiny::p(translate_app("progress_detail_initial", lang()))
+        ),
+        background_color = "transparent", text_color = "#83A24E"
+      )
       on.exit(waitress_progress$close())
 
       # set a progress
-      progress <- shiny::Progress$new(session, min = 5, max = 100)
-      on.exit(progress$close(), add = TRUE)
-      progress$set(
-        message = translate_app("progress_message", lang()),
-        detail = translate_app("progress_detail_initial", lang()),
-        value = 5
-      )
+      # progress <- shiny::Progress$new(session, min = 5, max = 100)
+      # on.exit(progress$close(), add = TRUE)
+      # progress$set(
+      #   message = translate_app("progress_message", lang()),
+      #   detail = translate_app("progress_detail_initial", lang()),
+      #   value = 5
+      # )
 
 
       # inputs
@@ -160,7 +166,7 @@ mod_mainData <- function(
 
       main_data <- try(get_data(
         data_type, data_mode, date_range, user_polygon,
-        meteolanddb, 'geometry_id', progress, lang, session
+        meteolanddb, 'geometry_id', lang, session
       ))
 
       # validate that main_data is not try-error or of length 0
