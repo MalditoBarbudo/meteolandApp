@@ -109,7 +109,8 @@ div#shiny-notification-panel {
 
 /* waiter-waitress css custom */
 .waitress-overlay-content {
-  right: 35%;
+  top: 5px;
+  right: 30%;
 }
 
 .progressjs-theme-blueOverlayRadiusWithPercentBar {

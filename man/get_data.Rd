@@ -11,7 +11,6 @@ get_data(
   custom_polygon = NULL,
   meteolanddb,
   geometry_id,
-  progress_obj,
   lang,
   session
 )

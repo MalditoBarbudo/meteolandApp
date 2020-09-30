@@ -42,7 +42,7 @@ translate_app <- function(id, lang) {
 #' check and retrieve the data for the selected mode and type
 get_data <- function(
   data_type, data_mode, date_range = NULL, custom_polygon = NULL,
-  meteolanddb, geometry_id, progress_obj, lang, session
+  meteolanddb, geometry_id, lang, session
 ) {
 
   # browser()
@@ -60,13 +60,12 @@ get_data <- function(
       as.Date(format = '%j', origin = as.Date('1970-01-01')) %>%
       as.character()
 
-    progress_values <- ((80/length(datevec))*(1:length(datevec))) + 5
+    # progress_values <- ((80/length(datevec))*(1:length(datevec))) + 5
 
     query_data <- datevec %>%
       magrittr::set_names(., .) %>%
-      purrr::map2(
-        .y = progress_values,
-        .f = ~ get_lowres_raster_safe(.x, .y, progress_obj, meteolanddb, lang)
+      purrr::map(
+        .f = ~ get_lowres_raster_safe(.x, meteolanddb, lang)
       ) %>%
       purrr::keep(.p = ~ !rlang::is_na(.x))
   }
@@ -79,21 +78,21 @@ get_data <- function(
     #   text = translate_app('sweet_alert_res1km_text', lang())
     # )
 
-    progress_obj$set(
-      message = glue::glue(
-        "{translate_app('progress_message_drawn_polygon', lang())}"
-      ),
-      value = 45
-    )
+    # progress_obj$set(
+    #   message = glue::glue(
+    #     "{translate_app('progress_message_drawn_polygon', lang())}"
+    #   ),
+    #   value = 45
+    # )
 
     query_data <-
       meteolanddb$raster_interpolation(
-        custom_polygon, as.character(date_range), .progress_shiny = progress_obj
+        custom_polygon, as.character(date_range)
       )
 
-    progress_obj$set(
-      value = 85
-    )
+    # progress_obj$set(
+    #   value = 85
+    # )
   }
 
   # file, here we have two options:
@@ -101,12 +100,12 @@ get_data <- function(
   #     and current
   #   - POLYGONS, in this case is the same for current and historical
   if (data_type == 'file') {
-    progress_obj$set(
-      message = glue::glue(
-        "{translate_app('progress_message_file', lang())}"
-      ),
-      value = 45
-    )
+    # progress_obj$set(
+    #   message = glue::glue(
+    #     "{translate_app('progress_message_file', lang())}"
+    #   ),
+    #   value = 45
+    # )
 
     if (all(sf::st_is(custom_polygon, c('POLYGON', 'MULTIPOLYGON')))) {
       # shinyWidgets::sendSweetAlert(
@@ -117,8 +116,7 @@ get_data <- function(
 
       query_data <-
         meteolanddb$raster_interpolation(
-          custom_polygon, as.character(date_range),
-          .progress_shiny = progress_obj
+          custom_polygon, as.character(date_range)
         )
     }
 
@@ -147,9 +145,9 @@ get_data <- function(
       }
     }
 
-    progress_obj$set(
-      value = 85
-    )
+    # progress_obj$set(
+    #   value = 85
+    # )
 
   }
 
@@ -158,15 +156,15 @@ get_data <- function(
 
 # helpers for current and historical modes raster retrieving
 get_with_progress <- function(
-  date, progress_value, progress_obj, meteolanddb, lang
+  date, meteolanddb, lang
 ) {
 
-  progress_obj$set(
-    message = glue::glue(
-      "{translate_app('progress_message_raster', lang())} {date}"
-    ),
-    value = progress_value
-  )
+  # progress_obj$set(
+  #   message = glue::glue(
+  #     "{translate_app('progress_message_raster', lang())} {date}"
+  #   ),
+  #   value = progress_value
+  # )
 
   res <- meteolanddb$get_lowres_raster(date, 'raster')
   return(res)
@@ -187,33 +185,3 @@ viz_date_mode_check <- function(date_range, viz_date) {
   viz_date %in% dates_vec
 
 }
-
-
-# viz_date_mode_check <- function(date_range, main_data) {
-#
-#   # dates_vec <- as.Date(
-#   #   (as.Date(date_range[1])):(as.Date(date_range[2])),
-#   #   format = '%j', origin = as.Date('1970-01-01')
-#   # )
-#
-#   if (is(main_data, 'sf')) {
-#     dates_in_data <- main_data %>%
-#       dplyr::arrange(date) %>%
-#       dplyr::slice(1, nrow(main_data)) %>%
-#       dplyr::pull(date) %>%
-#       as.Date()
-#     # as.Date(viz_date) >= as.Date(dates_in_data[1]) &
-#     #   as.Date(viz_date) <= as.Date(dates_in_data[2])
-#
-#   } else {
-#     dates_in_data <- names(main_data)[c(1, length(names(main_data)))] %>%
-#       as.Date()
-#     # as.Date(viz_date) >= as.Date(dates_in_data[1]) &
-#     #   as.Date(viz_date) <= as.Date(dates_in_data[2])
-#   }
-#
-#   all(
-#     dates_in_data >= as.Date(date_range[1]) & dates_in_data <= as.Date(date_range[2])
-#   )
-#
-# }
