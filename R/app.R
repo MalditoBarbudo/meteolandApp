@@ -40,9 +40,8 @@ meteoland_app <- function() {
     # shinyjs
     shinyjs::useShinyjs(),
     # waiter
-    waiter::use_waitress(
-      color = "#606064", percent_color = "#83A24E"
-    ),
+    waiter::use_waiter(),
+    waiter::use_hostess(),
 
     # css
     shiny::tags$head(

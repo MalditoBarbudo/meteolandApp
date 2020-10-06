@@ -37,11 +37,10 @@ mod_mainData <- function(
   ## waiter/hostess progress ####
   # set a progress with waiter. We will use infinite TRUE, that way we dont
   # need to calculate any steps durations
-  waitress_progress <- waiter::Waitress$new(
-    selector = '#mod_mapOutput-meteoland_map',
-    theme = "overlay-percent",
-    infinite = TRUE
-  )
+  # 1. hostess progress
+  hostess_progress <- waiter::Hostess$new(infinite = TRUE)
+  # 2. waiter overlay related to map id
+  waiter_overlay <- waiter::Waiter$new('mod_mapOutput-meteoland_map')
 
   # custom polygon ####
   # we need to check if custom polygon, to retrieve it and build the data later
@@ -137,15 +136,27 @@ mod_mainData <- function(
     eventExpr = apply_reactives$apply_button,
     valueExpr = {
 
-
-      waitress_progress$start(
+      waiter_overlay$show()
+      waiter_overlay$update(
         html = shiny::tagList(
           shiny::h3(translate_app("progress_message", lang())),
-          shiny::p(translate_app("progress_detail_initial", lang()))
-        ),
-        background_color = "transparent", text_color = "#83A24E"
+          shiny::p(translate_app("progress_detail_initial", lang())),
+          hostess_progress$get_loader()
+        )
       )
-      on.exit(waitress_progress$close())
+      hostess_progress$start()
+      on.exit(hostess_progress$close())
+      on.exit(waiter_overlay$hide(), add = TRUE)
+
+
+      # waitress_progress$start(
+      #   html = shiny::tagList(
+      #     shiny::h3(translate_app("progress_message", lang())),
+      #     shiny::p(translate_app("progress_detail_initial", lang()))
+      #   ),
+      #   background_color = "transparent", text_color = "#83A24E"
+      # )
+      # on.exit(waitress_progress$close())
 
       # set a progress
       # progress <- shiny::Progress$new(session, min = 5, max = 100)
