@@ -108,6 +108,14 @@ mod_mainData <- function(
 
       # validation
       drawn_polygon <- map_reactives$meteoland_map_draw_all_features
+
+      if (is.null(drawn_polygon) || length(drawn_polygon[['features']]) < 1) {
+        shinyWidgets::sendSweetAlert(
+          session = session,
+          title = translate_app('sweet_alert_nopoly_title', lang()),
+          text = translate_app('sweet_alert_nopoly_text', lang())
+        )
+      }
       # When removing the features (custom polygon) the
       # input$map_draw_new_feature is not cleared, so is always filtering the
       # sites, even after removing. For that we need to control when the removed
@@ -153,26 +161,6 @@ mod_mainData <- function(
       hostess_progress$start()
       on.exit(hostess_progress$close())
       on.exit(waiter_overlay$hide(), add = TRUE)
-
-
-      # waitress_progress$start(
-      #   html = shiny::tagList(
-      #     shiny::h3(translate_app("progress_message", lang())),
-      #     shiny::p(translate_app("progress_detail_initial", lang()))
-      #   ),
-      #   background_color = "transparent", text_color = "#83A24E"
-      # )
-      # on.exit(waitress_progress$close())
-
-      # set a progress
-      # progress <- shiny::Progress$new(session, min = 5, max = 100)
-      # on.exit(progress$close(), add = TRUE)
-      # progress$set(
-      #   message = translate_app("progress_message", lang()),
-      #   detail = translate_app("progress_detail_initial", lang()),
-      #   value = 5
-      # )
-
 
       # inputs
       data_mode <- data_reactives$data_mode

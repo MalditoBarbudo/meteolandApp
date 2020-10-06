@@ -77,6 +77,8 @@ app_translations <- tibble::tribble(
   'sweet_alert_fileext_text', "L'arxiu carregat ha de ser un zip o gpkg", "Uploaded file must be a zip or a gpkg file", "El archivo cargado debe ser un zip o un gpkg",
   'sweet_alert_nodata_title', "No s'ha pogut accedir a les dades.", "No data can be retrieved.", "No se ha podido acceder a los datos.",
   'sweet_alert_nodata_text', "Això pot ser un problema de connexió amb la base de dades o que no es troben dades per a les dates proporcionades. Si us plau-ho a provar amb un altre rang de dates", "It can be a problem of the database connection or that no data can be retrieved for the dates provided. Please try with another set of dates.", "Esto puede ser un problema de conexión con la base de datos o que no se encuentran datos para las fechas proporcionadas. Por favor, inténtelo de nuevo con otro rango de fechas",
+  'sweet_alert_nopoly_title', "No s'ha dibuixat cap polígon", "No polygon has been drawn", "No se ha dibujado ningún polígono",
+  'sweet_alert_nopoly_text', "Dibuixa un polígon amb l'eina de l'map i prova de nou", "Draw a polygon with the map tool and try again", "Dibuja un polígono con la herramienta del map y prueba de nuevo",
   'sweet_alert_res1km_title', 'Resolució de la interpolació', 'Interpolation resolution', 'Resolución de la interpolación',
   'sweet_alert_res1km_text', '1 km', '1 km', '1 km',
   'sweet_alert_res30m_title', 'Resolució de la interpolació', 'Interpolation resolution', 'Resolución de la interpolación',
