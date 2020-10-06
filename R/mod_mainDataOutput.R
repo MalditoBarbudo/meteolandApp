@@ -40,7 +40,9 @@ mod_mainData <- function(
   # 1. hostess progress
   hostess_progress <- waiter::Hostess$new(infinite = TRUE)
   # 2. waiter overlay related to map id
-  waiter_overlay <- waiter::Waiter$new('mod_mapOutput-meteoland_map')
+  waiter_overlay <- waiter::Waiter$new(
+    'mod_mapOutput-meteoland_map', color = '#E8EAEB'
+  )
 
   # custom polygon ####
   # we need to check if custom polygon, to retrieve it and build the data later
@@ -139,9 +141,13 @@ mod_mainData <- function(
       waiter_overlay$show()
       waiter_overlay$update(
         html = shiny::tagList(
+          hostess_progress$get_loader(
+            svg = 'images/hostess_image.svg',
+            progress_type = 'fill',
+            fill_direction = 'btt'
+          ),
           shiny::h3(translate_app("progress_message", lang())),
-          shiny::p(translate_app("progress_detail_initial", lang())),
-          hostess_progress$get_loader()
+          shiny::p(translate_app("progress_detail_initial", lang()))
         )
       )
       hostess_progress$start()
