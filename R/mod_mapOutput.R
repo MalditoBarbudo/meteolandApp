@@ -161,11 +161,40 @@ mod_map <- function(
     viz_date <- viz_reactives$viz_date
     viz_pal_reverse <- viz_reactives$viz_pal_reverse
 
+    # validate that pre_map_data has a viz_color variable or layer. In this
+    # case is the same for rasters or sf, as we use names
+    if (!viz_color %in% names(pre_map_data)) {
+      shinyWidgets::sendSweetAlert(
+        session = session,
+        title = translate_app('sweet_alert_all_nas_title', lang()),
+        text = translate_app('sweet_alert_all_nas_text', lang())
+      )
+    }
+    shiny::validate(
+      shiny::need(viz_color %in% names(pre_map_data), 'no variable present')
+    )
+
     # branching to show raster or points, depending on nature of map data
     if (is(pre_map_data, 'sf')) {
       # palette configuration
       color_vector <- pre_map_data %>%
         dplyr::pull(!! rlang::sym(viz_color))
+
+      # we need values on the variable, not all NAs, so
+      #   1. we check and show a warning in case all NAs
+      if (all(is.na(color_vector))) {
+        shinyWidgets::sendSweetAlert(
+          session = session,
+          title = translate_app('sweet_alert_all_nas_title', lang()),
+          text = translate_app('sweet_alert_all_nas_text', lang())
+        )
+      }
+      #   2. we validate to avoid continuing the calculations and hence the
+      #      error.
+      shiny::validate(
+        shiny::need(!all(is.na(color_vector)), 'all NAs')
+      )
+
       color_palette <- leaflet::colorNumeric(
         'plasma', color_vector, reverse = viz_pal_reverse,
         na.color = 'black'
@@ -201,14 +230,30 @@ mod_map <- function(
     } else {
 
       layer_data <- pre_map_data[[viz_color]]
+      color_vector <- raster::values(layer_data)
+
+      # we need values on the variable, not all NAs, so
+      #   1. we check and show a warning in case all NAs
+      if (all(is.na(color_vector))) {
+        shinyWidgets::sendSweetAlert(
+          session = session,
+          title = translate_app('sweet_alert_all_nas_title', lang()),
+          text = translate_app('sweet_alert_all_nas_text', lang())
+        )
+      }
+      #   2. we validate to avoid continuing the calculations and hence the
+      #      error.
+      shiny::validate(
+        shiny::need(!all(is.na(color_vector)), 'all NAs')
+      )
 
       # palette configuration
       color_palette <- leaflet::colorNumeric(
-        'plasma', raster::values(layer_data), reverse = viz_pal_reverse,
+        'plasma', color_vector, reverse = viz_pal_reverse,
         na.color = 'transparent'
       )
       color_palette_legend <- leaflet::colorNumeric(
-        'plasma', raster::values(layer_data), reverse = !viz_pal_reverse,
+        'plasma', color_vector, reverse = !viz_pal_reverse,
         na.color = 'transparent'
       )
 
@@ -222,7 +267,7 @@ mod_map <- function(
         ) %>%
         leaflet::addLegend(
           position = 'bottomright', pal = color_palette_legend,
-          values = raster::values(layer_data),
+          values = color_vector,
           title = glue::glue("{translate_app(viz_color, lang())} {viz_date}"),
           layerId = 'color_legend', opacity = 1,
           na.label = '', className = 'info legend na_out',
