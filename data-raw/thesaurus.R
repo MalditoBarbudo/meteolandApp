@@ -45,7 +45,7 @@ app_translations <- tibble::tribble(
   'MinRelativeHumidity', "Humitat relativa mínima [%]", "Min Relative Humidity [%]", "Humedad relativa mínima [%]",
   'MaxRelativeHumidity', "Humitat relativa màxima [%]", "Max Relative Humidity [%]", "Humedad relativa máxima [%]",
   'Precipitation', "Precipitació [mm]", "Precipitation [mm]", "Precipitación [mm]",
-  'Radiation', "Radiació [MJ/day]", "Radiation [MJ/day]", "Radiación [MJ/day]",
+  'Radiation', "Radiació [MJ/cm2]", "Radiation [MJ/cm2]", "Radiación [MJ/cm2]",
   'WindSpeed', "Velocitat del vent [m/s]", "Wind Speed [m/s]", "Velocidad del viento [m/s]",
   'WindDirection', "Direcció del vent [° des del N]", "Wind Direction [° from N]", "Dirección del viento [° desde N]",
   'PET', "PET [mm]", "PET [mm]", "PET [mm]",
