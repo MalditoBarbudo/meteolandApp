@@ -1,91 +1,74 @@
-library(stars)
-library(sf)
 library(raster)
-library(fasterize)
+library(stars)
 library(tidyverse)
+
+# list of files, we remove 1975 because we already did it in the tests
+nc_files <- list.files(
+  "../miquel/Climate/Products/Pixels1k/Historical/Daily/", "nc$",
+  full.names = TRUE
+)
 
 db_conn <- pool::dbPool(
   RPostgres::Postgres(),
   dbname = 'meteoland', host = 'laboratoriforestal.creaf.uab.cat', port = 5432,
-  password = rstudioapi::askForPassword(), user = 'ifn'
+  password = 'IFN2018creaf', user = 'ifn'
 )
+db_checkout <- pool::poolCheckout(db_conn)
 
-# stars::read_stars(file_year, proxy = TRUE, sub = 3:13)
-pryr::mem_used()
-year_1976 <- stars::read_stars('data-raw/1976_historical_netCDF.nc', proxy = TRUE)
-pryr::mem_used()
+# iterate over year files
+for (file_year in nc_files) {
 
-for (day in 1:stars::st_dimensions(year_1976)$time$to %>% as.numeric()) {
+  year_data <- stars::read_stars(file_year, proxy = TRUE, sub = c(3:11, 13))
 
-  date_posix <- st_get_dimension_values(year_1976, 'time')[day]
-  date_name <- date_posix %>%
-    as.character() %>%
-    stringr::str_sub(1, 10) %>%
-    stringr::str_remove_all('-')
-  table_name <- glue::glue("daily_historic_raster_interpolated_{date_name}")
-  message(glue::glue("Creating raster table: {table_name}"))
+  # iterate over dayss in the year file, as we create a table for each day
+  # 1:stars::st_dimensions(year_data)$time$to %>% as.numeric()
+  for (d in 1:stars::st_dimensions(year_data)$time$to %>% as.numeric()) {
 
-  pryr::mem_used()
-  res_stack <- year_1976[,,,day, drop = TRUE] %>%
-    st_as_stars() %>%
-    merge() %>%
-    as('Raster') %>%
-    magrittr::set_names(names(year_1976))
-  pryr::mem_used()
-  pryr::object_size(res_stack)
+    tictoc::tic()
+    date_posix <- st_get_dimension_values(year_data, 'time')[d]
+    date_name <- date_posix %>%
+      as.character() %>%
+      stringr::str_sub(1, 10) %>%
+      stringr::str_remove_all('-')
+    table_name <- glue::glue("daily_historic_raster_interpolated_{date_name}")
+    message(glue::glue("Creating raster table: {table_name}\n\n"))
 
+    message(pryr::mem_used())
+    res_stack <- year_data[,,,d, drop = TRUE] %>%
+      st_as_stars() %>%
+      merge() %>%
+      as('Raster') %>%
+      magrittr::set_names(names(year_data))
+    res_stack[['ThermalAmplitude']] <- res_stack[['MaxTemperature']] - res_stack[['MinTemperature']]
+    raster::projection(res_stack) <- crs('+proj=utm +zone=31 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs')
+    message(pryr::mem_used())
+    message(pryr::object_size(res_stack))
 
+    write_raster_try <- try({
+      rpostgis::pgWriteRast(
+        db_checkout, table_name, res_stack, overwrite = TRUE
+      )
+    })
 
+    if (class(write_raster_try) == 'try-error') {
+      pool::poolReturn(db_checkout)
+      pool::poolClose(db_conn)
+      Sys.sleep(60)
 
+      db_conn <- pool::dbPool(
+        RPostgres::Postgres(),
+        dbname = 'meteoland', host = 'laboratoriforestal.creaf.uab.cat', port = 5432,
+        password = 'IFN2018creaf', user = 'ifn'
+      )
+      db_checkout <- pool::poolCheckout(db_conn)
 
-  # stars_object %>%
-  #   # merge attributes (variables) as a dimension. This allows the
-  #   # direct conversion from stars to rasterBrick
-  #   merge() %>%
-  #   as('Raster') %>%
-  #   magrittr::set_names(names(stars_object))
-
-  res_MeanTemperature <- as(year_1976['MeanTemperature',,,day, drop = TRUE], 'Raster')
-  raster::projection(res_MeanTemperature) <- crs('+proj=utm +zone=31 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs')
-  res_MinTemperature <- as(year_1976['MinTemperature',,,day, drop = TRUE], 'Raster')
-  raster::projection(res_MinTemperature) <- crs('+proj=utm +zone=31 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs')
-  res_MaxTemperature <- as(year_1976['MaxTemperature',,,day, drop = TRUE], 'Raster')
-  raster::projection(res_MaxTemperature) <- crs('+proj=utm +zone=31 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs')
-  res_MeanRelativeHumidity <- as(year_1976['MeanRelativeHumidity',,,day, drop = TRUE], 'Raster')
-  raster::projection(res_MeanRelativeHumidity) <- crs('+proj=utm +zone=31 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs')
-  res_MinRelativeHumidity <- as(year_1976['MinRelativeHumidity',,,day, drop = TRUE], 'Raster')
-  raster::projection(res_MinRelativeHumidity) <- crs('+proj=utm +zone=31 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs')
-  res_MaxRelativeHumidity <- as(year_1976['MaxRelativeHumidity',,,day, drop = TRUE], 'Raster')
-  raster::projection(res_MaxRelativeHumidity) <- crs('+proj=utm +zone=31 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs')
-  res_Precipitation <- as(year_1976['Precipitation',,,day, drop = TRUE], 'Raster')
-  raster::projection(res_Precipitation) <- crs('+proj=utm +zone=31 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs')
-  res_Radiation <- as(year_1976['Radiation',,,day, drop = TRUE], 'Raster')
-  raster::projection(res_Radiation) <- crs('+proj=utm +zone=31 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs')
-  res_WindSpeed <- as(year_1976['WindSpeed',,,day, drop = TRUE], 'Raster')
-  raster::projection(res_WindSpeed) <- crs('+proj=utm +zone=31 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs')
-  res_WindDirection <- as(year_1976['WindDirection',,,day, drop = TRUE], 'Raster')
-  raster::projection(res_WindDirection) <- crs('+proj=utm +zone=31 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs')
-  res_PET <- as(year_1976['PET',,,day, drop = TRUE], 'Raster')
-  raster::projection(res_PET) <- crs('+proj=utm +zone=31 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs')
-
-  res_stack <- raster::stack(
-    res_MeanTemperature, res_MinTemperature, res_MaxTemperature,
-    res_MeanRelativeHumidity, res_MinRelativeHumidity, res_MaxRelativeHumidity,
-    res_Precipitation, res_Radiation, res_WindSpeed, res_WindDirection,
-    res_PET
-  )
-  names(res_stack) <- c(
-    'MeanTemperature', 'MinTemperature', 'MaxTemperature',
-    'MeanRelativeHumidity', 'MinRelativeHumidity', 'MaxRelativeHumidity',
-    'Precipitation', 'Radiation', 'WindSpeed', 'WindDirection', 'PET'
-  )
-
-  db_checkout <- pool::poolCheckout(db_conn)
-  rpostgis::pgWriteRast(
-    db_checkout, table_name, res_stack, overwrite = TRUE
-  )
-  pool::poolReturn(db_checkout)
-
+      rpostgis::pgWriteRast(
+        db_checkout, table_name, res_stack, overwrite = TRUE
+      )
+    }
+    tictoc::toc()
+  }
 }
 
+pool::poolReturn(db_checkout)
 pool::poolClose(db_conn)

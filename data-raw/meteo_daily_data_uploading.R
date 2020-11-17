@@ -94,8 +94,9 @@ prepare_daily_grid_raster <- function(date_i, topo) {
   res_Precipitation <- as(res_stars['Precipitation'], 'Raster')
   res_Radiation <- as(res_stars['Radiation'], 'Raster')
   res_WindSpeed <- as(res_stars['WindSpeed'], 'Raster')
-  res_WindDirection <- as(res_stars['WindDirection'], 'Raster')
+  # res_WindDirection <- as(res_stars['WindDirection'], 'Raster')
   res_PET <- as(res_stars['PET'], 'Raster')
+  res_ThermalAmplitude <- res_MaxTemperature - res_MinTemperature
 
   res_stack <- raster::stack(
     res_MeanTemperature,
@@ -107,8 +108,9 @@ prepare_daily_grid_raster <- function(date_i, topo) {
     res_Precipitation,
     res_Radiation,
     res_WindSpeed,
-    res_WindDirection,
-    res_PET
+    # res_WindDirection,
+    res_PET,
+    res_ThermalAmplitude
   )
   names(res_stack) <- c(
     'MeanTemperature',
@@ -120,8 +122,9 @@ prepare_daily_grid_raster <- function(date_i, topo) {
     'Precipitation',
     'Radiation',
     'WindSpeed',
-    'WindDirection',
-    'PET'
+    # 'WindDirection',
+    'PET',
+    'ThermalAmplitude'
   )
 
   return(res_stack)
@@ -230,19 +233,30 @@ daily_meto_data_update <- function(db_conn, path_cat, path_spa, overwrite) {
 
 
 # arguments
-overwrite <- TRUE
-db_conn <- pool::dbPool(
-  RPostgres::Postgres(),
-  dbname = 'meteoland', host = 'laboratoriforestal.creaf.uab.cat', port = 5432,
-  password = rstudioapi::askForPassword(), user = 'ifn'
-)
-path_cat <- # file.path("/home", "miquel", "Climate", "Sources", "SMC", "Download", "DailyCAT")
-  "data-raw/daily_meteo_data/DailyCAT"
-path_spa <- # file.path("/home", "miquel", "Climate", "Sources", "AEMET", "Download", "DailySPAIN")
-  "data-raw/daily_meteo_data/DailySPAIN"
+overwrite <- FALSE
+db_conn <- try({
+  pool::dbPool(
+    RPostgres::Postgres(),
+    dbname = 'meteoland', host = 'laboratoriforestal.creaf.uab.cat', port = 5432,
+    password = 'IFN2018creaf', user = 'ifn', idleTimeout = 3600
+  )
+})
 
-tictoc::tic()
+if (class(db_conn) == 'try-error') {
+  sleep(30)
+  pool::dbPool(
+    RPostgres::Postgres(),
+    dbname = 'meteoland', host = 'laboratoriforestal.creaf.uab.cat', port = 5432,
+    password = 'IFN2018creaf', user = 'ifn', idleTimeout = 3600
+  )
+}
+
+path_cat <- file.path(
+  "/home", "miquel", "Climate", "Sources", "SMC", "Download", "DailyCAT"
+)
+path_spa <- file.path(
+  "/home", "miquel", "Climate", "Sources", "AEMET", "Download", "DailySPAIN"
+)
 daily_meto_data_update(db_conn, path_cat, path_spa, overwrite)
-tictoc::toc()
 
 pool::poolClose(db_conn)
