@@ -34,6 +34,21 @@ meteoland_app <- function() {
 });'
   )
 
+  keep_alive_script <- shiny::HTML(
+    "var socket_timeout_interval;
+var n = 0;
+
+$(document).on('shiny:connected', function(event) {
+  socket_timeout_interval = setInterval(function() {
+    Shiny.onInputChange('alive_count', n++)
+  }, 10000);
+});
+
+$(document).on('shiny:disconnected', function(event) {
+  clearInterval(socket_timeout_interval)
+});"
+  )
+
   ## UI ####
   ui <- shiny::tagList(
 
@@ -47,6 +62,7 @@ meteoland_app <- function() {
     shiny::tags$head(
       # js script,
       shiny::tags$script(js_script),
+      shiny::tags$script(keep_alive_script),
       # corporative image css
       shiny::includeCSS(
         system.file('resources', 'corp_image.css', package = 'meteolandApp')
