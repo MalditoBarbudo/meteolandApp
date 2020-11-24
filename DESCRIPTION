@@ -31,4 +31,5 @@ Imports:
     sp,
     stringr,
     dygraphs,
-    waiter
+    waiter,
+    DBI

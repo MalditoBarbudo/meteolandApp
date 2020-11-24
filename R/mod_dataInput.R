@@ -207,13 +207,10 @@ mod_data <- function(
       # We need to check which is the last date available without cuts (dates
       # in a row) and set this as the start, end and max values in the date
       # range input
-      pool_checkout <-
-        pool::poolCheckout(meteolanddb$.__enclos_env__$private$pool_conn)
       current_daily_tables <-
-        dplyr::db_list_tables(pool_checkout) %>%
+        DBI::dbListTables(meteolanddb$.__enclos_env__$private$pool_conn) %>%
         magrittr::extract(stringr::str_detect(., "daily_raster_interpolated")) %>%
         sort()
-      pool::poolReturn(pool_checkout)
 
       accepted_dates <- as.Date(
         (Sys.Date() - 396):(Sys.Date() - 1), # one year long + 30 days buffer
