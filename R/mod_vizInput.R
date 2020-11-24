@@ -52,7 +52,7 @@ mod_viz <- function(
 
     # precalculated choices
     color_choices <- c(
-      'MeanTemperature', 'MinTemperature', 'MaxTemperature',
+      'MeanTemperature', 'MinTemperature', 'MaxTemperature', "ThermalAmplitude",
       'MeanRelativeHumidity', 'MinRelativeHumidity', 'MaxRelativeHumidity',
       'Precipitation', 'Radiation', 'WindSpeed', 'PET'
     ) %>%

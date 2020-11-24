@@ -23,12 +23,13 @@ mod_dataInput <- function(id) {
 #' @param output internal
 #' @param session internal
 #'
+#' @param meteolanddb lfcdata database accesss object
 #' @param lang lang reactive
 #'
 #' @export
 mod_data <- function(
   input, output, session,
-  lang
+  meteolanddb, lang
 ) {
 
   # renderUI ####
@@ -202,37 +203,53 @@ mod_data <- function(
     data_mode <- input$data_mode
 
     if (data_mode == 'current') {
-      # shinyWidgets::updateAirDateInput(
-      #   session, 'date_range',
-      #   label = translate_app('date_range', lang()),
-      #   value = c(Sys.Date()-2, Sys.Date()-1),
-      #   options = list(
-      #     minDate = Sys.Date()-365, maxDate = Sys.Date()-1
-      #   )
-      # )
-      # shiny::updateDateRangeInput(
-      #   session, 'date_range',
-      #   label = translate_app('date_range', lang()),
-      #   start = Sys.Date()-1, end = Sys.Date()-1,
-      #   min = Sys.Date()-365, max = Sys.Date()-1
-      # )
+
+      # We need to check which is the last date available without cuts (dates
+      # in a row) and set this as the start, end and max values in the date
+      # range input
+      current_daily_tables <-
+        dplyr::db_list_tables(meteolanddb$.__enclos_env__$private$pool_conn) %>%
+        magrittr::extract(stringr::str_detect(., "daily_raster_interpolated")) %>%
+        sort()
+
+      accepted_dates <- as.Date(
+        (Sys.Date() - 396):(Sys.Date() - 1), # one year long + 30 days buffer
+        format = '%j', origin = as.Date('1970-01-01')
+      ) %>%
+        as.character()
+
+      current_accepted_tables <-  accepted_dates %>%
+        stringr::str_remove_all(pattern = '-') %>%
+        {glue::glue("daily_raster_interpolated_{.}")}
+
+      index_missing <- which(!current_accepted_tables %in% current_daily_tables)
+
+      # 31 is the removing buffer in the database
+      if (length(index_missing) > 0) {
+        accepted_dates <- accepted_dates[31:(index_missing - 1)]
+      } else {
+        accepted_dates <- accepted_dates[31:length(accepted_dates)]
+      }
+
+
       # there is a bug in shiny: https://github.com/rstudio/shiny/issues/2703,
-      # so here we need a convoluted way of doing it per:
+      # so here we need a convoluted way of setting the start, end, min and max
+      # arguments. Explained in:
       # https://stackoverflow.com/questions/62171194/problems-with-shinyupdatedaterangeinput
 
       # first we set end and max
       shiny::updateDateRangeInput(
         session, 'date_range',
         label = translate_app('date_range', lang()),
-        end = Sys.Date()-1,
-        max = Sys.Date()-1
+        end = accepted_dates[length(accepted_dates)],
+        max = accepted_dates[length(accepted_dates)]
       )
       # and now start and min
       shiny::updateDateRangeInput(
         session, 'date_range',
         label = translate_app('date_range', lang()),
-        start = Sys.Date()-1,
-        min = Sys.Date()-365
+        start = accepted_dates[length(accepted_dates)],
+        min = accepted_dates[1]
       )
 
     } else {
@@ -248,7 +265,7 @@ mod_data <- function(
         session, 'date_range',
         label = translate_app('date_range', lang()),
         start = '1976-01-01', end = '1976-01-01',
-        min = '1976-01-01', max = Sys.Date()-366
+        min = '1976-01-01', max = Sys.Date() - 366
       )
     }
   })
@@ -271,11 +288,11 @@ mod_data <- function(
         text = translate_app('sweet_alert_30days_text', lang())
       )
 
-      shinyWidgets::updateAirDateInput(
-        session, 'date_range',
-        label = translate_app('date_range', lang()),
-        value = c(as.Date(date_range[1]), as.Date(date_range[1])+30)
-      )
+      # shinyWidgets::updateAirDateInput(
+      #   session, 'date_range',
+      #   label = translate_app('date_range', lang()),
+      #   value = c(as.Date(date_range[1]), as.Date(date_range[1]) + 30)
+      # )
     }
 
   })

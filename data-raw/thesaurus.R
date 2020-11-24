@@ -38,9 +38,9 @@ app_translations <- tibble::tribble(
   # apply module
   "apply", "Aplicar", "Apply", "Aplicar",
   # variables
-  'MeanTemperature', "Temperatura mitjana [ºC]", "Mean Temperature [ºC]", "Temperatura media [ºC]",
-  'MinTemperature', "Temperatura mínima [ºC]", "Min Temperature [ºC]", "Temperatura mínima [ºC]",
-  'MaxTemperature', "Temperatura màxima [ºC]", "Max Temperature [ºC]", "Temperatura máxima [ºC]",
+  'MeanTemperature', "Temperatura mitjana [°C]", "Mean Temperature [°C]", "Temperatura media [°C]",
+  'MinTemperature', "Temperatura mínima [°C]", "Min Temperature [°C]", "Temperatura mínima [°C]",
+  'MaxTemperature', "Temperatura màxima [°C]", "Max Temperature [°C]", "Temperatura máxima [°C]",
   'MeanRelativeHumidity', "Humitat relativa mitjana [%]", "Mean Relative Humidity [%]", "Humedad relativa media [%]",
   'MinRelativeHumidity', "Humitat relativa mínima [%]", "Min Relative Humidity [%]", "Humedad relativa mínima [%]",
   'MaxRelativeHumidity', "Humitat relativa màxima [%]", "Max Relative Humidity [%]", "Humedad relativa máxima [%]",
@@ -48,6 +48,7 @@ app_translations <- tibble::tribble(
   'Radiation', "Radiació [MJ/cm2]", "Radiation [MJ/cm2]", "Radiación [MJ/cm2]",
   'WindSpeed', "Velocitat del vent [m/s]", "Wind Speed [m/s]", "Velocidad del viento [m/s]",
   'WindDirection', "Direcció del vent [° des del N]", "Wind Direction [° from N]", "Dirección del viento [° desde N]",
+  'ThermalAmplitude', "Amplitud Tèrmica [°C]", "Thermal Amplitude [°C]", "Amplitud Térmica [°C]",
   'PET', "PET [mm]", "PET [mm]", "PET [mm]",
   # viz
   "h4_viz", "Visualització", "Visualization", "Visualización",
@@ -94,7 +95,7 @@ app_translations <- tibble::tribble(
   'save_remarks_2', 'Els rásteres es guardaran en format GeoTiff (extensió .tif). Si la consulta es realitza per punts, es guardaran en format GeoPackage (extensió .gpkg).', 'The rasters will be saved in GeoTiff format (.tif extension). If the query is made for points, they will be saved in GeoPackage format (extension .gpkg).', 'Los rásteres se guardarán en formato GeoTiff (extensión .tif). Si la consulta se realiza para puntos, se guardarán en formato GeoPackage (extensión .gpkg).',
   # cv module
   'cv_intro', "Aquests són els resultats de la validació creuada per al procés d’interpolació de dades meteorològiques diàries. La validació es va fer fent prediccions sobre la ubicació de cada estació metereològica després d’excloure les dades del model. La validació creuada es va dur a terme per a cada any durant el període 1976-2017 per separat.", "These are the cross-validation results for the process of interpolating daily meteorological data. Validation was done by making predictions for the location of each metereological station after excluding its data from the model. Cross-validation was conducted for each year in the 1976-2017 period separately.", "Estos son los resultados de la validación cruzada para el proceso de interpolación de datos meteorológicos diarios. La validación se realizó haciendo predicciones para la ubicación de cada estación meteorológica después de excluir sus datos del modelo. La validación cruzada se realizó para cada año en el período 1976-2017 por separado.",
-  'TemperatureRange', "Rang de temperatura [ºC]", "Temperature range [ºC]", "Rango de temperatura [ºC]",
+  'TemperatureRange', "Rang de temperatura [°C]", "Temperature range [°C]", "Rango de temperatura [°C]",
   "RelativeHumidity", "Humitat relativa [%]", "Relative Humidity [%]", "Humedad relativa [%]",
   "Station.rainfall", "Precipitaciò per estaciò", "Rainfall by station", "Precipitación por estación",
   "Station.rainfall.relative", "Precipitaciò per estaciò relativa", "Rainfall by station (relative)", "Precipitación por estación relativa",

@@ -4,7 +4,7 @@
 \alias{mod_data}
 \title{mod_data server function}
 \usage{
-mod_data(input, output, session, lang)
+mod_data(input, output, session, meteolanddb, lang)
 }
 \arguments{
 \item{input}{internal}
@@ -12,6 +12,8 @@ mod_data(input, output, session, lang)
 \item{output}{internal}
 
 \item{session}{internal}
+
+\item{meteolanddb}{lfcdata database accesss object}
 
 \item{lang}{lang reactive}
 }

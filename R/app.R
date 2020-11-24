@@ -191,7 +191,7 @@ $(document).on('shiny:disconnected', function(event) {
     # modules ####
     # data inputs
     data_reactives <- shiny::callModule(
-      mod_data, 'mod_dataInput', lang
+      mod_data, 'mod_dataInput', meteolanddb, lang
     )
     # apply button
     apply_reactives <- shiny::callModule(
