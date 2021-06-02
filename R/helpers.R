@@ -55,7 +55,6 @@ get_data <- function(
     #   title = translate_app('sweet_alert_res1km_title', lang()),
     #   text = translate_app('sweet_alert_res1km_text', lang())
     # )
-
     datevec <- date_range[1]:date_range[2] %>%
       as.Date(format = '%j', origin = as.Date('1970-01-01')) %>%
       as.character()

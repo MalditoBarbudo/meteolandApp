@@ -213,7 +213,7 @@ mod_data <- function(
         sort()
 
       accepted_dates <- as.Date(
-        (Sys.Date() - 396):(Sys.Date() - 1), # one year long + 30 days buffer
+        (Sys.Date() - 366):(Sys.Date() - 1), # one year long + 30 days buffer
         format = '%j', origin = as.Date('1970-01-01')
       ) %>%
         as.character()
@@ -226,9 +226,9 @@ mod_data <- function(
 
       # 31 is the removing buffer in the database
       if (length(index_missing) > 0) {
-        accepted_dates <- accepted_dates[31:(index_missing - 1)]
+        accepted_dates <- accepted_dates[1:(index_missing - 1)]
       } else {
-        accepted_dates <- accepted_dates[31:length(accepted_dates)]
+        accepted_dates <- accepted_dates[1:length(accepted_dates)]
       }
 
 
