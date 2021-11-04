@@ -28,7 +28,7 @@ names(topology_stack) <- c('elevation', 'slope', 'aspect')
 # conn
 conn <- RPostgres::dbConnect(
   RPostgres::Postgres(),
-  'meteoland', 'laboratoriforestal.creaf.uab.cat',
+  'meteoland', 'laboratoriforestal.creaf.cat',
   5432, rstudioapi::askForPassword(), 'ifn'
 )
 

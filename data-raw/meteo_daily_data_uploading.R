@@ -237,7 +237,7 @@ overwrite <- FALSE
 db_conn <- try({
   pool::dbPool(
     RPostgres::Postgres(),
-    dbname = 'meteoland', host = 'laboratoriforestal.creaf.uab.cat', port = 5432,
+    dbname = 'meteoland', host = 'laboratoriforestal.creaf.cat', port = 5432,
     password = 'IFN2018creaf', user = 'ifn', idleTimeout = 3600
   )
 })
@@ -246,7 +246,7 @@ if (class(db_conn) == 'try-error') {
   sleep(30)
   pool::dbPool(
     RPostgres::Postgres(),
-    dbname = 'meteoland', host = 'laboratoriforestal.creaf.uab.cat', port = 5432,
+    dbname = 'meteoland', host = 'laboratoriforestal.creaf.cat', port = 5432,
     password = 'IFN2018creaf', user = 'ifn', idleTimeout = 3600
   )
 }

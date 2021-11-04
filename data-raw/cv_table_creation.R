@@ -31,7 +31,7 @@ cv_summary <- seq_along(cv_files) %>%
 
 db_conn <- pool::dbPool(
   RPostgres::Postgres(),
-  dbname = 'meteoland', host = 'laboratoriforestal.creaf.uab.cat', port = 5432,
+  dbname = 'meteoland', host = 'laboratoriforestal.creaf.cat', port = 5432,
   password = rstudioapi::askForPassword(), user = 'ifn'
 )
 
