@@ -224,9 +224,19 @@ mod_data <- function(
 
       index_missing <- which(!current_accepted_tables %in% current_daily_tables)
 
+      browser()
+
       # 31 is the removing buffer in the database
       if (length(index_missing) > 0) {
-        accepted_dates <- accepted_dates[1:(index_missing - 1)]
+        # first date must be the first available: which(!1:366 %in% index_missing)[1]
+        # last date must be the previous one to the first index missing (except if the first index missing is
+        # the first date accepted, i.e. index_missing[1]==1)
+        first_date_accepted <- which(!1:366 %in% index_missing)[1]
+        last_date_accepted <- index_missing[1] - 1
+        if (index_missing[1] == 1) {
+          last_date_accepted <- index_missing[2] - 1
+        }
+        accepted_dates <- accepted_dates[first_date_accepted:last_date_accepted]
       } else {
         accepted_dates <- accepted_dates[1:length(accepted_dates)]
       }
