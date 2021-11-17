@@ -224,8 +224,6 @@ mod_data <- function(
 
       index_missing <- which(!current_accepted_tables %in% current_daily_tables)
 
-      browser()
-
       # 31 is the removing buffer in the database
       if (length(index_missing) > 0) {
         # first date must be the first available: which(!1:366 %in% index_missing)[1]
