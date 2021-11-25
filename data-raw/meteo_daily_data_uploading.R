@@ -238,7 +238,7 @@ db_conn <- try({
   pool::dbPool(
     RPostgres::Postgres(),
     dbname = 'meteoland', host = 'laboratoriforestal.creaf.cat', port = 5432,
-    password = 'IFN2018creaf', user = 'ifn', idleTimeout = 3600
+    password = 'rstudioapi::askForPassword('ifn')creaf', user = 'ifn', idleTimeout = 3600
   )
 })
 
@@ -247,7 +247,7 @@ if (class(db_conn) == 'try-error') {
   pool::dbPool(
     RPostgres::Postgres(),
     dbname = 'meteoland', host = 'laboratoriforestal.creaf.cat', port = 5432,
-    password = 'IFN2018creaf', user = 'ifn', idleTimeout = 3600
+    password = 'rstudioapi::askForPassword('ifn')creaf', user = 'ifn', idleTimeout = 3600
   )
 }
 
