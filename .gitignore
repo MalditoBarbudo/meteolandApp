@@ -7,3 +7,5 @@ data-raw/*.tiff
 data-raw/*.nc
 data-raw/interpolation_objects
 data-raw/cv_files
+data-raw/meteo_daily_data_uploading.R
+data-raw/daily_historic_tables_creation.R
