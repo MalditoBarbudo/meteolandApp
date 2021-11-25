@@ -11,7 +11,7 @@ nc_files <- list.files(
 db_conn <- pool::dbPool(
   RPostgres::Postgres(),
   dbname = 'meteoland', host = 'laboratoriforestal.creaf.cat', port = 5432,
-  password = 'rstudioapi::askForPassword('ifn')creaf', user = 'ifn'
+  password = rstudioapi::askForPassword('ifn'), user = 'ifn'
 )
 db_checkout <- pool::poolCheckout(db_conn)
 
@@ -58,7 +58,7 @@ for (file_year in nc_files) {
       db_conn <- pool::dbPool(
         RPostgres::Postgres(),
         dbname = 'meteoland', host = 'laboratoriforestal.creaf.cat', port = 5432,
-        password = 'rstudioapi::askForPassword('ifn')creaf', user = 'ifn'
+        password = rstudioapi::askForPassword('ifn'), user = 'ifn'
       )
       db_checkout <- pool::poolCheckout(db_conn)
 
