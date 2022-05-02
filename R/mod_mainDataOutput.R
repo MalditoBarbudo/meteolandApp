@@ -99,8 +99,28 @@ mod_mainData <- function(
         shiny::need(user_file_polygons, 'no file provided')
       )
 
-      # rename the poly_id
-      names(user_file_polygons)[1] <- 'geometry_id'
+      # check for poly_id
+      if (!"poly_id" %in% names(user_file_polygons)) {
+        warning('No poly_id variable found in spatial file, using first variable found as id')
+        user_file_polygons$poly_id <- as.character(user_file_polygons[[1]])
+        shiny::showNotification(
+          ui = shiny::tagList(
+            shiny::h4(translate_app("poly_id_missing_title", lang()))
+          ),
+          action = shiny::tagList(
+            translate_app("poly_id_missing_message", lang())
+          ),
+          duration = 15,
+          type = "warning"
+        )
+
+      } else {
+        # ensure polygon id is character (factors fuck it all)
+        user_file_polygons$poly_id <- as.character(user_file_polygons$poly_id)
+      }
+
+      # # rename the poly_id
+      # names(user_file_polygons)[1] <- 'poly_id'
 
       return(user_file_polygons)
     }
@@ -135,7 +155,7 @@ mod_mainData <- function(
         sf::st_sfc() %>%
         sf::st_sf(crs = 4326) %>%
         sf::st_transform(crs = 3043) %>%
-        dplyr::mutate(geometry_id = 'drawn_polygon')
+        dplyr::mutate(poly_id = 'drawn_polygon')
       return(res)
     }
   })
@@ -171,7 +191,7 @@ mod_mainData <- function(
 
       main_data <- try(get_data(
         data_type, data_mode, date_range, user_polygon,
-        meteolanddb, 'geometry_id', lang, session
+        meteolanddb, 'poly_id', lang, session
       ))
 
       # validate that main_data is not try-error or of length 0

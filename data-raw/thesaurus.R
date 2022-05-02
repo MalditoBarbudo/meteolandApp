@@ -20,7 +20,7 @@ app_translations <- tibble::tribble(
   "user_file_sel_label", "Selecciona l'arxiu a carregar", "Select the file to upload", "Selecciona el archivo a cargar",
   "user_file_sel_buttonLabel", "Inspecciona...", "Browse...", "Inspecciona...",
   "user_file_sel_placeholder", "Cap fitxer seleccionat", "No file selected", "Ningún archivo seleccionado",
-  "file_text", 'El fitxer pot ser un shapefile (comprimit en un fitxer zip) o un fitxer GeoPackage (.gpkg). Han de tenir un camp anomenat "id" amb els identificadors dels geometries continguts.', 'File can be a shapefile (compressed in a zip file) or GeoPackage file (.gpkg). They must have a field called "id" with the identifiers of the contained geometries.', 'El archivo puede ser un shapefile (comprimido en un archivo zip) o un archivo GeoPackage (.gpkg). Deben tener un campo llamado "id" con los identificadores de las geometrías contenidas.',
+  "file_text", 'El fitxer pot ser un shapefile (comprimit en un fitxer zip) o un fitxer GeoPackage (.gpkg). Han de tenir un camp anomenat "poly_id" amb els identificadors dels geometries continguts.', 'File can be a shapefile (compressed in a zip file) or GeoPackage file (.gpkg). They must have a field called "poly_id" with the identifiers of the contained geometries.', 'El archivo puede ser un shapefile (comprimido en un archivo zip) o un archivo GeoPackage (.gpkg). Deben tener un campo llamado "poly_id" con los identificadores de las geometrías contenidas.',
   # map
   "cite_div", "Dades elaborades pel CTFC i el CREAF a partir de les xarxes d'estacions meteorològiques automàtiques del SMC i AEMET.", "Data prepared by the CTFC and CREAF from the networks of automatic weather stations of the SMC and AEMET.", "Datos elaborados por el CTFC y el CREAF a partir de las redes de estaciones meteorológicas automáticas del SMC y AEMET.",
   # 'Relief', 'Relleu (base)', 'Relief (base)', 'Relieve (base)',
@@ -118,6 +118,10 @@ app_translations <- tibble::tribble(
   # modes explanation
   "current_mode_explanation", "Dades d’interpolació dels darrers 365 dies (any natural). Totes les interpolacions es fan amb una resolució d’1 km, excepte els fitxers que contenen punts individuals, en què la interpolació es realitza a 30 m de resolució.", "Interpolation data for the last 365 days (natural year). All interpolations are done in a 1km resolution, except for files containing individual points, in which the interpolation is made at 30m resolution.", "Datos de interpolación de los últimos 365 días (año natural). Todas las interpolaciones se realizan con una resolución de 1 km, excepto los archivos que contienen puntos individuales, en los que la interpolación se realiza con una resolución de 30 m.",
   "historic_mode_explanation", "Dades d’interpolació de dates històriques (des del 1976). Totes les interpolacions, inclosos fitxers que contenen punts individuals, es fan a una resolució d'1 km.", "Interpolation data for historic dates (since 1976). All interpolations, included file containing individual points, are made at 1km resolution.", "Datos de interpolación para fechas históricas (desde 1976). Todas las interpolaciones, incluidos los archivos que contienen puntos individuales, se realizan a una resolución de 1 km.",
+
+  # poly_id_var_check
+  "poly_id_missing_title", "No s'ha trobat cap variable anomenada 'poly_id' al fitxer", "Not 'poly_id' variable found in file", "No se ha encontrado ninguna variable llamada 'poly_id' en el archivo",
+  "poly_id_missing_message", "S'ha fet servir la primera variable del fitxer com a poly_id", "First variable found in file used as poly_id", "Se ha usado la primera variable del archivo como poly_id"
 )
 
 # internal data for package
