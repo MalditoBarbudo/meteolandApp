@@ -61,12 +61,12 @@ mod_ts <- function(
       res <- main_data %>%
         dplyr::as_tibble() %>%
         dplyr::select(
-          dplyr::all_of(c('date', 'geometry_id', viz_reactives$viz_color))
+          dplyr::all_of(c('date', 'poly_id', viz_reactives$viz_color))
         ) %>%
-        dplyr::filter(geometry_id %in% viz_reactives$ts_points) %>%
+        dplyr::filter(poly_id %in% viz_reactives$ts_points) %>%
         # convert the sf object to a xts object to use with dygraphs
         tidyr::pivot_wider(
-          names_from = 'geometry_id',
+          names_from = 'poly_id',
           values_from = viz_reactives$viz_color
         ) %>%
         dplyr::select(-date) %>%
@@ -88,7 +88,7 @@ mod_ts <- function(
       coordinates_sf <- tibble::tibble(
         lat = map_reactives$meteoland_map_click$lat,
         lng = map_reactives$meteoland_map_click$lng,
-        geometry_id = glue::glue("click")
+        poly_id = glue::glue("click")
       ) %>%
         sf::st_as_sf(
           coords = c('lng', 'lat'), crs = sf::st_crs(4326)
@@ -105,11 +105,11 @@ mod_ts <- function(
           ~ dplyr::mutate(.x, date = .y)
         ) %>%
         dplyr::select(
-          dplyr::all_of(c('date', 'geometry_id', viz_reactives$viz_color))
+          dplyr::all_of(c('date', 'poly_id', viz_reactives$viz_color))
         ) %>%
         # convert the sf object to a xts object to use with dygraphs
         tidyr::pivot_wider(
-          names_from = 'geometry_id',
+          names_from = 'poly_id',
           values_from = viz_reactives$viz_color
         ) %>%
         dplyr::select(-date) %>%

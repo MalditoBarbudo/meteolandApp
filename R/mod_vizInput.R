@@ -148,7 +148,7 @@ mod_viz <- function(
     if (is(main_data, 'sf')) {
 
       data_choices <- main_data %>%
-        dplyr::pull('geometry_id') %>%
+        dplyr::pull('poly_id') %>%
         unique()
 
       shiny::tagList(

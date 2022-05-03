@@ -57,6 +57,7 @@ mod_mainData <- function(
 
     # file
     if (data_type == 'file') {
+
       path_to_file <- data_reactives$user_file_sel$datapath
       file_name <- data_reactives$user_file_sel$name
 
@@ -195,7 +196,7 @@ mod_mainData <- function(
       ))
 
       # validate that main_data is not try-error or of length 0
-      if (class(main_data) == 'try-error' || length(main_data) < 1) {
+      if (any(class(main_data) == 'try-error') || length(main_data) < 1) {
         shinyWidgets::sendSweetAlert(
           session = session,
           title = translate_app('sweet_alert_nodata_title', lang()),

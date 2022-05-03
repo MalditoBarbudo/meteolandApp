@@ -210,7 +210,7 @@ mod_map <- function(
         leaflet::clearGroup('raster') %>%
         leaflet::addCircles(
           data = pre_map_data,
-          group = 'plots', label = ~geometry_id, layerId = ~geometry_id,
+          group = 'plots', label = ~poly_id, layerId = ~poly_id,
           stroke = FALSE, fillOpacity = 0.7,
           fillColor = color_palette(color_vector),
           radius = 750,
