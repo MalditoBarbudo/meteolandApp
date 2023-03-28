@@ -49,16 +49,20 @@ mod_map <- function(
     leaflet::leaflet() %>%
       leaflet::setView(2.36, 41.70, zoom = 8) %>%
       leaflet::addProviderTiles(
-        leaflet::providers$Esri.WorldShadedRelief, group = 'Relief'
+        leaflet::providers$Esri.WorldShadedRelief, group = 'Relief',
+        # avoid raster disappearing when base tiles change
+        options = leaflet::providerTileOptions(zIndex = -10)
       ) %>%
       leaflet::addProviderTiles(
-        leaflet::providers$Esri.WorldImagery, group = 'Imaginery'
+        leaflet::providers$Esri.WorldImagery, group = 'Imaginery',
+        # avoid raster disappearing when base tiles change
+        options = leaflet::providerTileOptions(zIndex = -10)
       ) %>%
       leaflet::addMapPane('raster', zIndex = 410) %>%
       leaflet::addMapPane('plots', zIndex = 420) %>%
       leaflet::addLayersControl(
         baseGroups = c('Relief', 'Imaginery'),
-        options = leaflet::layersControlOptions(collapsed = TRUE)
+        options = leaflet::layersControlOptions(collapsed = TRUE, autoZIndex = FALSE)
       ) %>%
       # leaflet.extras plugins
       leaflet.extras::addDrawToolbar(
@@ -174,6 +178,22 @@ mod_map <- function(
       shiny::need(viz_color %in% names(pre_map_data), 'no variable present')
     )
 
+    # viz_color palette, both for sf and raster
+    viridis_pal_name <- switch(
+      viz_color,
+      'MeanTemperature' = viridis::rocket(256),
+      'MinTemperature' = viridis::rocket(256),
+      'MaxTemperature' = viridis::plasma(256),
+      "ThermalAmplitude" = viridis::rocket(256),
+      'MeanRelativeHumidity' = viridis::mako(256, direction = -1),
+      'MinRelativeHumidity' = viridis::mako(256, direction = -1),
+      'MaxRelativeHumidity' = viridis::mako(256, direction = -1),
+      'Precipitation' = viridis::cividis(256, direction = -1),
+      'Radiation' = viridis::inferno(256),
+      'WindSpeed' = viridis::viridis(256),
+      'PET' = viridis::cividis(256)
+    )
+
     # branching to show raster or points, depending on nature of map data
     if (is(pre_map_data, 'sf')) {
       # palette configuration
@@ -196,11 +216,11 @@ mod_map <- function(
       )
 
       color_palette <- leaflet::colorNumeric(
-        'plasma', color_vector, reverse = viz_pal_reverse,
+        viridis_pal_name, color_vector, reverse = viz_pal_reverse,
         na.color = 'black'
       )
       color_palette_legend <- leaflet::colorNumeric(
-        'plasma', color_vector, reverse = !viz_pal_reverse,
+        viridis_pal_name, color_vector, reverse = !viz_pal_reverse,
         na.color = 'black'
       )
 
@@ -249,11 +269,11 @@ mod_map <- function(
 
       # palette configuration
       color_palette <- leaflet::colorNumeric(
-        'plasma', color_vector, reverse = viz_pal_reverse,
+        viridis_pal_name, color_vector, reverse = viz_pal_reverse,
         na.color = 'transparent'
       )
       color_palette_legend <- leaflet::colorNumeric(
-        'plasma', color_vector, reverse = !viz_pal_reverse,
+        viridis_pal_name, color_vector, reverse = !viz_pal_reverse,
         na.color = 'transparent'
       )
 
