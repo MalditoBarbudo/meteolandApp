@@ -53,15 +53,15 @@ mod_save <- function(
         shiny::column(
           8, align = 'left', offset = 0,
           shiny::p(translate_app('save_remarks_2', lang())),
-          shiny::span(
-            shiny::p(
-              translate_app('save_remarks', lang()),
-              shiny::tags$a(
-                "https://epsg.io/3043",
-                href = "https://epsg.io/3043"
-              )
-            )
-          ),
+          # shiny::span(
+          #   shiny::p(
+          #     translate_app('save_remarks', lang()),
+          #     shiny::tags$a(
+          #       "https://epsg.io/3043",
+          #       href = "https://epsg.io/3043"
+          #     )
+          #   )
+          # ),
           shiny::br(),shiny::br(),
           shiny::downloadButton(
             ns('save_map_btn'),
@@ -105,19 +105,19 @@ mod_save <- function(
         # filename argument
         tmp_dir <- tempdir()
 
-        writting_step <- main_data %>%
+        writting_step <- main_data |>
           purrr::map(
             function(.x) {
-              .x@crs <- sp::rebuild_CRS(.x@crs)
-              .x
+              stars::st_warp(.x, crs = 4326)
             }
-          ) %>%
+          ) |>
           purrr::imap(
-            ~ raster::writeRaster(
+            ~ stars::write_stars(
               .x,
-              filename = file.path(
+              dsn = file.path(
                 tmp_dir, glue::glue("{.y}_meteo_interpolation.tif")
-              )
+              ),
+              driver = "GTiff"
             )
           )
 

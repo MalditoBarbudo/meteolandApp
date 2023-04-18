@@ -1,7 +1,5 @@
 #' function to launch the lidar app
 #'
-#' @importFrom magrittr %>%
-#'
 #' @export
 meteoland_app <- function() {
   ### DB access ################################################################

@@ -11,14 +11,14 @@ interpolator_files <- list.files(
 # a tibble with an extra column indicating the year
 interpolation_params_extractor <- function(file) {
   interpolator <- readRDS(file)
-  dplyr::as_tibble(interpolator@params) %>%
+  dplyr::as_tibble(interpolator@params) |>
     mutate(year = stringr::str_extract(file, pattern = "[0-9]+"))
 }
 
 # map_dfr
 interpolation_params_table <-
-  interpolator_files %>%
-  purrr::map_dfr(interpolation_params_extractor) %>%
+  interpolator_files |>
+  purrr::map_dfr(interpolation_params_extractor) |>
   dplyr::arrange(year)
 
 db_conn <- pool::dbPool(

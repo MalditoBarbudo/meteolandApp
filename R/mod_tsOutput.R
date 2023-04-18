@@ -53,23 +53,23 @@ mod_ts <- function(
 
     if (is(main_data, 'sf')) {
 
-      date_index <- main_data_reactives$main_data$date %>%
-        unique() %>%
+      date_index <- main_data_reactives$main_data$date |>
+        unique() |>
         as.Date()
 
       # filter the sf object with the points selected
-      res <- main_data %>%
-        dplyr::as_tibble() %>%
+      res <- main_data |>
+        dplyr::as_tibble() |>
         dplyr::select(
           dplyr::all_of(c('date', 'poly_id', viz_reactives$viz_color))
-        ) %>%
-        dplyr::filter(poly_id %in% viz_reactives$ts_points) %>%
+        ) |>
+        dplyr::filter(poly_id %in% viz_reactives$ts_points) |>
         # convert the sf object to a xts object to use with dygraphs
         tidyr::pivot_wider(
           names_from = 'poly_id',
           values_from = viz_reactives$viz_color
-        ) %>%
-        dplyr::select(-date) %>%
+        ) |>
+        dplyr::select(-date) |>
         xts::as.xts(order.by = date_index)
 
     } else {
@@ -80,39 +80,38 @@ mod_ts <- function(
         shiny::need(map_reactives$meteoland_map_click, 'no click')
       )
 
-      date_index <- names(main_data) %>%
-        unique() %>%
+      date_index <- names(main_data) |>
+        unique() |>
         as.Date()
 
       # we need to create the sf object from the coordinates on the map
       coordinates_sf <- tibble::tibble(
         lat = map_reactives$meteoland_map_click$lat,
-        lng = map_reactives$meteoland_map_click$lng,
-        poly_id = glue::glue("click")
-      ) %>%
+        lng = map_reactives$meteoland_map_click$lng
+      ) |>
         sf::st_as_sf(
           coords = c('lng', 'lat'), crs = sf::st_crs(4326)
         )
 
-      res <- main_data %>%
+      res <- main_data |>
         purrr::map(
-          ~ raster::extract(.x, coordinates_sf, sp = TRUE)
-        ) %>%
+          ~ stars::st_extract(.x, sf::st_transform(coordinates_sf, crs = sf::st_crs(.x)))
+        ) |>
         purrr::map(
           ~ dplyr::as_tibble(.x)
-        ) %>%
+        ) |>
         purrr::imap_dfr(
-          ~ dplyr::mutate(.x, date = .y)
-        ) %>%
+          ~ dplyr::mutate(.x, date = .y, poly_id = glue::glue("click"))
+        ) |>
         dplyr::select(
           dplyr::all_of(c('date', 'poly_id', viz_reactives$viz_color))
-        ) %>%
+        ) |>
         # convert the sf object to a xts object to use with dygraphs
         tidyr::pivot_wider(
           names_from = 'poly_id',
           values_from = viz_reactives$viz_color
-        ) %>%
-        dplyr::select(-date) %>%
+        ) |>
+        dplyr::select(-date) |>
         xts::as.xts(order.by = date_index)
 
       attr(res, 'coords') <- glue::glue(
@@ -166,19 +165,19 @@ mod_ts <- function(
       "{if (is.null(attr(ts_data(), 'coords'))) {''} else {attr(ts_data(), 'coords')}}"
     )
 
-    ts_data() %>%
+    ts_data() |>
       dygraphs::dygraph(
         main = dygraph_main
-      ) %>%
-      dygraphs::dyAxis("x", drawGrid = FALSE) %>%
+      ) |>
+      dygraphs::dyAxis("x", drawGrid = FALSE) |>
       dygraphs::dyHighlight(
         highlightCircleSize = 5,
         highlightSeriesBackgroundAlpha = 1,
         hideOnMouseOut = TRUE
-      ) %>%
+      ) |>
       dygraphs::dyLegend(
         show = "follow", labelsSeparateLines = TRUE
-      ) %>%
+      ) |>
       dygraphs::dyOptions(
         axisLineWidth = 1.5,
         # drawGrid = FALSE,

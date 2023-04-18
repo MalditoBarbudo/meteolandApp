@@ -47,18 +47,18 @@ dbExecute(
 # raster tipo for the grid
 raster_tipo <- raster::raster(
   '../../03_lidar_app/lidarappkg/data-raw/AB.tif'
-) %>%
+) |>
   raster::aggregate(fact = 50)
 
 # get the center of cells from the raster tipo
-centers_sf <- raster_tipo %>%
-  raster::coordinates() %>%
-  as.data.frame() %>%
+centers_sf <- raster_tipo |>
+  raster::coordinates() |>
+  as.data.frame() |>
   sf::st_as_sf(
     coords = c('x', 'y'),
     crs = "+proj=utm +zone=31 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
-  ) %>%
-  sf::st_transform(crs = 3043) #%>%
+  ) |>
+  sf::st_transform(crs = 3043) #|>
 # dplyr::slice(1:544)
 
 # the grid specs for later in the pixels step
@@ -80,14 +80,14 @@ all_cells_topo <-
 # points outside Catalunya, to reduce the points to check
 catalunya_polys <- sf::read_sf(
   '../../01_nfi_app/NFIappkg/data-raw/shapefiles/catalunya.shp'
-) %>%
-  dplyr::select(poly_id = NOM_CA, geometry) %>%
+) |>
+  dplyr::select(poly_id = NOM_CA, geometry) |>
   sf::st_set_crs(value = 3043)
 
 all_cells_catalunya <-
-  cbind(all_cells_topo@coords, all_cells_topo@data) %>%
-  sf::st_as_sf(coords = c('coords.x1', 'coords.x2'), crs = 3043) %>%
-  dplyr::slice(sf::st_intersects(catalunya_polys, .)[[1]]) %>%
+  cbind(all_cells_topo@coords, all_cells_topo@data) |>
+  sf::st_as_sf(coords = c('coords.x1', 'coords.x2'), crs = 3043) |>
+  dplyr::slice(sf::st_intersects(catalunya_polys, .)[[1]]) |>
   dplyr::mutate(point_id = 1:nrow(.))
 
 # now we need to recreate the topology object, but with the land data

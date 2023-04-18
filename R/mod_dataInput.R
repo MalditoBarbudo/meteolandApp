@@ -39,15 +39,11 @@ mod_data <- function(
 
     ## preacalculated choices
     # mode (historic, current)
-    data_mode_choices <- c(
-      'current', 'historic'
-    ) %>%
-      magrittr::set_names(translate_app(., lang()))
+    data_mode_choices <- c('current', 'historic') |>
+      purrr::set_names(translate_app(c('current', 'historic'), lang()))
     # type (raster, points, custom)
-    data_type_choices <- c(
-      'raster', 'drawn_polygon', 'file'
-    ) %>%
-      magrittr::set_names(translate_app(., lang()))
+    data_type_choices <- c('raster', 'drawn_polygon', 'file') |>
+      purrr::set_names(translate_app(c('raster', 'drawn_polygon', 'file'), lang()))
     # lang for dates
     dates_lang <- switch(
       lang(),
@@ -207,20 +203,22 @@ mod_data <- function(
       # We need to check which is the last date available without cuts (dates
       # in a row) and set this as the start, end and max values in the date
       # range input
+      tables_list <- DBI::dbListTables(meteolanddb$.__enclos_env__$private$pool_conn)
       current_daily_tables <-
-        DBI::dbListTables(meteolanddb$.__enclos_env__$private$pool_conn) %>%
-        magrittr::extract(stringr::str_detect(., "daily_raster_interpolated")) %>%
+        tables_list |>
+        magrittr::extract(stringr::str_detect(tables_list, "daily_raster_interpolated")) |>
         sort()
 
       accepted_dates <- as.Date(
         (Sys.Date() - 366):(Sys.Date() - 1), # one year long + 30 days buffer
         format = '%j', origin = as.Date('1970-01-01')
-      ) %>%
+      ) |>
         as.character()
 
-      current_accepted_tables <-  accepted_dates %>%
-        stringr::str_remove_all(pattern = '-') %>%
-        {glue::glue("daily_raster_interpolated_{.}")}
+      current_accepted_tables <-
+        glue::glue(
+          "daily_raster_interpolated_{stringr::str_remove_all(accepted_dates, pattern = '-')}"
+        )
 
       index_missing <- which(!current_accepted_tables %in% current_daily_tables)
 

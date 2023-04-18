@@ -55,11 +55,15 @@ mod_viz <- function(
       'MeanTemperature', 'MinTemperature', 'MaxTemperature', "ThermalAmplitude",
       'MeanRelativeHumidity', 'MinRelativeHumidity', 'MaxRelativeHumidity',
       'Precipitation', 'Radiation', 'WindSpeed', 'PET'
-    ) %>%
-      magrittr::set_names(translate_app(., lang()))
+    ) |>
+      purrr::set_names(translate_app(c(
+        'MeanTemperature', 'MinTemperature', 'MaxTemperature', "ThermalAmplitude",
+        'MeanRelativeHumidity', 'MinRelativeHumidity', 'MaxRelativeHumidity',
+        'Precipitation', 'Radiation', 'WindSpeed', 'PET'
+      ), lang()))
 
-    date_choices <- date_range[1]:date_range[2] %>%
-      as.Date(format = '%j', origin = as.Date('1970-01-01')) %>%
+    date_choices <- date_range[1]:date_range[2] |>
+      as.Date(format = '%j', origin = as.Date('1970-01-01')) |>
       as.character()
 
     # tagList ####
@@ -147,8 +151,8 @@ mod_viz <- function(
 
     if (is(main_data, 'sf')) {
 
-      data_choices <- main_data %>%
-        dplyr::pull('poly_id') %>%
+      data_choices <- main_data |>
+        dplyr::pull('poly_id') |>
         unique()
 
       shiny::tagList(

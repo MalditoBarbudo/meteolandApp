@@ -10,20 +10,20 @@ cv_files <- list.files(
 
 summarise_cv <- function(index) {
   index_year <- stringr::str_extract(cv_files[index], '[0-9]+')
-  cv_files[index] %>%
-    readRDS() %>%
-    meteoland::summary.interpolation.cv() %>%
-    tibble::rownames_to_column('variable') %>%
-    dplyr::as_tibble() %>%
+  cv_files[index] |>
+    readRDS() |>
+    meteoland::summary.interpolation.cv() |>
+    tibble::rownames_to_column('variable') |>
+    dplyr::as_tibble() |>
     dplyr::mutate(
       year = index_year
-    ) %>%
+    ) |>
     dplyr::select(
       variable, year, everything()
     )
 }
 
-cv_summary <- seq_along(cv_files) %>%
+cv_summary <- seq_along(cv_files) |>
   purrr::map_dfr(summarise_cv)
 
 

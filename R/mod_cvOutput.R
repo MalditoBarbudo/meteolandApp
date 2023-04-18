@@ -47,10 +47,10 @@ mod_cv <- function(
 ) {
 
   cv_df <- shiny::reactive({
-    dplyr::tbl(
+    cv_temp <- dplyr::tbl(
       meteolanddb$.__enclos_env__$private$pool_conn, 'crossvalidation_summary'
-    ) %>%
-      dplyr::collect() %>%
+    ) |>
+      dplyr::collect() |>
       dplyr::select(
         variable,
         year,
@@ -61,16 +61,17 @@ mod_cv <- function(
         sd.dates.MAE,
         sd.station.Bias,
         sd.dates.Bias
-      ) %>%
+      ) |>
       dplyr::mutate(
         variable = translate_app(variable, lang())
-      ) %>%
+      ) |>
       dplyr::mutate_if(
         is.numeric,
         round, digits = 1
-      ) %>%
-      magrittr::set_names(
-        translate_app(names(.), lang())
+      )
+    cv_temp |>
+      purrr::set_names(
+        translate_app(names(cv_temp), lang())
       )
   })
 
@@ -79,32 +80,6 @@ mod_cv <- function(
   })
 
   output$cv_table <- DT::renderDT({
-
-    # cv_df <- dplyr::tbl(
-    #   meteolanddb$.__enclos_env__$private$pool_conn, 'crossvalidation_summary'
-    # ) %>%
-    #   dplyr::collect() %>%
-    #   dplyr::select(
-    #     variable,
-    #     year,
-    #     n,
-    #     MAE,
-    #     Bias,
-    #     sd.station.MAE,
-    #     sd.dates.MAE,
-    #     sd.station.Bias,
-    #     sd.dates.Bias
-    #   ) %>%
-    #   dplyr::mutate(
-    #     variable = translate_app(variable, lang())
-    #   ) %>%
-    #   dplyr::mutate_if(
-    #     is.numeric,
-    #     round, digits = 1
-    #   ) %>%
-    #   magrittr::set_names(
-    #     translate_app(names(.), lang())
-    #   )
 
     DT::datatable(
       cv_df(),

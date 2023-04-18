@@ -34,6 +34,11 @@ mod_mainData <- function(
   meteolanddb, lang, parent_session
 ) {
 
+  ## helper ####
+  to_matrix_list <- function(data) {
+    list(as.matrix(data))
+  }
+
   ## waiter/hostess progress ####
   # set a progress with waiter. We will use infinite TRUE, that way we dont
   # need to calculate any steps durations
@@ -87,11 +92,11 @@ mod_mainData <- function(
           user_file_polygons <- sf::st_read(
             list.files(tmp_folder, '.shp', recursive = TRUE, full.names = TRUE),
             as_tibble = TRUE
-          ) %>%
+          ) |>
             sf::st_transform(3043)
         } else {
           # gpkg
-          user_file_polygons <- sf::st_read(path_to_file) %>%
+          user_file_polygons <- sf::st_read(path_to_file) |>
             sf::st_transform(3043)
         }
       }
@@ -147,15 +152,15 @@ mod_mainData <- function(
         shiny::need(length(drawn_polygon[['features']]) != 0, 'removed poly')
       )
       res <-
-        drawn_polygon[['features']][[1]][['geometry']][['coordinates']] %>%
-        purrr::flatten() %>%
-        purrr::modify_depth(1, purrr::set_names, nm = c('long', 'lat')) %>%
-        dplyr::bind_rows() %>%
-        {list(as.matrix(.))} %>%
-        sf::st_polygon() %>%
-        sf::st_sfc() %>%
-        sf::st_sf(crs = 4326) %>%
-        sf::st_transform(crs = 3043) %>%
+        drawn_polygon[['features']][[1]][['geometry']][['coordinates']] |>
+        purrr::flatten() |>
+        purrr::modify_depth(1, purrr::set_names, nm = c('long', 'lat')) |>
+        dplyr::bind_rows() |>
+        to_matrix_list() |>
+        sf::st_polygon() |>
+        sf::st_sfc() |>
+        sf::st_sf(crs = 4326) |>
+        sf::st_transform(crs = 3043) |>
         dplyr::mutate(poly_id = 'drawn_polygon')
       return(res)
     }

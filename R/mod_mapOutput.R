@@ -46,24 +46,42 @@ mod_map <- function(
   output$meteoland_map <- leaflet::renderLeaflet({
 
     # we need data, and we need color var at least
-    leaflet::leaflet() %>%
-      leaflet::setView(2.36, 41.70, zoom = 8) %>%
+    leaflet::leaflet() |>
+      leaflet::setView(2.36, 41.70, zoom = 8) |>
       leaflet::addProviderTiles(
         leaflet::providers$Esri.WorldShadedRelief, group = 'Relief',
         # avoid raster disappearing when base tiles change
         options = leaflet::providerTileOptions(zIndex = -10)
-      ) %>%
+      ) |>
       leaflet::addProviderTiles(
         leaflet::providers$Esri.WorldImagery, group = 'Imaginery',
         # avoid raster disappearing when base tiles change
         options = leaflet::providerTileOptions(zIndex = -10)
-      ) %>%
-      leaflet::addMapPane('raster', zIndex = 410) %>%
-      leaflet::addMapPane('plots', zIndex = 420) %>%
+      ) |>
+      leaflet::addProviderTiles(
+        leaflet::providers$OpenStreetMap,
+        group = translate_app('OSM', lang()),
+        # avoid raster disappearing when base tiles change
+        options = leaflet::providerTileOptions(zIndex = -10)
+      ) |>
+      leaflet::addProviderTiles(
+        leaflet::providers$Esri.WorldGrayCanvas,
+        group = translate_app('WorldGrayCanvas', lang()),
+        # avoid raster disappearing when base tiles change
+        options = leaflet::providerTileOptions(zIndex = -10)
+      ) |>
+      leaflet::addProviderTiles(
+        leaflet::providers$CartoDB.PositronNoLabels,
+        group = translate_app('PositronNoLabels', lang()),
+        # avoid raster disappearing when base tiles change
+        options = leaflet::providerTileOptions(zIndex = -10)
+      ) |>
+      leaflet::addMapPane('raster', zIndex = 410) |>
+      leaflet::addMapPane('plots', zIndex = 420) |>
       leaflet::addLayersControl(
-        baseGroups = c('Relief', 'Imaginery'),
+        baseGroups = c('Relief', 'Imaginery', 'OSM', 'WorldGrayCanvas', 'PositronNoLabels'),
         options = leaflet::layersControlOptions(collapsed = TRUE, autoZIndex = FALSE)
-      ) %>%
+      ) |>
       # leaflet.extras plugins
       leaflet.extras::addDrawToolbar(
         targetGroup = 'drawn_poly',
@@ -107,8 +125,8 @@ mod_map <- function(
     # browser()
 
     if (is(main_data, 'sf')) {
-      data_res <- main_data %>%
-        sf::st_transform(crs = 4326) %>%
+      data_res <- main_data |>
+        sf::st_transform(crs = 4326) |>
         dplyr::filter(date == viz_date)
 
       # validation of the filtering
@@ -125,7 +143,8 @@ mod_map <- function(
       }
 
     } else {
-      data_res <- main_data %>%
+
+      data_res <- main_data |>
         magrittr::extract2(viz_date)
       # validation of the filtering
       if (is.null(data_res)) {
@@ -139,8 +158,8 @@ mod_map <- function(
         )
       }
 
-      data_res <- data_res %>%
-        leaflet::projectRasterForLeaflet('bilinear')
+      # data_res <- data_res |>
+      #   leaflet::projectRasterForLeaflet('bilinear')
     }
 
     # return the map data
@@ -197,7 +216,7 @@ mod_map <- function(
     # branching to show raster or points, depending on nature of map data
     if (is(pre_map_data, 'sf')) {
       # palette configuration
-      color_vector <- pre_map_data %>%
+      color_vector <- pre_map_data |>
         dplyr::pull(!! rlang::sym(viz_color))
 
       # we need values on the variable, not all NAs, so
@@ -225,9 +244,9 @@ mod_map <- function(
       )
 
       # update the map
-      leaflet::leafletProxy('meteoland_map') %>%
-        leaflet::clearGroup('plots') %>%
-        leaflet::clearGroup('raster') %>%
+      leaflet::leafletProxy('meteoland_map') |>
+        leaflet::clearGroup('plots') |>
+        leaflet::clearGroup('raster') |>
         leaflet::addCircles(
           data = pre_map_data,
           group = 'plots', label = ~poly_id, layerId = ~poly_id,
@@ -235,7 +254,7 @@ mod_map <- function(
           fillColor = color_palette(color_vector),
           radius = 750,
           options = leaflet::pathOptions(pane = 'plots')
-        ) %>%
+        ) |>
         leaflet::addLegend(
           position = 'bottomright', pal = color_palette_legend,
           values = color_vector,
@@ -249,8 +268,8 @@ mod_map <- function(
 
     } else {
 
-      layer_data <- pre_map_data[[viz_color]]
-      color_vector <- raster::values(layer_data)
+      layer_data <- pre_map_data[viz_color]
+      color_vector <- layer_data[[1]] |> as.numeric()
 
       # we need values on the variable, not all NAs, so
       #   1. we check and show a warning in case all NAs
@@ -278,13 +297,13 @@ mod_map <- function(
       )
 
       # update the map
-      leaflet::leafletProxy('meteoland_map') %>%
-        leaflet::clearGroup('plots') %>%
-        leaflet::clearGroup('raster') %>%
+      leaflet::leafletProxy('meteoland_map') |>
+        leaflet::clearGroup('plots') |>
+        leaflet::clearGroup('raster') |>
         leaflet::addRasterImage(
-          layer_data, project = FALSE, colors = color_palette, opacity = 0.8,
+          terra::rast(layer_data), project = TRUE, colors = color_palette, opacity = 0.8,
           group = 'raster', layerId = 'raster'
-        ) %>%
+        ) |>
         leaflet::addLegend(
           position = 'bottomright', pal = color_palette_legend,
           values = color_vector,
