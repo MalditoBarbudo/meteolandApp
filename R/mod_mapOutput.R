@@ -34,6 +34,8 @@ mod_map <- function(
   lang
 ) {
 
+  attachNamespace("terra")
+
   ## renderUI ####
   output$map_container <- shiny::renderUI({
     shiny::tags$div(
