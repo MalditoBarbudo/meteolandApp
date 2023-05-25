@@ -266,8 +266,8 @@ mod_map <- function(
           )
         )
 
-    } else {
 
+    } else {
       layer_data <- pre_map_data[viz_color]
       color_vector <- layer_data[[1]] |> as.numeric()
 
@@ -314,7 +314,7 @@ mod_map <- function(
             transform = function(x) {sort(x, decreasing = TRUE)}
           )
         )
-    }
+      }
   })
 
   ## reactives to return ####

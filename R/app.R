@@ -1,5 +1,7 @@
 #' function to launch the lidar app
 #'
+#' @importFrom terra has.RGB
+#'
 #' @export
 meteoland_app <- function() {
   ### DB access ################################################################
@@ -46,6 +48,9 @@ $(document).on('shiny:disconnected', function(event) {
   clearInterval(socket_timeout_interval)
 });"
   )
+
+  ## only once alarm ####
+  under_construction <- 0
 
   ## UI ####
   ui <- shiny::tagList(
@@ -185,6 +190,20 @@ $(document).on('shiny:disconnected', function(event) {
     lang <- shiny::reactive({
       input$lang
     })
+
+    # send an alarm when loading app or change langs
+    shiny::observeEvent(
+      eventExpr = lang(),
+      handlerExpr = {
+        # if (under_construction < 1) {
+          # under_construction <- 1
+          shinyWidgets::show_alert(
+            title = translate_app('under_construction_title', lang()),
+            text = translate_app('under_construction_text', lang())
+          )
+        # }
+      }
+    )
 
     # modules ####
     # data inputs

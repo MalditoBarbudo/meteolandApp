@@ -89,6 +89,8 @@ app_translations <- tibble::tribble(
   "sweet_alert_all_nas_title", "Aquesta variable no té valors,", "This variable has not values,", "Esta variable no tiene valores,",
   "sweet_alert_all_nas_text", "si us plau selecciona una altra", "please select another", "por favor selecciona otra",
   "ts_one_date", "No s'ha pogut crear una sèrie temporal amb una sola data", "Could not create a time series with a single date", "No se pudo crear una serie temporal con una sola fecha",
+  "under_construction_title", "Meteoland App està en manteniment.", "Meteoland App is under maintenance.", "Meteoland App está bajo mantenimiento.",
+  "under_construction_text", "Algunes funcionalitats i dades poden faltar temporalment. Es poden produir errors (pantalles grises) en consultar les dades que falten.", "Some functionality, data can be temporally missing. Errors (gray screens) can happen when consulting missing data.", "Alguna funcionalidad o datos pueden faltar temporalmente. Pueden ocurrir errores (pantallazo gris) al consultar estos datos faltantes.",
   # save
   'save_map_btn', "Descarrega", "Download", "Descarga",
   'save_remarks', 'Tots els arxius espacials generats es troben en el sistema de referència de coordenades EPGS:3043:', 'All generated spatial files are in the EPGS: 3043 coordinate reference system.', 'Todos los archivos espaciales generados se encuentran en el sistema de referencia de coordenadas EPGS:3043:',
