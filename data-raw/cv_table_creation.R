@@ -12,7 +12,7 @@ summarise_cv <- function(index) {
   index_year <- stringr::str_extract(cv_files[index], '[0-9]+')
   cv_files[index] |>
     readRDS() |>
-    meteoland::summary.interpolation.cv() |>
+    # meteoland::summary.interpolation.cv() |>
     tibble::rownames_to_column('variable') |>
     dplyr::as_tibble() |>
     dplyr::mutate(
@@ -31,7 +31,7 @@ cv_summary <- seq_along(cv_files) |>
 
 db_conn <- pool::dbPool(
   RPostgres::Postgres(),
-  dbname = 'meteoland', host = 'laboratoriforestal.creaf.cat', port = 5432,
+  dbname = 'new_meteoland', host = 'laboratoriforestal.creaf.cat', port = 5432,
   password = rstudioapi::askForPassword(), user = 'ifn'
 )
 

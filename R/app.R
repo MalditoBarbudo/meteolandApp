@@ -98,6 +98,20 @@ $(document).on('shiny:disconnected', function(event) {
         )
       ),
 
+      # footer
+      footer = shiny::tags$footer(
+        shiny::fluidRow(
+          shiny::column(
+            width = 12, align = "right",
+            shiny::HTML(glue::glue(
+              '<img src="images/emf_white_logo.svg" width="120px" class="d-inline-block" alt="" loading="lazy">
+              <img src="images/creaf_white_logo.svg" width="135px" class="d-inline-block" alt="" loading="lazy">
+              <span>({lubridate::year(Sys.Date())})</span>'
+            ))
+          )
+        )
+      ),
+
       # navbarPage contents
       shiny::tabPanel(
         title = mod_tab_translateOutput('main_tab_translation'),
@@ -167,11 +181,11 @@ $(document).on('shiny:disconnected', function(event) {
         ) # end of sidebarLayout
 
       ), # end of main tabPanel
-      shiny::tabPanel(
-        title = mod_tab_translateOutput('cv_translation'),
-        value = 'cv_panel',
-        mod_cvOutput('mod_cvOutput')
-      ), # end of cv tabPanel
+      # shiny::tabPanel(
+      #   title = mod_tab_translateOutput('cv_translation'),
+      #   value = 'cv_panel',
+      #   mod_cvOutput('mod_cvOutput')
+      # ), # end of cv tabPanel
       shiny::tabPanel(
         title = mod_tab_translateOutput('tech_specs_translation'),
         value = 'tech_spec_panel',

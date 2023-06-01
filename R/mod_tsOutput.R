@@ -136,7 +136,7 @@ mod_ts <- function(
     # taglist
     shiny::tagList(
       shiny::fluidPage(
-        dygraphs::dygraphOutput(ns('ts_plot'))
+        dygraphs::dygraphOutput(ns('ts_plot'), height = 600)
       )
     )
   })
