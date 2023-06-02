@@ -68,11 +68,11 @@ $(document).on('shiny:disconnected', function(event) {
       shiny::tags$script(keep_alive_script),
       # corporative image css
       shiny::includeCSS(
-        system.file('resources', 'corp_image.css', package = 'meteolandApp')
+        system.file('apps_css', 'corp_image.css', package = 'lfcdata')
       ),
       # custom css
       shiny::includeCSS(
-        system.file('resources', 'meteolandapp.css', package = 'meteolandApp')
+        system.file('apps_css', 'meteolandapp.css', package = 'lfcdata')
       )
     ),
 
