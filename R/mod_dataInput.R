@@ -63,7 +63,8 @@ mod_data <- function(
             ns('data_mode'),
             label = translate_app('data_mode', lang()),
             choices = data_mode_choices,
-            selected = 'current'
+            selected = 'current',
+            choicesOpt = list(disabled = data_mode_choices %in% "historic")
           ),
           shinyWidgets::pickerInput(
             ns('data_type'),
