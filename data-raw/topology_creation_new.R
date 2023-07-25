@@ -8,6 +8,35 @@ library(lfcdata)
 # env
 readRenviron("/data/25_secrets/lfc_development_env")
 
+# db
+db_conn <- pool::dbPool(
+  drv = RPostgres::Postgres(),
+  dbname = Sys.getenv("METEO_DB"),
+  host = Sys.getenv("METEO_DB_HOST"),
+  user = Sys.getenv("METEO_DB_USER"),
+  password = Sys.getenv("METEO_DB_PASS"),
+  idleTimeout = 3600,
+  options = "-c client_min_messages=warning"
+)
+withr::defer(pool::poolClose(db_conn))
+
+
+# 200m topo -----------------------------------------------------------------------------------
+
+# Topology sf.
+# the gpkg file was created by M. de Caceres for the app engine.
+# It is a points sf with the cells coordinates for a grid of 200x200m (400128 points)
+topology_sf <- sf::st_read("data-raw/spdf_topo_catfor.gpkg") |>
+  dplyr::rename(point_id = id)
+
+# Save to db
+sf::st_write(
+  topology_sf, db_conn,
+  layer = "topo_land_points_200", layer_options = "OVERWRITE=true"
+)
+
+# 1km topo ------------------------------------------------------------------------------------
+
 # topology object
 topology_data <- stars::read_ncdf("data-raw/Topology_grid.nc")
 sf::st_crs(topology_data) <- "+proj=utm +zone=31 +ellps=WGS84 +datum=WGS84 +units=m +towgs84=0,0,0"
@@ -29,26 +58,26 @@ rm(topology_data, topology_elevation, topology_slope, topology_aspect)
 gc()
 
 # write to db
-db_conn <- pool::dbPool(
-  drv = RPostgres::Postgres(),
-  dbname = Sys.getenv("METEO_DB"),
-  host = Sys.getenv("METEO_DB_HOST"),
-  user = Sys.getenv("METEO_DB_USER"),
-  password = Sys.getenv("METEO_DB_PASS"),
-  idleTimeout = 3600,
-  options = "-c client_min_messages=warning"
-)
-withr::defer(pool::poolClose(db_conn))
+# db_conn <- pool::dbPool(
+#   drv = RPostgres::Postgres(),
+#   dbname = Sys.getenv("METEO_DB"),
+#   host = Sys.getenv("METEO_DB_HOST"),
+#   user = Sys.getenv("METEO_DB_USER"),
+#   password = Sys.getenv("METEO_DB_PASS"),
+#   idleTimeout = 3600,
+#   options = "-c client_min_messages=warning"
+# )
+# withr::defer(pool::poolClose(db_conn))
 
 pc <- pool::poolCheckout(db_conn)
 
-rpostgis::pgWriteRast(
-  pc, "topology_cat", topology_stack, blocks = 50, overwrite = TRUE
-)
-
-# lfcdata:::write_raster_to_db(
-#   topology_terra, db_conn, "topology_cat", .overwrite = TRUE
+# rpostgis::pgWriteRast(
+#   pc, "topology_cat", topology_stack, blocks = 50, overwrite = TRUE
 # )
+
+lfcdata:::write_raster_to_db(
+  topology_terra, db_conn, "topology_cat", blocks = 50, .overwrite = TRUE
+)
 
 pool::poolReturn(pc)
 
