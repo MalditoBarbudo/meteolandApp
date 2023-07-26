@@ -26,8 +26,8 @@ withr::defer(pool::poolClose(db_conn))
 # Topology sf.
 # the gpkg file was created by M. de Caceres for the app engine.
 # It is a points sf with the cells coordinates for a grid of 200x200m (400128 points)
-topology_sf <- sf::st_read("data-raw/spdf_topo_catfor.gpkg") |>
-  dplyr::rename(point_id = id)
+topology_sf <- sf::st_read("data-raw/sf_topo_cat.gpkg") |>
+  dplyr::mutate(point_id = 1:length(geom))
 
 # Save to db
 sf::st_write(
