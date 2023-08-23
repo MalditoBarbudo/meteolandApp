@@ -205,19 +205,21 @@ $(document).on('shiny:disconnected', function(event) {
       input$lang
     })
 
+    ####### Maintenance notice
     # send an alarm when loading app or change langs
-    shiny::observeEvent(
-      eventExpr = lang(),
-      handlerExpr = {
-        # if (under_construction < 1) {
-          # under_construction <- 1
-          shinyWidgets::show_alert(
-            title = translate_app('under_construction_title', lang()),
-            text = translate_app('under_construction_text', lang())
-          )
-        # }
-      }
-    )
+    # shiny::observeEvent(
+    #   eventExpr = lang(),
+    #   handlerExpr = {
+    #     # if (under_construction < 1) {
+    #       # under_construction <- 1
+    #       shinyWidgets::show_alert(
+    #         title = translate_app('under_construction_title', lang()),
+    #         text = translate_app('under_construction_text', lang())
+    #       )
+    #     # }
+    #   }
+    # )
+    ########
 
     # modules ####
     # data inputs

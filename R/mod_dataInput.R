@@ -126,10 +126,10 @@ mod_data <- function(
           shiny::dateRangeInput(
             ns('date_range'),
             label = translate_app('date_range', lang()),
-            # start = Sys.Date()-1, end = Sys.Date()-1,
-            # min = Sys.Date()-365, max = Sys.Date()-1,
-            start = "2023/05/10", end = "2023/05/10",
-            min = Sys.Date()-365, max = "2023/05/10",
+            start = Sys.Date()-1, end = Sys.Date()-1,
+            min = Sys.Date()-365, max = Sys.Date()-1,
+            # start = "2023/05/10", end = "2023/05/10",
+            # min = Sys.Date()-365, max = "2023/05/10",
             weekstart = 1, language = dates_lang,
             separator = translate_app('date_separator', lang())
           )
@@ -250,17 +250,17 @@ mod_data <- function(
       shiny::updateDateRangeInput(
         session, 'date_range',
         label = translate_app('date_range', lang()),
-        # end = accepted_dates[length(accepted_dates)],
-        # max = accepted_dates[length(accepted_dates)]
-        end = "2023/05/10",
-        max = "2023/05/10"
+        end = accepted_dates[length(accepted_dates)],
+        max = accepted_dates[length(accepted_dates)]
+        # end = "2023/05/10",
+        # max = "2023/05/10"
       )
       # and now start and min
       shiny::updateDateRangeInput(
         session, 'date_range',
         label = translate_app('date_range', lang()),
-        # start = accepted_dates[length(accepted_dates)],
-        start = "2023/05/10",
+        start = accepted_dates[length(accepted_dates)],
+        # start = "2023/05/10",
         min = accepted_dates[1]
       )
 
