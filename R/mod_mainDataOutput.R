@@ -43,12 +43,12 @@ mod_mainData <- function(
   # set a progress with waiter. We will use infinite TRUE, that way we dont
   # need to calculate any steps durations
   # 1. hostess progress
-  hostess_progress <- waiter::Hostess$new(infinite = TRUE)
-  hostess_progress$set_loader(waiter::hostess_loader(
-    svg = 'images/hostess_image.svg',
-    progress_type = 'fill',
-    fill_direction = 'btt'
-  ))
+  # hostess_progress <- waiter::Hostess$new(infinite = TRUE)
+  # hostess_progress$set_loader(waiter::hostess_loader(
+  #   svg = 'images/hostess_image.svg',
+  #   progress_type = 'fill',
+  #   fill_direction = 'btt'
+  # ))
 
   # custom polygon ####
   # we need to check if custom polygon, to retrieve it and build the data later
@@ -177,15 +177,18 @@ mod_mainData <- function(
       waiter_overlay <- waiter::Waiter$new(
         id = 'mod_mapOutput-meteoland_map',
         html = shiny::tagList(
-          hostess_progress$get_loader(),
+          # hostess_progress$get_loader(),
+          shiny::br(), shiny::br(),
+          shiny::br(), shiny::br(),
+          waiter::spin_flowers(),
           shiny::h3(translate_app("progress_message", lang())),
           shiny::p(translate_app("progress_detail_initial", lang()))
         ),
         color = '#E8EAEB'
       )
       waiter_overlay$show()
-      hostess_progress$start()
-      on.exit(hostess_progress$close())
+      # hostess_progress$start()
+      # on.exit(hostess_progress$close())
       on.exit(waiter_overlay$hide(), add = TRUE)
 
       # inputs

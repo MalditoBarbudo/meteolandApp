@@ -59,7 +59,7 @@ $(document).on('shiny:disconnected', function(event) {
     shinyjs::useShinyjs(),
     # waiter
     waiter::use_waiter(),
-    waiter::use_hostess(),
+    # waiter::use_hostess(),
 
     # css
     shiny::tags$head(
