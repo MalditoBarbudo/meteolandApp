@@ -24,7 +24,7 @@ interpolation_params_table <-
 db_conn <- pool::dbPool(
   RPostgres::Postgres(),
   dbname = 'new_meteoland', host = 'laboratoriforestal.creaf.cat', port = 5432,
-  password = rstudioapi::askForPassword(), user = 'ifn'
+  password = "IFN2018creaf", user = 'ifn'
 )
 
 dplyr::copy_to(
@@ -33,9 +33,3 @@ dplyr::copy_to(
 )
 
 pool::poolClose(db_conn)
-
-
-
-
-
-

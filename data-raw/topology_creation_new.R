@@ -50,8 +50,8 @@ topology_stack <-
   raster::stack(topology_elevation, topology_slope, topology_aspect)
 names(topology_stack) <- c('elevation', 'slope', 'aspect')
 
-# topology_terra <- terra::rast(topology_data)
-# names(topology_terra) <- names(topology_data)
+topology_terra <- terra::rast(topology_data)
+names(topology_terra) <- names(topology_data)
 
 # remove
 rm(topology_data, topology_elevation, topology_slope, topology_aspect)
@@ -69,17 +69,17 @@ gc()
 # )
 # withr::defer(pool::poolClose(db_conn))
 
-pc <- pool::poolCheckout(db_conn)
+lfcdata:::write_raster_to_db(
+  topology_terra, db_conn, "topology_cat", blocks = 50, .overwrite = TRUE
+)
+# pc <- pool::poolCheckout(db_conn)
 
 # rpostgis::pgWriteRast(
 #   pc, "topology_cat", topology_stack, blocks = 50, overwrite = TRUE
 # )
 
-lfcdata:::write_raster_to_db(
-  topology_terra, db_conn, "topology_cat", blocks = 50, .overwrite = TRUE
-)
 
-pool::poolReturn(pc)
+# pool::poolReturn(pc)
 
 # create index
 pool::dbExecute(

@@ -9,6 +9,7 @@ cv_files <- list.files(
 )
 
 summarise_cv <- function(index) {
+  browser()
   index_year <- stringr::str_extract(cv_files[index], '[0-9]+')
   cv_files[index] |>
     readRDS() |>
@@ -24,7 +25,7 @@ summarise_cv <- function(index) {
 }
 
 cv_summary <- seq_along(cv_files) |>
-  purrr::map_dfr(summarise_cv)
+  purrr::map(summarise_cv)
 
 
 
@@ -41,4 +42,3 @@ dplyr::copy_to(
 )
 
 pool::poolClose(db_conn)
-
