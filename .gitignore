@@ -11,3 +11,4 @@ data-raw/cv_files
 data-raw/meteo_daily_data_uploading.R
 data-raw/daily_historic_tables_creation.R
 data-raw/*.gpkg
+.vscode
