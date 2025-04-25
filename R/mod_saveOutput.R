@@ -113,7 +113,7 @@ mod_save <- function(
           ) |>
           purrr::imap(
             ~ stars::write_stars(
-              .x,
+              merge(.x),
               dsn = file.path(
                 tmp_dir, glue::glue("{.y}_meteo_interpolation.tif")
               ),
